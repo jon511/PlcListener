@@ -208,7 +208,7 @@ namespace PlcListener
             dataArray[19] = successIndicator;
             dataArray[20] = faultCode;
 
-            var m = new MessageEventArgs(senderIP, _localIp, "N197[0]", dataArray, 50, TypeCode.Int16, DateTime.Now);
+            var m = new MessageEventArgs(senderIP, _localIp, tagName, dataArray, 50, TypeCode.Int16, DateTime.Now);
             OnMessageRecieved(m);
         }
         
