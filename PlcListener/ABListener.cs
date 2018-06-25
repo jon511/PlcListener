@@ -170,8 +170,10 @@ namespace PlcListener
             var processHistoryArr = new string[14];
             if (itemArr.Length > 6)
             {
-                for (var j = 6; j < 22; j++)
+                for (var j = 6; j < itemArr.Length; j++)
                 {
+                    if (j > 22)
+                        break;
                     processHistoryArr[j - 6] = itemArr[j];
                 }
             }
