@@ -368,24 +368,18 @@ namespace PlcListener
             
             Console.WriteLine(tagName);
 
-            var dataArray = new int[50];
+            var dataArray = new Int16[50];
             
             for (int i = 0; i < tempArr.Length; i++)
             {
                 if (i % 2 == 0)
                 {
-                    var c = Convert2BytesToInteger(tempArr[i], tempArr[i + 1]);
+                    var c = Convert.ToInt16(Convert2BytesToInteger(tempArr[i], tempArr[i + 1]));
                     dataArray[i / 2] = c;
                 }
             }
             var m = new MessageEventArgs(senderIP, _localIp, tagName, dataArray, 50, TypeCode.Int16, DateTime.Now);
-            Console.WriteLine(m.IPAddressNIC);
-            Console.WriteLine(m.IPSender);
-            Console.WriteLine(m.Timestamp.ToString());
-            Console.WriteLine(m.ItemName);
-            Console.WriteLine(m.Length);
-            Console.WriteLine(m.Value);
-            Console.WriteLine(m.NetType);
+            OnMessageRecieved(m);
 
         }
         
@@ -404,28 +398,19 @@ namespace PlcListener
             
             Buffer.BlockCopy(bytes, 5, tempArr, 0, tempArr.Length);
 
-            var dataArray = new int[50];
+            var dataArray = new Int16[50];
             
             for (var i = 0; i < tempArr.Length; i++)
             {
                 if (i % 2 == 0)
                 {
-                    var c = Convert2BytesToInteger(tempArr[i], tempArr[i + 1]);
+                    var c = Convert.ToInt16(Convert2BytesToInteger(tempArr[i], tempArr[i + 1]));
                     dataArray[i / 2] = c;
                 }
             }
             
             var m = new MessageEventArgs(senderIP, _localIp, tagName, dataArray,50,TypeCode.Int16, DateTime.Now);
-
-            Console.WriteLine(m.IPAddressNIC);
-            Console.WriteLine(m.IPSender);
-            Console.WriteLine(m.Timestamp.ToString());
-            Console.WriteLine(m.ItemName);
-            Console.WriteLine(m.Length);
-            Console.WriteLine(m.Value);
-            Console.WriteLine(m.NetType);
-
-            var newArray = (Array) m.Value;
+            OnMessageRecieved(m);
             
         }
 
