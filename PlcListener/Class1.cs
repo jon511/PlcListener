@@ -1,6 +1,9 @@
-﻿namespace PlcListener
+﻿using System;
+
+namespace PlcListener
 {
-  public class Class1
-  {
-  }
+    public class Listener
+    
+    {
+    }
 }
