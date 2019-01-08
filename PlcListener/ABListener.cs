@@ -13,11 +13,7 @@ namespace PlcListener
         
         protected virtual void OnMessageRecieved(MessageEventArgs e)
         {
-            EventHandler handler = MessageRecieved;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            MessageRecieved?.Invoke(this, e);
         }
         
         private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);

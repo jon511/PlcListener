@@ -1,0 +1,6 @@
+C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\PlcListener\bin\Debug\PlcListener.dll
+C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\PlcListener\bin\Debug\PlcListener.pdb
+C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\PlcListener\obj\Debug\PlcListener.csprojAssemblyReference.cache
+C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\PlcListener\obj\Debug\PlcListener.csproj.CoreCompileInputs.cache
+C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\PlcListener\obj\Debug\PlcListener.dll
+C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\PlcListener\obj\Debug\PlcListener.pdb
