@@ -32,7 +32,6 @@ namespace OESListener
     {
         public string Component { get; set; }
         public string AccessId { get; set; }
-        public string TransactionRequest { get; set; }
         public string ModelNumber { get; set; }
         public string OpNumber { get; set; }
 
@@ -47,7 +46,7 @@ namespace OESListener
         {
             Client = client;
             CellID = cellID;
-            TransactionRequest = transactionRequest;
+            Request = transactionRequest;
             ModelNumber = modelNumber;
             OpNumber = opNumber;
 
@@ -59,7 +58,7 @@ namespace OESListener
             CellID = cellID;
             Component = component;
             AccessId = accessId;
-            TransactionRequest = transactionRequest;
+            Request = transactionRequest;
             ModelNumber = modelNumber;
             OpNumber = opNumber;
         }

@@ -7,9 +7,13 @@ namespace OESListener
 {
     public class OesEventArgs : EventArgs
     {
-        public bool UseJson { get; set; }
+        internal bool UseJson { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
         public System.Net.Sockets.TcpClient Client { get; set; }
         public string CellID { get; set; }
+        public string Request { get; set; }
+        public string Status { get; set; }
+        public string FailureCode { get; set; }
 
     }
 }

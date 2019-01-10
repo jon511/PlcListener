@@ -5,17 +5,16 @@ using System.Text;
 
 namespace OESListener
 {
-    public struct LoginResponse
-    {
-        public string Status;
-        public string FaultCode;
-    }
+    //public struct LoginResponse
+    //{
+    //    public string Status;
+    //    public string FaultCode;
+    //}
 
     public class LoginEventArgs : OesEventArgs
     {
         public string OperatorID { get; set; }
-        public string ProcessRequest { get; set; }
-        public LoginResponse Response;
+        //public LoginResponse Response;
 
         public LoginEventArgs(System.Net.Sockets.TcpClient client)
         {
@@ -26,7 +25,7 @@ namespace OESListener
         {
             Client = client;
             CellID = cellID;
-            ProcessRequest = processRequest;
+            Request = processRequest;
         }
 
         public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, string operatorID, string processRequest)
@@ -34,7 +33,7 @@ namespace OESListener
             Client = client;
             CellID = cellID;
             OperatorID = operatorID;
-            ProcessRequest = processRequest;
+            Request = processRequest;
         }
 
     }

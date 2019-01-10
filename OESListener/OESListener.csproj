@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logger.cs" />
     <Compile Include="LoginEventArgs.cs" />
     <Compile Include="OesEventArgs.cs" />
     <Compile Include="Listener.cs" />

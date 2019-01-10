@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -30,56 +29,95 @@ namespace OESListener
         public event EventHandler<LoginEventArgs> LoginReceived;
 
         private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);
+        private bool LogToConsole = false;
+        private bool LogToFile = false;
         public string myIPAddress { get; set; }
         public int Port { get; set; }
 
+        public Listener(bool logToConsole = false, bool logToFile = false)
+        {
+            Port = 55001;
+            myIPAddress = "127.0.0.1";
+            LogToConsole = logToConsole;
+            LogToFile = logToFile;
+        }
+
         public Listener()
         {
-            this.Port = 55001;
-            this.myIPAddress = "127.0.0.1";
+            Port = 55001;
+            myIPAddress = "127.0.0.1";
         }
 
         public Listener(string ipAddress)
         {
-            this.myIPAddress = ipAddress;
-            this.Port = 55001;
+            myIPAddress = ipAddress;
+            Port = 55001;
+        }
+
+        public Listener(string ipAddress, bool logToConsole = false, bool logToFile = false)
+        {
+            myIPAddress = ipAddress;
+            Port = 55001;
+            LogToConsole = logToConsole;
+            LogToFile = logToFile;
         }
 
         public Listener(string ipAddress, int port)
         {
-            this.myIPAddress = ipAddress;
-            this.Port = port;
+            myIPAddress = ipAddress;
+            Port = port;
+        }
+
+        public Listener(string ipAddress, int port, bool logToConsole = false, bool logToFile = false)
+        {
+            myIPAddress = ipAddress;
+            Port = port;
+            LogToConsole = logToConsole;
+            LogToFile = logToFile;
         }
 
         public void Listen()
         {
+            
             Thread myNewThread = new Thread(() => StartListening());
+            if (LogToConsole)
+                Console.WriteLine("Starting new thread");
+
             myNewThread.Start();
         }
 
         private void StartListening()
         {
+            Console.WriteLine("Listening...");
+
             TcpListener server = null;
 
             try
             {
-                server = new TcpListener(IPAddress.Parse(this.myIPAddress), this.Port);
+                server = new TcpListener(IPAddress.Parse(myIPAddress), Port);
                 server.Start();
 
                 while (true)
                 {
                     AllDone.Reset();
-                    Console.WriteLine("Ready for connection...");
+                    if (LogToConsole)
+                        Logger.Log("waiting for connection...");
+                        //Logger.Log("Ready for connection...");
+                        
+                        //Console.WriteLine("Ready for connection...");
 
                     var client = server.AcceptTcpClient();
-                    Console.WriteLine("Connected!");
+
+                    if (LogToConsole)
+                        Logger.Log("connected");
 
                     new Thread(() => HandleMessage(client)).Start();
                 }
             }
             catch (SocketException e)
             {
-                Console.WriteLine("SocketException: ${0}", e);
+                Logger.Log(string.Format("Socket Error : {0}", e));
+                //Console.WriteLine("SocketException: ${0}", e);
             }
             finally
             {
@@ -95,158 +133,173 @@ namespace OESListener
 
             var stream = client.GetStream();
             int i;
-
-            while ((i = stream.Read(bytes, 0, bytes.Length)) != 0 && client != null)
+            try
             {
-                var receivedBytes = new byte[i];
-                Buffer.BlockCopy(bytes, 0, receivedBytes, 0, i);
-                var inString = Encoding.Default.GetString(receivedBytes).Trim();
-                
-                //check if incoming string is valid json
-                if (inString.StartsWith("{") && inString.EndsWith("}"))
+                while ((i = stream.Read(bytes, 0, bytes.Length)) != 0 && client != null)
                 {
-                    ReceiveData jsonData;
-                    try
+                    var receivedBytes = new byte[i];
+                    Buffer.BlockCopy(bytes, 0, receivedBytes, 0, i);
+                    var inString = Encoding.Default.GetString(receivedBytes).Trim();
+
+                    //check if incoming string is valid json
+                    if (inString.StartsWith("{") && inString.EndsWith("}"))
                     {
-                        jsonData = Newtonsoft.Json.JsonConvert.DeserializeObject<ReceiveData>(inString);
-                        switch (jsonData.Command)
+                        if (LogToConsole)
+                            Logger.Log(string.Format("json data received from : {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString()));
+
+                        ReceiveData jsonData;
+                        try
                         {
-                            case "PROD":
-                                var p = new ProductionEventArgs(client);
-                                p.Data.CellID = jsonData.CellId;
-                                p.Data.ItemID = jsonData.ItemId;
-                                p.Data.RequestType = jsonData.RequestCode;
-                                p.Data.Status = jsonData.Status;
-                                p.Data.FailureCode = jsonData.FailureCode;
-                                p.Data.ProcessHistoryValues = jsonData.ProcessHistoryValues;
-                                p.UseJson = true;
-                                OnProductionReceived(p);
-                                break;
-                            case "SETUP":
-                                if (jsonData.RequestCode == "4" || jsonData.RequestCode == "16")
-                                {
-                                    var s = new SetupEventArgs(client);
-                                    s.CellID = jsonData.CellId;
-                                    s.TransactionRequest = jsonData.RequestCode;
-                                    s.ModelNumber = jsonData.ModelNumber;
-                                    s.OpNumber = jsonData.OpNumber;
-                                    OnSetupReceived(s);
-                                }
-                                if (jsonData.RequestCode == "5" || jsonData.RequestCode == "17" || jsonData.RequestCode == "6" || jsonData.RequestCode == "18")
-                                {
-                                    var s = new SetupEventArgs(client);
-                                    s.CellID = jsonData.CellId;
-                                    s.Component = jsonData.Component;
-                                    s.AccessId = jsonData.AccessId;
-                                    s.TransactionRequest = jsonData.RequestCode;
-                                    s.ModelNumber = jsonData.ModelNumber;
-                                    s.OpNumber = jsonData.OpNumber;
-                                    OnSetupReceived(s);
-                                }
-                                break;
-                            case "LOGIN":
-                                LoginEventArgs l;
-                                switch (jsonData.RequestCode)
-                                {
-                                    case "2":
-                                    case "3":
-                                        l = new LoginEventArgs(client);
-                                        l.CellID = jsonData.CellId;
-                                        l.OperatorID = jsonData.OperatorID;
-                                        l.ProcessRequest = jsonData.RequestCode;
-                                        OnLoginReceived(l);
-                                        break;
-                                    case "17":
-                                        l = new LoginEventArgs(client);
-                                        l.CellID = jsonData.CellId;
-                                        l.ProcessRequest = jsonData.RequestCode;
-                                        OnLoginReceived(l);
-                                        break;
-                                    default:
-                                        //handle wrong data size
-                                        Console.WriteLine("invalid data size");
-                                        break;
-                                }
-                                break;
-                            default:
-                                break;
+                            jsonData = Newtonsoft.Json.JsonConvert.DeserializeObject<ReceiveData>(inString);
+                            switch (jsonData.Command)
+                            {
+                                case "PROD":
+                                    var p = new ProductionEventArgs(client);
+                                    p.CellID = jsonData.CellId;
+                                    p.ItemID = jsonData.ItemId;
+                                    p.Request = jsonData.RequestCode;
+                                    p.Status = jsonData.Status;
+                                    p.FailureCode = jsonData.FailureCode;
+                                    p.ProcessHistoryValues = new List<string>(jsonData.ProcessHistoryValues);
+                                    p.UseJson = true;
+                                    OnProductionReceived(p);
+                                    break;
+                                case "SETUP":
+                                    if (jsonData.RequestCode == "4" || jsonData.RequestCode == "16")
+                                    {
+                                        var s = new SetupEventArgs(client);
+                                        s.CellID = jsonData.CellId;
+                                        s.Request = jsonData.RequestCode;
+                                        s.ModelNumber = jsonData.ModelNumber;
+                                        s.OpNumber = jsonData.OpNumber;
+                                        s.UseJson = true;
+                                        OnSetupReceived(s);
+                                    }
+                                    if (jsonData.RequestCode == "5" || jsonData.RequestCode == "17" || jsonData.RequestCode == "6" || jsonData.RequestCode == "18")
+                                    {
+                                        var s = new SetupEventArgs(client);
+                                        s.CellID = jsonData.CellId;
+                                        s.Component = jsonData.Component;
+                                        s.AccessId = jsonData.AccessId;
+                                        s.Request = jsonData.RequestCode;
+                                        s.ModelNumber = jsonData.ModelNumber;
+                                        s.OpNumber = jsonData.OpNumber;
+                                        s.UseJson = true;
+                                        OnSetupReceived(s);
+                                    }
+                                    break;
+                                case "LOGIN":
+                                    LoginEventArgs l;
+                                    switch (jsonData.RequestCode)
+                                    {
+                                        case "2":
+                                        case "3":
+                                            l = new LoginEventArgs(client);
+                                            l.CellID = jsonData.CellId;
+                                            l.OperatorID = jsonData.OperatorID;
+                                            l.Request = jsonData.RequestCode;
+                                            l.UseJson = true;
+                                            OnLoginReceived(l);
+                                            break;
+                                        case "17":
+                                            l = new LoginEventArgs(client);
+                                            l.CellID = jsonData.CellId;
+                                            l.Request = jsonData.RequestCode;
+                                            l.UseJson = true;
+                                            OnLoginReceived(l);
+                                            break;
+                                        default:
+                                            //handle wrong data size
+                                            Console.WriteLine("invalid data size");
+                                            break;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            if (LogToConsole)
+                                Logger.Log("could not parse json data");
                         }
 
                     }
-                    catch (Exception)
+                    else
                     {
-                        //add error for incorrect JSON format
-                        throw;
-                    }
+                        if (LogToConsole)
+                            Logger.Log("string received");
 
-                }
-                else
-                {
-
-                    try
-                    {
-                        var data = System.Text.Encoding.Default.GetString(receivedBytes).Trim().Split(',');
-                        switch (data[0])
+                        try
                         {
-                            case "PROD":
-                                var dArr = new string[14];
-                                if (data.Length > 6)
-                                {
-                                    var copLen = (data.Length > 20) ? 14 : data.Length - 6;
-                                    Array.Copy(data, 6, dArr, 0, copLen);
-                                }
-                                var p = new ProductionEventArgs(client, data[1], data[2], data[3], data[4], data[5], dArr);
-                                p.UseJson = false;
-                                OnProductionReceived(p);
-                                //var m = new MessageEventArgs(client, data, DateTime.Now);
-                                //OnMessageRecieved(m);
-                                break;
-                            case "SETUP":
-                                if (data.Length == 5)
-                                {
-                                    var s = new SetupEventArgs(client, data[1], data[2], data[3], data[4]);
-                                    OnSetupReceived(s);
-                                }
-                                if (data.Length == 7)
-                                {
-                                    var s = new SetupEventArgs(client, data[1], data[2], data[3], data[4], data[5], data[6]);
-                                    OnSetupReceived(s);
-                                }
-                                // get error for wrong length
-                                break;
-                            case "LOGIN":
-                                LoginEventArgs l;
-                                switch (data.Length)
-                                {
-                                    case 4:
-                                        l = new LoginEventArgs(client, data[1], data[2], data[3]);
-                                        OnLoginReceived(l);
-                                        break;
-                                    case 3:
-                                        l = new LoginEventArgs(client, data[1], data[2]);
-                                        OnLoginReceived(l);
-                                        break;
-                                    default:
-                                        //handle wrong data size
-                                        Console.WriteLine("invalid data size");
-                                        break;
-                                }
-                                break;
-                            default:
-                                Console.WriteLine("invalid format");
-                                break;
+                            var data = Encoding.Default.GetString(receivedBytes).Trim().Split(',');
+                            switch (data[0])
+                            {
+                                case "PROD":
+                                    var dArr = new string[14];
+                                    if (data.Length > 6)
+                                    {
+                                        var copLen = (data.Length > 20) ? 14 : data.Length - 6;
+                                        Array.Copy(data, 6, dArr, 0, copLen);
+                                    }
+                                    var p = new ProductionEventArgs(client, data[1], data[2], data[3], data[4], data[5], dArr);
+                                    p.UseJson = false;
+                                    OnProductionReceived(p);
+                                    break;
+                                case "SETUP":
+                                    if (data.Length == 5)
+                                    {
+                                        var s = new SetupEventArgs(client, data[1], data[2], data[3], data[4]);
+                                        OnSetupReceived(s);
+                                    }
+                                    if (data.Length == 7)
+                                    {
+                                        var s = new SetupEventArgs(client, data[1], data[2], data[3], data[4], data[5], data[6]);
+                                        OnSetupReceived(s);
+                                    }
+                                    // get error for wrong length
+                                    break;
+                                case "LOGIN":
+                                    LoginEventArgs l;
+                                    switch (data.Length)
+                                    {
+                                        case 4:
+                                            l = new LoginEventArgs(client, data[1], data[2], data[3]);
+                                            OnLoginReceived(l);
+                                            break;
+                                        case 3:
+                                            l = new LoginEventArgs(client, data[1], data[2]);
+                                            OnLoginReceived(l);
+                                            break;
+                                        default:
+                                            
+                                            Console.WriteLine("invalid data size");
+                                            break;
+                                    }
+                                    break;
+                                default:
+                                    Console.WriteLine("invalid format");
+                                    break;
+                            }
                         }
-                    }
-                    catch (Exception)
-                    {
+                        catch (Exception)
+                        {
 
-                        throw;
-                    }
+                            throw;
+                        }
 
+                    }
                 }
             }
+            catch
+            {
+                if (LogToConsole)
+                    Logger.Log("connection error");
+            }
+            if (client.Connected)
+                client.GetStream().Close();
 
-            client.GetStream().Close();
             client.Close();
             stream.Flush();
         }
@@ -256,22 +309,22 @@ namespace OESListener
             string responseString;
             if (e.UseJson)
             {
-                responseString = Newtonsoft.Json.JsonConvert.SerializeObject(e.Data);
+                responseString = Newtonsoft.Json.JsonConvert.SerializeObject(e);
             }
             else
             {
                 var sb = new StringBuilder();
-                sb.Append(e.Data.CellID);
+                sb.Append(e.CellID);
                 sb.Append(",");
-                sb.Append(e.Data.ItemID);
+                sb.Append(e.ItemID);
                 sb.Append(",");
-                sb.Append(e.Data.RequestType);
+                sb.Append(e.Request);
                 sb.Append(",");
-                sb.Append(e.Data.Status);
+                sb.Append(e.Status);
                 sb.Append(",");
-                sb.Append(e.Data.FailureCode);
+                sb.Append(e.FailureCode);
                 sb.Append(",");
-                sb.Append(String.Join(",", e.Data.ProcessHistoryValues));
+                sb.Append(string.Join(",", e.ProcessHistoryValues));
                 responseString = sb.ToString();
             }
             var stream = e.Client.GetStream();
@@ -320,7 +373,7 @@ namespace OESListener
                 sb.Append(",");
                 sb.Append(e.Response.ErrorCode);
                 sb.Append(",");
-                sb.Append(String.Join(",", e.Response.PlcModelSetup));
+                sb.Append(string.Join(",", e.Response.PlcModelSetup));
                 responseString = sb.ToString();
             }
 
@@ -330,11 +383,20 @@ namespace OESListener
             stream.Write(outData, 0, outData.Length);
         }
 
-        public static void LoginResponse(LoginEventArgs returnData)
+        public static void LoginResponse(LoginEventArgs e)
         {
-            var stream = returnData.Client.GetStream();
-            var s = $"{returnData.Response.Status},{returnData.Response.FaultCode}";
-            var outData = Encoding.ASCII.GetBytes(s.ToString());
+            string responseString;
+            if (e.UseJson)
+            {
+                responseString = Newtonsoft.Json.JsonConvert.SerializeObject(e);
+            }
+            else
+            {
+                responseString = $"{e.CellID}, {e.OperatorID}, {e.Status}, {e.FailureCode}";
+            }
+
+            var stream = e.Client.GetStream();
+            var outData = Encoding.ASCII.GetBytes(responseString.ToString());
             stream.Write(outData, 0, outData.Length);
         }
 
