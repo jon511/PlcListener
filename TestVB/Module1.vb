@@ -12,12 +12,15 @@ Module Module1
         AddHandler listener.SetupReceived, AddressOf SetupTransactionReceived
         AddHandler listener.LoginReceived, AddressOf LoginTransactionReceived
 
+        Logger.LogPath = "C:\\Users\\jonosborne\\Dropbox\\Developer\\Visual Studio\\Source\\Repos\\PlcListener.git\\TestVB\\bin\\Debug\\Log"
+        Logger.LogToFile = True
+        Logger.LogToConsole = True
 
     End Sub
 
     Private Sub ProductionTransactionReceived(sender As Object, e As ProductionEventArgs)
 
-        'Logger.Log("here is something from VB")
+        Logger.Log("ProductionResponse from VB")
 
         'call static method ProductionResponse and pass back the PorductionEventArgs as the parameter
         Listener.ProductionResponse(e)
@@ -25,6 +28,8 @@ Module Module1
     End Sub
 
     Private Sub SetupTransactionReceived(sender As Object, e As SetupEventArgs)
+
+        Logger.Log("SetupResponse from VB")
 
         e.Response.Component1.AccessId = "1"
         e.Response.Component1.ModelNumber = "B0111100-00"

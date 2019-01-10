@@ -29,19 +29,9 @@ namespace OESListener
         public event EventHandler<LoginEventArgs> LoginReceived;
 
         private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);
-        private bool LogToConsole = false;
-        private bool LogToFile = false;
         public string myIPAddress { get; set; }
         public int Port { get; set; }
-
-        public Listener(bool logToConsole = false, bool logToFile = false)
-        {
-            Port = 55001;
-            myIPAddress = "127.0.0.1";
-            LogToConsole = logToConsole;
-            LogToFile = logToFile;
-        }
-
+        
         public Listener()
         {
             Port = 55001;
@@ -53,34 +43,18 @@ namespace OESListener
             myIPAddress = ipAddress;
             Port = 55001;
         }
-
-        public Listener(string ipAddress, bool logToConsole = false, bool logToFile = false)
-        {
-            myIPAddress = ipAddress;
-            Port = 55001;
-            LogToConsole = logToConsole;
-            LogToFile = logToFile;
-        }
-
+        
         public Listener(string ipAddress, int port)
         {
             myIPAddress = ipAddress;
             Port = port;
         }
 
-        public Listener(string ipAddress, int port, bool logToConsole = false, bool logToFile = false)
-        {
-            myIPAddress = ipAddress;
-            Port = port;
-            LogToConsole = logToConsole;
-            LogToFile = logToFile;
-        }
-
         public void Listen()
         {
             
             Thread myNewThread = new Thread(() => StartListening());
-            if (LogToConsole)
+            if (Logger.Enabled)
                 Console.WriteLine("Starting new thread");
 
             myNewThread.Start();
@@ -100,7 +74,7 @@ namespace OESListener
                 while (true)
                 {
                     AllDone.Reset();
-                    if (LogToConsole)
+                    if (Logger.Enabled)
                         Logger.Log("waiting for connection...");
                         //Logger.Log("Ready for connection...");
                         
@@ -108,7 +82,7 @@ namespace OESListener
 
                     var client = server.AcceptTcpClient();
 
-                    if (LogToConsole)
+                    if (Logger.Enabled)
                         Logger.Log("connected");
 
                     new Thread(() => HandleMessage(client)).Start();
@@ -144,7 +118,7 @@ namespace OESListener
                     //check if incoming string is valid json
                     if (inString.StartsWith("{") && inString.EndsWith("}"))
                     {
-                        if (LogToConsole)
+                        if (Logger.Enabled)
                             Logger.Log(string.Format("json data received from : {0}", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString()));
 
                         ReceiveData jsonData;
@@ -221,14 +195,14 @@ namespace OESListener
                         }
                         catch (Exception)
                         {
-                            if (LogToConsole)
+                            if (Logger.Enabled)
                                 Logger.Log("could not parse json data");
                         }
 
                     }
                     else
                     {
-                        if (LogToConsole)
+                        if (Logger.Enabled)
                             Logger.Log("string received");
 
                         try
@@ -294,7 +268,7 @@ namespace OESListener
             }
             catch
             {
-                if (LogToConsole)
+                if (Logger.Enabled)
                     Logger.Log("connection error");
             }
             if (client.Connected)

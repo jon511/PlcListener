@@ -10,7 +10,7 @@ namespace Test
 
         static void Main(string[] args)
         {
-            var l = new OESListener.Listener(true);
+            var l = new OESListener.Listener();
             l.Listen();
             l.LoginReceived += L_LoginReceived;
             l.SetupReceived += L_SetupReceived;
@@ -23,8 +23,8 @@ namespace Test
 
         private static void L_ProductionReceived(object sender, OESListener.ProductionEventArgs e)
         {
-            OESListener.Logger.Log(e.Data.CellID);
-            OESListener.Logger.Log(e.Data.ItemID);
+            OESListener.Logger.Log(e.CellID);
+            OESListener.Logger.Log(e.ItemID);
             OESListener.Listener.ProductionResponse(e);
             OESListener.Logger.Log("production response");
         }
