@@ -12,9 +12,10 @@ Module Module1
         AddHandler listener.SetupReceived, AddressOf SetupTransactionReceived
         AddHandler listener.LoginReceived, AddressOf LoginTransactionReceived
 
-        Logger.LogPath = "C:\\Users\\jonosborne\\Dropbox\\Developer\\Visual Studio\\Source\\Repos\\PlcListener.git\\TestVB\\bin\\Debug\\Log"
+        Logger.LogPath = "C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\bin\Debug\Log"
         Logger.LogToFile = True
         Logger.LogToConsole = True
+        Logger.Enabled = False
 
     End Sub
 
@@ -49,8 +50,11 @@ Module Module1
 
     Private Sub LoginTransactionReceived(sender As Object, e As LoginEventArgs)
 
-        Console.WriteLine(e.Status)
-        Console.WriteLine(e.FailureCode)
+        If (Logger.Enabled) Then
+            Logger.Log("enabled logger")
+        End If
+        Logger.Log("Login response")
+
         e.FailureCode = 0
         e.Status = 1
         'call static method LoginResponse and pass back the LoginEventArgs as the parameter

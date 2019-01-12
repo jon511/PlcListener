@@ -15,6 +15,12 @@ namespace Test
             l.LoginReceived += L_LoginReceived;
             l.SetupReceived += L_SetupReceived;
             l.ProductionReceived += L_ProductionReceived;
+
+            //OESListener.Logger.LogPath = @"C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\bin\Debug\Log";
+            OESListener.Logger.LogPath = @"C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\bin\Debug\Log";
+            OESListener.Logger.LogToFile = true;
+            OESListener.Logger.LogToConsole = true;
+            OESListener.Logger.EnableDllLogging = true;
             
 
             Console.Read();
@@ -41,6 +47,7 @@ namespace Test
 
         private static void L_LoginReceived(object sender, OESListener.LoginEventArgs e)
         {
+            //OESListener.Logger.Log(e.CellID);
 
             OESListener.Listener.LoginResponse(e);
         }

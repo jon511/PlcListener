@@ -19,7 +19,13 @@ namespace OESListener
             set { logPath = value.EndsWith("\\") ? value : value + "\\"; }
         }
 
-        public static bool Enabled = false;
+        internal static bool Enabled = false;
+        
+
+        public static bool EnableDllLogging
+        {
+            set { Enabled = value; }
+        }
 
         private static bool logToConsole;
 
@@ -28,7 +34,6 @@ namespace OESListener
             get { return logToConsole; }
             set {
                 logToConsole = value;
-                Enabled = (logToConsole || LogToFile) ? true : false;
             }
         }
 
@@ -39,7 +44,6 @@ namespace OESListener
             get { return logToFile; }
             set {
                 logToFile = value;
-                Enabled = (logToConsole || LogToFile) ? true : false;
             }
         }
 
@@ -47,11 +51,13 @@ namespace OESListener
 
         static ConcurrentQueue<string> itemsToWrite = new ConcurrentQueue<string>();
         static bool done = false;
-        
-        static Logger()
+        static bool active = false;
+
+        static void StartLogger()
         {
             Task consumerTask = new Task(ConsumerMethod);
             consumerTask.Start();
+            active = true;
         }
 
         //prints messages to file (almost) as fast as possible
@@ -67,14 +73,15 @@ namespace OESListener
                     string itemToWrite;
                     while (itemsToWrite.TryDequeue(out itemToWrite))
                     {
+                        var s = string.Format("{0} {1} - {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), itemToWrite);
                         if (logToFile)
-                            fileout.WriteLine(itemToWrite);
+                            fileout.WriteLine(s);
 
                         if (logToConsole)
-                            Console.WriteLine(itemToWrite);
+                            Console.WriteLine(s);
                     }
 
-                    //Thread.Sleep(10);  //sleep for 10 milliseconds
+                    Thread.Sleep(10);  //sleep for 10 milliseconds
                 }
             }
         }
@@ -82,6 +89,9 @@ namespace OESListener
         //adds messages to the queue to print to the file
         public static void Log(string message)
         {
+            if (!active)
+                StartLogger();
+                    
             itemsToWrite.Enqueue(message);
         }
 
