@@ -5,17 +5,17 @@ Module Module1
 
     Sub Main()
 
-        Dim listener As New Listener()
+        Dim listener As New Listener("10.50.71.109")
         listener.Listen()
 
         AddHandler listener.ProductionReceived, AddressOf ProductionTransactionReceived
         AddHandler listener.SetupReceived, AddressOf SetupTransactionReceived
         AddHandler listener.LoginReceived, AddressOf LoginTransactionReceived
 
-        Logger.LogPath = "C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\bin\Debug\Log"
-        Logger.LogToFile = True
-        Logger.LogToConsole = True
-        Logger.Enabled = False
+        'Logger.LogPath = "C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\bin\Debug\Log"
+        'Logger.LogToFile = True
+        'Logger.LogToConsole = True
+        'Logger.EnableDllLogging = False
 
     End Sub
 
@@ -24,7 +24,10 @@ Module Module1
         Logger.Log("ProductionResponse from VB")
 
         'call static method ProductionResponse and pass back the PorductionEventArgs as the parameter
-        Listener.ProductionResponse(e)
+
+        Dim listenerResponse As New ListenerResponse()
+        listenerResponse.ProductionResponse(e)
+
 
     End Sub
 
@@ -44,21 +47,20 @@ Module Module1
 
 
         'call static method SetupResponse and pass back the SetupEventArgs as the parameter
-        Listener.SetupResponse(e)
+        Dim listenerResponse As New ListenerResponse()
+        listenerResponse.SetupResponse(e)
 
     End Sub
 
     Private Sub LoginTransactionReceived(sender As Object, e As LoginEventArgs)
 
-        If (Logger.Enabled) Then
-            Logger.Log("enabled logger")
-        End If
-        Logger.Log("Login response")
+        'Logger.Log("Login response")
 
         e.FailureCode = 0
         e.Status = 1
         'call static method LoginResponse and pass back the LoginEventArgs as the parameter
-        Listener.LoginResponse(e)
+        Dim listenerResponse As New ListenerResponse()
+        listenerResponse.LoginResponse(e)
 
     End Sub
 

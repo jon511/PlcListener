@@ -5,16 +5,10 @@ using System.Text;
 
 namespace OESListener
 {
-    //public struct LoginResponse
-    //{
-    //    public string Status;
-    //    public string FaultCode;
-    //}
 
     public class LoginEventArgs : OesEventArgs
     {
         public string OperatorID { get; set; }
-        //public LoginResponse Response;
 
         public LoginEventArgs(System.Net.Sockets.TcpClient client)
         {

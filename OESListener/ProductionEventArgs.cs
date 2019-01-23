@@ -7,8 +7,6 @@ namespace OESListener
 {
     public class ProductionEventArgs : OesEventArgs
     {
-        //public bool UseJson { get; set; }
-        //public System.Net.Sockets.TcpClient Client { get; set; }
         public string ItemID { get; set; }
         public string GeneratedBarcode { get; set; }
         public List<string> ProcessHistoryValues = new List<string>();

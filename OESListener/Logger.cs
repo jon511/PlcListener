@@ -47,6 +47,8 @@ namespace OESListener
             }
         }
 
+        private static readonly object balanceLock = new object();
+
 
 
         static ConcurrentQueue<string> itemsToWrite = new ConcurrentQueue<string>();
@@ -64,35 +66,38 @@ namespace OESListener
         static void ConsumerMethod()
         {
 
-            using (StreamWriter fileout = File.CreateText(string.Format("{0}Log.txt", logPath)))
+            while (true)
             {
-                fileout.AutoFlush = true;
-
-                while (done == false)
+                while (itemsToWrite.TryDequeue(out string item))
                 {
-                    string itemToWrite;
-                    while (itemsToWrite.TryDequeue(out itemToWrite))
+                    var s = string.Format("{0} {1} - {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), item);
+
+                    if (logToConsole)
+                        Console.WriteLine(s);
+
+                    if (logToFile)
                     {
-                        var s = string.Format("{0} {1} - {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), itemToWrite);
-                        if (logToFile)
-                            fileout.WriteLine(s);
-
-                        if (logToConsole)
-                            Console.WriteLine(s);
+                        using (StreamWriter fileout = File.CreateText(string.Format("{0}Log.txt", logPath)))
+                        {
+                            fileout.Write(s);
+                        }
                     }
-
-                    Thread.Sleep(10);  //sleep for 10 milliseconds
                 }
+                Thread.Sleep(10);
             }
         }
 
         //adds messages to the queue to print to the file
         public static void Log(string message)
         {
-            if (!active)
-                StartLogger();
-                    
-            itemsToWrite.Enqueue(message);
+            lock (balanceLock)
+            {
+                if (!active)
+                    StartLogger();
+
+                itemsToWrite.Enqueue(message);
+            }
+            
         }
 
 

@@ -454,19 +454,10 @@ namespace PlcListener
             Console.WriteLine("sleep done");
         }
 
-//        private IPAddress GetLocalIpAddress()
-//        {
-//            var host = Dns.GetHostEntry(Dns.GetHostName());
-//            foreach (var ip in host.AddressList)
-//            {
-//                if (ip.AddressFamily == AddressFamily.InterNetwork)
-//                {
-//                    return ip;
-//                }
-//            }
-//
-//            throw new Exception("No network adapters with an IPv4 address in the system!");
-//        }
+        public static void ProductionResponse()
+        {
+
+        }
 
         private static byte[] ConvertIntToFourBytes(int val)
         {
