@@ -17,6 +17,8 @@ Module Module1
         'Logger.LogToConsole = True
         'Logger.EnableDllLogging = False
 
+        Console.ReadLine()
+
     End Sub
 
     Private Sub ProductionTransactionReceived(sender As Object, e As ProductionEventArgs)
@@ -44,7 +46,6 @@ Module Module1
         e.Response.PlcModelSetup(2) = "3.3"
         e.Response.Acknowledge = "1"
         e.Response.ErrorCode = "1"
-
 
         'call static method SetupResponse and pass back the SetupEventArgs as the parameter
         Dim listenerResponse As New ListenerResponse()

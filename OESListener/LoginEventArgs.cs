@@ -18,14 +18,14 @@ namespace OESListener
         public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, string processRequest)
         {
             Client = client;
-            CellID = cellID;
+            CellId = cellID;
             Request = processRequest;
         }
 
         public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, string operatorID, string processRequest)
         {
             Client = client;
-            CellID = cellID;
+            CellId = cellID;
             OperatorID = operatorID;
             Request = processRequest;
         }

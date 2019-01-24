@@ -80,6 +80,24 @@ namespace OESListener
             }
         }
 
+        public void FinalPrintResponse(LabelPrintEventArgs e)
+        {
+            switch (e.listenerType)
+            {
+                case ListenerType.TCP:
+                    TcpFinalPrintResponse(e);
+                    break;
+                case ListenerType.EIP:
+                    EipFinalPrintResponse(e);
+                    break;
+                case ListenerType.PCCC:
+                    PcccFinalPrintResponse(e);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public void TcpProductionResponse(ProductionEventArgs e)
         {
             string responseString;
@@ -90,9 +108,9 @@ namespace OESListener
             else
             {
                 var sb = new StringBuilder();
-                sb.Append(e.CellID);
+                sb.Append(e.CellId);
                 sb.Append(",");
-                sb.Append(e.ItemID);
+                sb.Append(e.ItemId);
                 sb.Append(",");
                 sb.Append(e.Request);
                 sb.Append(",");
@@ -167,7 +185,7 @@ namespace OESListener
             else
             {
                 var sb = new StringBuilder();
-                sb.Append(e.CellID);
+                sb.Append(e.CellId);
                 sb.Append(",");
                 sb.Append(e.Request);
                 sb.Append(",");
@@ -191,7 +209,7 @@ namespace OESListener
             else
             {
                 var sb = new StringBuilder();
-                sb.Append(e.CellID);
+                sb.Append(e.CellId);
                 sb.Append(",");
                 sb.Append(e.ItemID);
                 responseString = sb.ToString();
@@ -200,6 +218,20 @@ namespace OESListener
             var stream = e.Client.GetStream();
             var outData = Encoding.ASCII.GetBytes(responseString);
             stream.Write(outData, 0, outData.Length);
+        }
+
+        public void TcpFinalPrintResponse(LabelPrintEventArgs e)
+        {
+            string responseString;
+            if (e.UseJson)
+                responseString = "{\"response\":\"" + e.Response + "\"}";
+            else
+                responseString = e.Response;
+
+            var stream = e.Client.GetStream();
+            var outData = Encoding.ASCII.GetBytes(responseString);
+            stream.Write(outData, 0, outData.Length);
+
         }
 
         public void PcccProductionResponse(ProductionEventArgs e)
@@ -215,10 +247,10 @@ namespace OESListener
             else
                 e.OutTagName = e.InTagName;
 
-            var cellArr = Util.StringToAbIntArray(e.CellID);
+            var cellArr = Util.StringToAbIntArray(e.CellId);
             Array.Copy(cellArr, 0, retArr, 0, cellArr.Length);
 
-            var itemArr = Util.StringToAbIntArray(e.ItemID);
+            var itemArr = Util.StringToAbIntArray(e.ItemId);
             Array.Copy(itemArr, 0, retArr, 5, itemArr.Length);
 
             retArr[18] = Convert.ToInt16(e.Request);
@@ -348,7 +380,18 @@ namespace OESListener
             var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
 
-            s.LogixResponse(targetIp, retArr, e.OutTagName);
+            s.SlcResponse(targetIp, retArr, e.OutTagName);
+        }
+
+        public void PcccFinalPrintResponse(LabelPrintEventArgs e)
+        {
+            var retArr = new short[10];
+            e.OutTagName = e.InTagName;
+            short.TryParse(e.Response, out retArr[0]);
+            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
+            var s = new PlcWriter();
+
+            s.SlcResponse(targetIp, retArr, e.OutTagName);
         }
 
         public void EipProductionResponse(ProductionEventArgs e)
@@ -364,10 +407,10 @@ namespace OESListener
             else
                 e.OutTagName = e.InTagName;
 
-            var cellArr = Util.StringToAbIntArray(e.CellID);
+            var cellArr = Util.StringToAbIntArray(e.CellId);
             Array.Copy(cellArr, 0, retArr, 0, cellArr.Length);
 
-            var itemArr = Util.StringToAbIntArray(e.ItemID);
+            var itemArr = Util.StringToAbIntArray(e.ItemId);
             Array.Copy(itemArr, 0, retArr, 5, itemArr.Length);
 
             retArr[18] = Convert.ToInt16(e.Request);
@@ -495,6 +538,17 @@ namespace OESListener
             e.OutTagName = "N247[0]";
             var itemArr = Util.StringToAbIntArray(e.ItemID);
             Array.Copy(itemArr, 0, retArr, 0, itemArr.Length);
+            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
+            var s = new PlcWriter();
+
+            s.LogixResponse(targetIp, retArr, e.OutTagName);
+        }
+
+        public void EipFinalPrintResponse(LabelPrintEventArgs e)
+        {
+            var retArr = new short[10];
+            e.OutTagName = e.InTagName;
+            short.TryParse(e.Response, out retArr[0]);
             var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
 

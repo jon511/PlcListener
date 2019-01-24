@@ -10,5 +10,12 @@ namespace OESListener
         public string Weight { get; set; }
         public string PrinterIpAddress { get; set; }
         public string RevLevel { get; set; }
+        public string AlphaCode { get; set; }
+        public string PrintCode { get; set; }
+        public string Response { get; set; }
+        public LabelPrintEventArgs(System.Net.Sockets.TcpClient client)
+        {
+            Client = client;
+        }
     }
 }

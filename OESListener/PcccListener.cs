@@ -34,6 +34,12 @@ namespace OESListener
         }
         public event EventHandler<SerialRequestEventArgs> SerialRequestReceived;
 
+        protected virtual void OnFinalLabelPrintReceived(LabelPrintEventArgs e)
+        {
+            FinalLabelPrintReceived?.Invoke(this, e);
+        }
+        public event EventHandler<LabelPrintEventArgs> FinalLabelPrintReceived;
+
         private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);
         public string myIPAddress { get; set; }
         private const int Port = 2222;
@@ -171,15 +177,27 @@ namespace OESListener
                     break;
                 case 2:
                 case 3:
+                case 19:
                     ParseLoginTransaction(client, dataArray, tagName);
                     break;
                 case 4:
                 case 5:
                 case 6:
+                case 14:
+                case 15:
+                case 16:
                     ParseSetupTransaction(client, dataArray, tagName);
                     break;
                 case 21:
                     ParseRequestSerialTransaction(client, dataArray, tagName);
+                    break;
+                case 31:
+                    // print final label
+                    ParsePrintFinalLabelTransaction(client, dataArray, tagName);
+                    break;
+                case 32:
+                    // print interim label
+
                     break;
                 default:
                     if (tagName == "N247:20")
@@ -210,7 +228,7 @@ namespace OESListener
                     bytes.Add(b2);
             }
 
-            e.CellID = Encoding.Default.GetString(bytes.ToArray());
+            e.CellId = Encoding.Default.GetString(bytes.ToArray());
 
             bytes = new List<byte>();
             for (var i = 5; i < 11; i++)
@@ -224,7 +242,7 @@ namespace OESListener
                     bytes.Add(b2);
             }
 
-            e.ItemID = Encoding.Default.GetString(bytes.ToArray());
+            e.ItemId = Encoding.Default.GetString(bytes.ToArray());
 
             bytes = new List<byte>
             {
@@ -264,7 +282,7 @@ namespace OESListener
                     bytes.Add(b2);
             }
 
-            e.CellID = Encoding.Default.GetString(bytes.ToArray());
+            e.CellId = Encoding.Default.GetString(bytes.ToArray());
 
             bytes = new List<byte>();
             for (var i = 5; i < 10; i++)
@@ -300,7 +318,7 @@ namespace OESListener
                     bytes.Add(b2);
             }
 
-            e.CellID = Encoding.Default.GetString(bytes.ToArray());
+            e.CellId = Encoding.Default.GetString(bytes.ToArray());
 
             if (dataArray[18] == 5 || dataArray[18] == 6 || dataArray[18] == 17 || dataArray[18] == 18)
             {
@@ -371,11 +389,63 @@ namespace OESListener
                     bytes.Add(b2);
             }
 
-            e.CellID = Encoding.Default.GetString(bytes.ToArray());
+            e.CellId = Encoding.Default.GetString(bytes.ToArray());
 
             OnSerialRequestReceived(e);
         }
 
-       
+        private void ParsePrintFinalLabelTransaction(TcpClient client, short[] dataArray, string tagName)
+        {
+            var e = new LabelPrintEventArgs(client);
+
+            var bytes = new List<byte>();
+            for (int i = 0; i < 5; i++)
+            {
+                var b1 = (byte)((dataArray[i] & 0xff00) >> 8);
+                var b2 = (byte)(dataArray[i] & 0x00ff);
+                if (b1 != 0)
+                    bytes.Add(b1);
+
+                if (b2 != 0)
+                    bytes.Add(b2);
+            }
+
+            e.CellId = Encoding.Default.GetString(bytes.ToArray());
+
+            bytes = new List<byte>();
+            for (var i = 5; i < 11; i++)
+            {
+                var b1 = (byte)((dataArray[i] & 0xff00) >> 8);
+                var b2 = (byte)(dataArray[i] & 0x00ff);
+                if (b1 != 0)
+                    bytes.Add(b1);
+
+                if (b2 != 0)
+                    bytes.Add(b2);
+            }
+
+            e.ItemId = Encoding.Default.GetString(bytes.ToArray());
+            e.AlphaCode = e.ItemId.Substring(0, 2);
+
+            var weightString = dataArray[22].ToString();
+            var weightDecString = (dataArray[23] < 10) ? "0" + dataArray[23].ToString() : dataArray[23].ToString();
+
+            if (dataArray[24] != 1)
+                dataArray[24] = 2;
+
+            var weightStr = weightDecString.Substring(0, dataArray[24]);
+
+            e.Weight = string.Format("{0}.{1}", weightString, weightStr.Substring(0, dataArray[24]));
+            e.RevLevel = (dataArray[25] < 10) ? "0" + dataArray[25].ToString() : dataArray[25].ToString();
+            e.PrinterIpAddress = dataArray[26].ToString() + "." + dataArray[27].ToString() + "." + dataArray[28].ToString() + "." + dataArray[29].ToString();
+
+
+            OnFinalLabelPrintReceived(e);
+
+        }
+
+
     }
+
+
 }

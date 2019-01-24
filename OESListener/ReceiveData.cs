@@ -20,5 +20,8 @@ namespace OESListener
         public string ModelNumber { get; set; }
         public string OpNumber { get; set; }
         public string[] ProcessHistoryValues { get; set; }
+        public string Weight { get; set; }
+        public string PrinterIpAddress { get; set; }
+        public string RevLevel { get; set; }
     }
 }

@@ -30,9 +30,31 @@ namespace OESListener
             SerialRequestReceived?.Invoke(this, e);
         }
         public event EventHandler<SerialRequestEventArgs> SerialRequestReceived;
-        
+
+        protected virtual void OnFinalLabelPrintReceived(LabelPrintEventArgs e)
+        {
+            if (!PrintFromFile)
+            {
+                FinalLabelPrintReceived?.Invoke(this, e);
+            }
+            else
+            {
+                var p = new LabelPrinter(e);
+                p.UseFile = true;
+                var result = p.PrintLabel();
+                e.Response = result.ToString();
+                Console.WriteLine(result);
+                var resp = new ListenerResponse();
+                resp.FinalPrintResponse(e);
+            }
+            
+        }
+        public event EventHandler<LabelPrintEventArgs> FinalLabelPrintReceived;
+
         public string myIPAddress { get; set; }
         public int TcpPort { get; set; }
+
+        public bool PrintFromFile = false;
 
         public Listener()
         {
@@ -69,18 +91,36 @@ namespace OESListener
             tcpListener.SetupReceived += TcpListener_SetupReceived;
             tcpListener.ProductionReceived += TcpListener_ProductionReceived;
             tcpListener.SerialRequestReceived += TcpListener_SerialRequestReceived;
+            tcpListener.FinalLabelPrintReceived += TcpListener_FinalLabelPrintReceived;
             var pcccListener = new PcccListener(myIPAddress);
             pcccListener.Listen();
             pcccListener.LoginReceived += PcccListener_LoginReceived;
             pcccListener.SetupReceived += PcccListener_SetupReceived;
             pcccListener.ProductionReceived += PcccListener_ProductionReceived;
             pcccListener.SerialRequestReceived += PcccListener_SerialRequestReceived;
+            pcccListener.FinalLabelPrintReceived += PcccListener_FinalLabelPrintReceived;
             var eipListener = new EipListener(myIPAddress);
             eipListener.Listen();
             eipListener.ProductionReceived += EipListener_ProductionReceived;
             eipListener.SetupReceived += EipListener_SetupReceived;
             eipListener.LoginReceived += EipListener_LoginReceived;
             eipListener.SerialRequestReceived += EipListener_SerialRequestReceived;
+            eipListener.FinalLabelPrintReceived += EipListener_FinalLabelPrintReceived;
+        }
+
+        private void PcccListener_FinalLabelPrintReceived(object sender, LabelPrintEventArgs e)
+        {
+            OnFinalLabelPrintReceived(e);
+        }
+
+        private void TcpListener_FinalLabelPrintReceived(object sender, LabelPrintEventArgs e)
+        {
+            OnFinalLabelPrintReceived(e);
+        }
+
+        private void EipListener_FinalLabelPrintReceived(object sender, LabelPrintEventArgs e)
+        {
+            OnFinalLabelPrintReceived(e);
         }
 
         private void TcpListener_ProductionReceived(object sender, ProductionEventArgs e)

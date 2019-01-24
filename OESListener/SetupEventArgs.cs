@@ -45,7 +45,7 @@ namespace OESListener
         public SetupEventArgs(System.Net.Sockets.TcpClient client, string cellID, string transactionRequest, string modelNumber, string opNumber)
         {
             Client = client;
-            CellID = cellID;
+            CellId = cellID;
             Request = transactionRequest;
             ModelNumber = modelNumber;
             OpNumber = opNumber;
@@ -55,7 +55,7 @@ namespace OESListener
         public SetupEventArgs(System.Net.Sockets.TcpClient client, string cellID, string component, string accessId, string transactionRequest, string modelNumber, string opNumber)
         {
             Client = client;
-            CellID = cellID;
+            CellId = cellID;
             Component = component;
             AccessId = accessId;
             Request = transactionRequest;
