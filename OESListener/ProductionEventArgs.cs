@@ -7,7 +7,7 @@ namespace OESListener
 {
     public class ProductionEventArgs : OesEventArgs
     {
-        public string ItemID { get; set; }
+        public string ItemId { get; set; }
         public string GeneratedBarcode { get; set; }
         public List<string> ProcessHistoryValues = new List<string>();
 
@@ -18,8 +18,8 @@ namespace OESListener
         public ProductionEventArgs(System.Net.Sockets.TcpClient client, string cellID, string itemID, string requestType, string status, string failureCode, string[] data)
         {
             Client = client;
-            CellID = cellID;
-            ItemID = itemID;
+            CellId = cellID;
+            ItemId = itemID;
             GeneratedBarcode = "";
             Request = requestType;
             Status = status;
@@ -30,8 +30,8 @@ namespace OESListener
         public ProductionEventArgs(System.Net.Sockets.TcpClient client, string cellID, string itemID, string generatedBarcode, string requestType, string status, string failureCode, string[] data)
         {
             Client = client;
-            CellID = cellID;
-            ItemID = itemID;
+            CellId = cellID;
+            ItemId = itemID;
             GeneratedBarcode = generatedBarcode;
             Request = requestType;
             Status = status;

@@ -34,6 +34,12 @@ namespace OESListener
         }
         public event EventHandler<SerialRequestEventArgs> SerialRequestReceived;
 
+        protected virtual void OnFinalLabelPrintReceived(LabelPrintEventArgs e)
+        {
+            FinalLabelPrintReceived?.Invoke(this, e);
+        }
+        public event EventHandler<LabelPrintEventArgs> FinalLabelPrintReceived;
+
         private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);
         public string myIPAddress { get; set; }
         public int Port { get; set; }
@@ -133,8 +139,8 @@ namespace OESListener
                             {
                                 case "PROD":
                                     var p = new ProductionEventArgs(client);
-                                    p.CellID = jsonData.CellId;
-                                    p.ItemID = jsonData.ItemId;
+                                    p.CellId = jsonData.CellId;
+                                    p.ItemId = jsonData.ItemId;
                                     p.Request = jsonData.RequestCode;
                                     p.Status = jsonData.Status;
                                     p.FailureCode = jsonData.FailureCode;
@@ -147,7 +153,7 @@ namespace OESListener
                                     if (jsonData.RequestCode == "4" || jsonData.RequestCode == "16")
                                     {
                                         var s = new SetupEventArgs(client);
-                                        s.CellID = jsonData.CellId;
+                                        s.CellId = jsonData.CellId;
                                         s.Request = jsonData.RequestCode;
                                         s.ModelNumber = jsonData.ModelNumber;
                                         s.OpNumber = jsonData.OpNumber;
@@ -157,7 +163,7 @@ namespace OESListener
                                     if (jsonData.RequestCode == "5" || jsonData.RequestCode == "17" || jsonData.RequestCode == "6" || jsonData.RequestCode == "18")
                                     {
                                         var s = new SetupEventArgs(client);
-                                        s.CellID = jsonData.CellId;
+                                        s.CellId = jsonData.CellId;
                                         s.Component = jsonData.Component;
                                         s.AccessId = jsonData.AccessId;
                                         s.Request = jsonData.RequestCode;
@@ -174,7 +180,7 @@ namespace OESListener
                                         case "2":
                                         case "3":
                                             l = new LoginEventArgs(client);
-                                            l.CellID = jsonData.CellId;
+                                            l.CellId = jsonData.CellId;
                                             l.OperatorID = jsonData.OperatorID;
                                             l.Request = jsonData.RequestCode;
                                             l.UseJson = true;
@@ -182,7 +188,7 @@ namespace OESListener
                                             break;
                                         case "17":
                                             l = new LoginEventArgs(client);
-                                            l.CellID = jsonData.CellId;
+                                            l.CellId = jsonData.CellId;
                                             l.Request = jsonData.RequestCode;
                                             l.UseJson = true;
                                             OnLoginReceived(l);
@@ -197,9 +203,22 @@ namespace OESListener
                                     break;
                                 case "SERIAL":
                                     var sr = new SerialRequestEventArgs(client);
-                                    sr.CellID = jsonData.CellId;
+                                    sr.CellId = jsonData.CellId;
                                     sr.Request = jsonData.RequestCode;
                                     OnSerialRequestReceived(sr);
+
+                                    break;
+                                case "FINALPRINT":
+                                    var lp = new LabelPrintEventArgs(client);
+                                    lp.CellId = jsonData.CellId;
+                                    lp.ItemId = jsonData.ItemId;
+                                    lp.AlphaCode = lp.ItemId.Substring(0, 2);
+                                    lp.Weight = jsonData.Weight;
+                                    lp.RevLevel = jsonData.RevLevel;
+                                    lp.PrinterIpAddress = jsonData.PrinterIpAddress;
+                                    OnFinalLabelPrintReceived(lp);
+                                    break;
+                                case "INTERIMPRINT":
 
                                     break;
                                 default:
@@ -269,7 +288,7 @@ namespace OESListener
                                     break;
                                 case "SERIAL":
                                     var sr = new SerialRequestEventArgs(client);
-                                    sr.CellID = data[1];
+                                    sr.CellId = data[1];
                                     sr.Request = data[2];
                                     OnSerialRequestReceived(sr);
                                     break;

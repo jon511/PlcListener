@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EipListener.cs" />
+    <Compile Include="LabelPrinter.cs" />
+    <Compile Include="LabelPrintEventArgs.cs" />
     <Compile Include="Listener.cs" />
     <Compile Include="ListenerResponse.cs" />
     <Compile Include="Logger.cs" />

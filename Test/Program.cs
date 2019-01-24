@@ -46,8 +46,10 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener("10.50.71.109");
+            var l = new OESListener.Listener("10.50.71.106");
+            //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
+            l.PrintFromFile = true;
             l.LoginReceived += L_LoginReceived;
             l.SetupReceived += L_SetupReceived;
             l.ProductionReceived += L_ProductionReceived;
@@ -80,7 +82,7 @@ namespace Test
 
         private static void L_SetupReceived(object sender, OESListener.SetupEventArgs e)
         {
-            OESListener.Logger.Log(e.CellID);
+            OESListener.Logger.Log(e.CellId);
             OESListener.Logger.Log(e.Request);
             OESListener.Logger.Log(e.ModelNumber);
             OESListener.Logger.Log(e.OpNumber);
@@ -96,7 +98,7 @@ namespace Test
 
         private static void L_LoginReceived(object sender, OESListener.LoginEventArgs e)
         {
-            OESListener.Logger.Log(e.CellID);
+            OESListener.Logger.Log(e.CellId);
             OESListener.Logger.Log(e.OperatorID);
             OESListener.Logger.Log(e.Status);
             OESListener.Logger.Log(e.FailureCode);
