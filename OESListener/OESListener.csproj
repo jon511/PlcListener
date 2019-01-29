@@ -51,6 +51,7 @@
     <Compile Include="OesEventArgs.cs" />
     <Compile Include="SerialRequestEventArgs.cs" />
     <Compile Include="PlcWriter.cs" />
+    <Compile Include="TcpClientWithTimeout.cs" />
     <Compile Include="TcpListener.cs" />
     <Compile Include="PcccListener.cs" />
     <Compile Include="ProductionEventArgs.cs" />

@@ -13,6 +13,8 @@ namespace OESListener
         public string AlphaCode { get; set; }
         public string PrintCode { get; set; }
         public string Response { get; set; }
+        public string PrintType { get; set; }
+        public string InterimFile { get; set; }
         public LabelPrintEventArgs(System.Net.Sockets.TcpClient client)
         {
             Client = client;

@@ -23,5 +23,7 @@ namespace OESListener
         public string Weight { get; set; }
         public string PrinterIpAddress { get; set; }
         public string RevLevel { get; set; }
+        public string PrintType { get; set; }
+        public string InterimFile { get; set; }
     }
 }

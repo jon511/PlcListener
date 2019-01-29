@@ -34,11 +34,11 @@ namespace OESListener
         }
         public event EventHandler<SerialRequestEventArgs> SerialRequestReceived;
 
-        protected virtual void OnFinalLabelPrintReceived(LabelPrintEventArgs e)
+        protected virtual void OnLabelPrintReceived(LabelPrintEventArgs e)
         {
-            FinalLabelPrintReceived?.Invoke(this, e);
+            LabelPrintReceived?.Invoke(this, e);
         }
-        public event EventHandler<LabelPrintEventArgs> FinalLabelPrintReceived;
+        public event EventHandler<LabelPrintEventArgs> LabelPrintReceived;
 
         private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);
         public string myIPAddress { get; set; }
@@ -63,17 +63,24 @@ namespace OESListener
             {
                 server = new System.Net.Sockets.TcpListener(IPAddress.Parse(myIPAddress), Port);
                 server.Start();
-
+                TcpClient lastClient = null;
                 while (true)
                 {
+                    
                     AllDone.Reset();
                     if (Logger.Enabled)
                         Logger.Log("Ready for connection...");
-
                     var client = server.AcceptTcpClient();
+
+                    if (client == lastClient)
+                        Console.WriteLine("last client");
+
+                    lastClient = client;
+
                     if (Logger.Enabled)
                         Logger.Log("Connected!");
 
+                    Thread.Sleep(100);
                     new Thread(() => HandleMessage(client)).Start();
                 }
             }
@@ -101,8 +108,15 @@ namespace OESListener
             while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
             {
                 var receivedBytes = new byte[i];
-                Logger.Log(receivedBytes.ToString());
+                
+                if (Logger.Enabled)
+                    Logger.Log(receivedBytes.ToString());
+
                 Buffer.BlockCopy(bytes, 0, receivedBytes, 0, i);
+
+                Util.DisplayHexValues(receivedBytes);
+                Console.WriteLine("");
+                Console.WriteLine("");
 
                 // plc sending ListServices request with 0x04 in first byte
                 // not required in all processors
@@ -349,12 +363,9 @@ namespace OESListener
                     ParseRequestSerialTransaction(client, dataArray, tagName);
                     break;
                 case 31:
-                    // print final label
-                    ParsePrintFinalLabelTransaction(client, dataArray, tagName);
-                    break;
                 case 32:
-                    // print interim label
-
+                    // print final label
+                    ParsePrintLabelTransaction(client, dataArray, tagName);
                     break;
                 default:
                     if (tagName == "N247[20]")
@@ -409,12 +420,9 @@ namespace OESListener
                     ParseRequestSerialTransaction(client, dataArray, tagName);
                     break;
                 case 31:
-                    // print final label
-                    ParsePrintFinalLabelTransaction(client, dataArray, tagName);
-                    break;
                 case 32:
-                    // print interim label
-
+                    // print label
+                    ParsePrintLabelTransaction(client, dataArray, tagName);
                     break;
                 default:
                     if (tagName == "N247:20")
@@ -429,11 +437,7 @@ namespace OESListener
         {
             var e = new ProductionEventArgs(client);
             e.InTagName = tagName;
-            if (e.InTagName.Contains(":"))
-                e.listenerType = ListenerType.PCCC;
-            else
-                e.listenerType = ListenerType.EIP;
-
+            
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
             {
@@ -482,12 +486,19 @@ namespace OESListener
                 }
             }
 
+            if (e.InTagName.Contains(":"))
+                e.listenerType = ListenerType.PCCC;
+            else
+                e.listenerType = ListenerType.EIP;
+
             OnProductionReceived(e);
         }
 
         private void ParseLoginTransaction(TcpClient client, short[] dataArray, string tagName)
         {
             var e = new LoginEventArgs(client);
+            e.InTagName = tagName;
+
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
             {
@@ -518,12 +529,19 @@ namespace OESListener
 
             e.Request = dataArray[18].ToString();
 
+            if (e.InTagName.Contains(":"))
+                e.listenerType = ListenerType.PCCC;
+            else
+                e.listenerType = ListenerType.EIP;
+
             OnLoginReceived(e);
         }
 
         private void ParseSetupTransaction(TcpClient client, short[] dataArray, string tagName)
         {
             var e = new SetupEventArgs(client);
+            e.InTagName = tagName;
+
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
             {
@@ -587,12 +605,19 @@ namespace OESListener
 
             e.OpNumber = Encoding.Default.GetString(bytes.ToArray());
 
+            if (e.InTagName.Contains(":"))
+                e.listenerType = ListenerType.PCCC;
+            else
+                e.listenerType = ListenerType.EIP;
+
             OnSetupReceived(e);
         }
 
         private void ParseRequestSerialTransaction(TcpClient client, short[] dataArray, string tagName)
         {
             var e = new SerialRequestEventArgs(client);
+
+            e.InTagName = tagName;
 
             e.listenerType = ListenerType.PCCC;
             var bytes = new List<byte>();
@@ -609,19 +634,18 @@ namespace OESListener
 
             e.CellId = Encoding.Default.GetString(bytes.ToArray());
 
-            OnSerialRequestReceived(e);
-        }
-        
-        private void ParsePrintFinalLabelTransaction(TcpClient client, short[] dataArray, string tagName)
-        {
-            var e = new LabelPrintEventArgs(client);
-
-            e.InTagName = tagName;
             if (e.InTagName.Contains(":"))
                 e.listenerType = ListenerType.PCCC;
             else
                 e.listenerType = ListenerType.EIP;
 
+            OnSerialRequestReceived(e);
+        }
+        
+        private void ParsePrintLabelTransaction(TcpClient client, short[] dataArray, string tagName)
+        {
+            var e = new LabelPrintEventArgs(client);
+            e.InTagName = tagName;
 
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
@@ -664,8 +688,21 @@ namespace OESListener
             e.RevLevel = (dataArray[25] < 10) ? "0" + dataArray[25].ToString() : dataArray[25].ToString();
             e.PrinterIpAddress = dataArray[26].ToString() + "." + dataArray[27].ToString() + "." + dataArray[28].ToString() + "." + dataArray[29].ToString();
 
+            if (dataArray[18] == 31)
+                e.PrintType = "Final";
 
-            OnFinalLabelPrintReceived(e);
+            if (dataArray[18] == 32)
+            {
+                e.PrintType = "Interim";
+                e.InterimFile = dataArray[30].ToString();
+            }
+
+            if (e.InTagName.Contains(":"))
+                e.listenerType = ListenerType.PCCC;
+            else
+                e.listenerType = ListenerType.EIP;
+
+            OnLabelPrintReceived(e);
             
         }
 

@@ -18,7 +18,7 @@ namespace OESListener
         {
             e = args;
             FinalPrintStorageFolder = @"\PrintCode\Final\";
-            InterimPrintStorageFolder = @"\Printcode\Interim";
+            InterimPrintStorageFolder = @"\Printcode\Interim\";
 
             CheckFolders();
         }
@@ -53,16 +53,22 @@ namespace OESListener
             var result = SendToPrinter();
             if (result != 0)
                 return result;
-
-            Console.WriteLine(e.PrintCode);
-
+           
             return 0;
         }
 
         private string GetPrintcode()
         {
-            
-            string file = FinalPrintStorageFolder + e.AlphaCode + ".txt";
+            string file = "";
+            if (e.PrintType == "Final")
+                file = FinalPrintStorageFolder + e.AlphaCode + ".txt";
+
+            if (e.PrintType == "Interim")
+            {
+                var interimFileString = (e.InterimFile.Length < 2) ? "0" + e.InterimFile : e.InterimFile;
+                file = InterimPrintStorageFolder + interimFileString + ".txt";
+            }
+                
             if (File.Exists(file))
                 return File.ReadAllText(file);
             else
@@ -88,11 +94,12 @@ namespace OESListener
             try
             {
                 // Open connection
-                System.Net.Sockets.TcpClient client = new System.Net.Sockets.TcpClient();
-                client.Connect(e.PrinterIpAddress, Port);
+                System.Net.Sockets.TcpClient client = new TcpClientWithTimeout(e.PrinterIpAddress, Port, 4000).Connect();
+                //client.Connect(e.PrinterIpAddress, Port);
 
                 // Write ZPL String to connection
                 System.IO.StreamWriter writer = new System.IO.StreamWriter(client.GetStream());
+                writer.BaseStream.WriteTimeout = 1000;
                 writer.Write(e.PrintCode);
                 writer.Flush();
 
@@ -101,7 +108,7 @@ namespace OESListener
                 client.Close();
                 return 0;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 return 3;
             }

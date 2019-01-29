@@ -80,18 +80,23 @@ namespace OESListener
             }
         }
 
-        public void FinalPrintResponse(LabelPrintEventArgs e)
+        public void LabelPrintResponse(LabelPrintEventArgs e)
         {
+            var p = new LabelPrinter(e);
+            p.UseFile = true;
+            var result = p.PrintLabel();
+            e.Response = result.ToString();
+            
             switch (e.listenerType)
             {
                 case ListenerType.TCP:
-                    TcpFinalPrintResponse(e);
+                    TcpPrintResponse(e);
                     break;
                 case ListenerType.EIP:
-                    EipFinalPrintResponse(e);
+                    EipPrintResponse(e);
                     break;
                 case ListenerType.PCCC:
-                    PcccFinalPrintResponse(e);
+                    PcccPrintResponse(e);
                     break;
                 default:
                     break;
@@ -220,7 +225,7 @@ namespace OESListener
             stream.Write(outData, 0, outData.Length);
         }
 
-        public void TcpFinalPrintResponse(LabelPrintEventArgs e)
+        public void TcpPrintResponse(LabelPrintEventArgs e)
         {
             string responseString;
             if (e.UseJson)
@@ -383,7 +388,7 @@ namespace OESListener
             s.SlcResponse(targetIp, retArr, e.OutTagName);
         }
 
-        public void PcccFinalPrintResponse(LabelPrintEventArgs e)
+        public void PcccPrintResponse(LabelPrintEventArgs e)
         {
             var retArr = new short[10];
             e.OutTagName = e.InTagName;
@@ -433,7 +438,6 @@ namespace OESListener
             var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
             s.LogixResponse(targetIp, retArr, e.OutTagName);
-            Console.WriteLine("listener complete");
         }
 
         public void EipSetupResponse(SetupEventArgs e)
@@ -520,6 +524,8 @@ namespace OESListener
 
         public void EipLoginResponse(LoginEventArgs e)
         {
+            e.OutTagName = "N228[0]";
+
             var retArr = new short[34];
             e.OutTagName = e.InTagName;
 
@@ -544,7 +550,7 @@ namespace OESListener
             s.LogixResponse(targetIp, retArr, e.OutTagName);
         }
 
-        public void EipFinalPrintResponse(LabelPrintEventArgs e)
+        public void EipPrintResponse(LabelPrintEventArgs e)
         {
             var retArr = new short[10];
             e.OutTagName = e.InTagName;

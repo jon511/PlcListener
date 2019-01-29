@@ -46,7 +46,7 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener("10.50.71.106");
+            var l = new OESListener.Listener("10.50.71.123");
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
             l.PrintFromFile = true;

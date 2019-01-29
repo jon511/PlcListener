@@ -105,7 +105,7 @@ namespace OESListener
                 {
                     int bytes = 0;
                     bool done = false;
-                    reader.BaseStream.ReadTimeout = 5000;
+                    reader.BaseStream.ReadTimeout = 10000;
                     try
                     {
                         bytes = reader.Read(inData, 0, inData.Length);
@@ -124,9 +124,6 @@ namespace OESListener
 
                     if (bytes > 0)
                     {
-                        Util.DisplayHexValues(byteArr);
-                        Console.WriteLine("");
-                        Console.WriteLine("");
 
                         if (byteArr[0] == 0x65)
                         {
@@ -148,10 +145,7 @@ namespace OESListener
                             outArr[19] = senderContext[0];
 
                             writer.Write(outArr);
-
-                            Util.DisplayHexValues(outArr);
-                            Console.WriteLine("");
-                            Console.WriteLine("");
+                            
                         }
 
                         if (byteArr[0] == 0x6f)
@@ -209,8 +203,7 @@ namespace OESListener
             var registerSession = new byte[] { 0x65, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 };
             writer.Write(registerSession);
             GetResponse.Wait();
-
-            Console.WriteLine("Task Complete");
+            
 
             
         }
@@ -295,10 +288,7 @@ namespace OESListener
                             outArr[19] = senderContext[0];
 
                             writer.Write(outArr);
-
-                            Util.DisplayHexValues(outArr);
-                            Console.WriteLine("");
-                            Console.WriteLine("");
+                            
 
                             if (Logger.Enabled)
                                 Logger.Log("plc accecpted response");
@@ -349,7 +339,6 @@ namespace OESListener
             var registerSession = new byte[] { 0x65, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 };
             writer.Write(registerSession);
             GetResponse.Wait();
-            Console.WriteLine("Task Complete");
         }
 
 

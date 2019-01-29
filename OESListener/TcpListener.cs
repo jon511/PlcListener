@@ -34,11 +34,11 @@ namespace OESListener
         }
         public event EventHandler<SerialRequestEventArgs> SerialRequestReceived;
 
-        protected virtual void OnFinalLabelPrintReceived(LabelPrintEventArgs e)
+        protected virtual void OnLabelPrintReceived(LabelPrintEventArgs e)
         {
-            FinalLabelPrintReceived?.Invoke(this, e);
+            LabelPrintReceived?.Invoke(this, e);
         }
-        public event EventHandler<LabelPrintEventArgs> FinalLabelPrintReceived;
+        public event EventHandler<LabelPrintEventArgs> LabelPrintReceived;
 
         private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);
         public string myIPAddress { get; set; }
@@ -158,6 +158,7 @@ namespace OESListener
                                         s.ModelNumber = jsonData.ModelNumber;
                                         s.OpNumber = jsonData.OpNumber;
                                         s.UseJson = true;
+                                        s.listenerType = ListenerType.TCP;
                                         OnSetupReceived(s);
                                     }
                                     if (jsonData.RequestCode == "5" || jsonData.RequestCode == "17" || jsonData.RequestCode == "6" || jsonData.RequestCode == "18")
@@ -170,6 +171,7 @@ namespace OESListener
                                         s.ModelNumber = jsonData.ModelNumber;
                                         s.OpNumber = jsonData.OpNumber;
                                         s.UseJson = true;
+                                        s.listenerType = ListenerType.TCP;
                                         OnSetupReceived(s);
                                     }
                                     break;
@@ -184,6 +186,7 @@ namespace OESListener
                                             l.OperatorID = jsonData.OperatorID;
                                             l.Request = jsonData.RequestCode;
                                             l.UseJson = true;
+                                            l.listenerType = ListenerType.TCP;
                                             OnLoginReceived(l);
                                             break;
                                         case "17":
@@ -191,6 +194,7 @@ namespace OESListener
                                             l.CellId = jsonData.CellId;
                                             l.Request = jsonData.RequestCode;
                                             l.UseJson = true;
+                                            l.listenerType = ListenerType.TCP;
                                             OnLoginReceived(l);
                                             break;
                                         default:
@@ -205,10 +209,11 @@ namespace OESListener
                                     var sr = new SerialRequestEventArgs(client);
                                     sr.CellId = jsonData.CellId;
                                     sr.Request = jsonData.RequestCode;
+                                    sr.listenerType = ListenerType.TCP;
                                     OnSerialRequestReceived(sr);
 
                                     break;
-                                case "FINALPRINT":
+                                case "PRINT":
                                     var lp = new LabelPrintEventArgs(client);
                                     lp.CellId = jsonData.CellId;
                                     lp.ItemId = jsonData.ItemId;
@@ -216,10 +221,10 @@ namespace OESListener
                                     lp.Weight = jsonData.Weight;
                                     lp.RevLevel = jsonData.RevLevel;
                                     lp.PrinterIpAddress = jsonData.PrinterIpAddress;
-                                    OnFinalLabelPrintReceived(lp);
-                                    break;
-                                case "INTERIMPRINT":
-
+                                    lp.PrintType = jsonData.PrintType;
+                                    lp.InterimFile = jsonData.InterimFile;
+                                    lp.listenerType = ListenerType.TCP;
+                                    OnLabelPrintReceived(lp);
                                     break;
                                 default:
                                     break;
@@ -252,17 +257,20 @@ namespace OESListener
                                     }
                                     var p = new ProductionEventArgs(client, data[1], data[2], data[3], data[4], data[5], dArr);
                                     p.UseJson = false;
+                                    p.listenerType = ListenerType.TCP;
                                     OnProductionReceived(p);
                                     break;
                                 case "SETUP":
                                     if (data.Length == 5)
                                     {
                                         var s = new SetupEventArgs(client, data[1], data[2], data[3], data[4]);
+                                        s.listenerType = ListenerType.TCP;
                                         OnSetupReceived(s);
                                     }
                                     if (data.Length == 7)
                                     {
                                         var s = new SetupEventArgs(client, data[1], data[2], data[3], data[4], data[5], data[6]);
+                                        s.listenerType = ListenerType.TCP;
                                         OnSetupReceived(s);
                                     }
                                     // get error for wrong length
@@ -273,10 +281,12 @@ namespace OESListener
                                     {
                                         case 4:
                                             l = new LoginEventArgs(client, data[1], data[2], data[3]);
+                                            l.listenerType = ListenerType.TCP;
                                             OnLoginReceived(l);
                                             break;
                                         case 3:
                                             l = new LoginEventArgs(client, data[1], data[2]);
+                                            l.listenerType = ListenerType.TCP;
                                             OnLoginReceived(l);
                                             break;
                                         default:
@@ -290,7 +300,21 @@ namespace OESListener
                                     var sr = new SerialRequestEventArgs(client);
                                     sr.CellId = data[1];
                                     sr.Request = data[2];
+                                    sr.listenerType = ListenerType.TCP;
                                     OnSerialRequestReceived(sr);
+                                    break;
+                                case "PRINT":
+                                    var lp = new LabelPrintEventArgs(client);
+                                    lp.CellId = data[1];
+                                    lp.ItemId = data[2];
+                                    lp.AlphaCode = lp.ItemId.Substring(0, 2);
+                                    lp.Weight = data[3];
+                                    lp.RevLevel = data[4];
+                                    lp.PrinterIpAddress = data[5];
+                                    lp.PrintType = data[6];
+                                    lp.InterimFile = data[7];
+                                    lp.listenerType = ListenerType.TCP;
+                                    OnLabelPrintReceived(lp);
                                     break;
                                 default:
                                     if (Logger.Enabled)

@@ -34,11 +34,11 @@ namespace OESListener
         }
         public event EventHandler<SerialRequestEventArgs> SerialRequestReceived;
 
-        protected virtual void OnFinalLabelPrintReceived(LabelPrintEventArgs e)
+        protected virtual void OnLabelPrintReceived(LabelPrintEventArgs e)
         {
-            FinalLabelPrintReceived?.Invoke(this, e);
+            LabelPrintReceived?.Invoke(this, e);
         }
-        public event EventHandler<LabelPrintEventArgs> FinalLabelPrintReceived;
+        public event EventHandler<LabelPrintEventArgs> LabelPrintReceived;
 
         private static readonly ManualResetEvent AllDone = new ManualResetEvent(false);
         public string myIPAddress { get; set; }
@@ -192,12 +192,9 @@ namespace OESListener
                     ParseRequestSerialTransaction(client, dataArray, tagName);
                     break;
                 case 31:
-                    // print final label
-                    ParsePrintFinalLabelTransaction(client, dataArray, tagName);
-                    break;
                 case 32:
-                    // print interim label
-
+                    // print final label
+                    ParsePrintLabelTransaction(client, dataArray, tagName);
                     break;
                 default:
                     if (tagName == "N247:20")
@@ -213,8 +210,6 @@ namespace OESListener
             var e = new ProductionEventArgs(client);
 
             e.InTagName = tagName;
-            
-            e.listenerType = ListenerType.PCCC;
 
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
@@ -264,12 +259,15 @@ namespace OESListener
                 }
             }
 
+            e.listenerType = ListenerType.PCCC;
             OnProductionReceived(e);
         }
 
         private void ParseLoginTransaction(TcpClient client, short[] dataArray, string tagName)
         {
             var e = new LoginEventArgs(client);
+            e.InTagName = tagName;
+
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
             {
@@ -300,12 +298,15 @@ namespace OESListener
 
             e.Request = dataArray[18].ToString();
 
+            e.listenerType = ListenerType.PCCC;
             OnLoginReceived(e);
         }
 
         private void ParseSetupTransaction(TcpClient client, short[] dataArray, string tagName)
         {
             var e = new SetupEventArgs(client);
+            e.InTagName = tagName;
+
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
             {
@@ -368,7 +369,7 @@ namespace OESListener
             }
 
             e.OpNumber = Encoding.Default.GetString(bytes.ToArray());
-
+            e.listenerType = ListenerType.PCCC;
             OnSetupReceived(e);
         }
 
@@ -376,7 +377,8 @@ namespace OESListener
         {
             var e = new SerialRequestEventArgs(client);
 
-            e.listenerType = ListenerType.PCCC;
+            e.InTagName = tagName;
+
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
             {
@@ -391,12 +393,15 @@ namespace OESListener
 
             e.CellId = Encoding.Default.GetString(bytes.ToArray());
 
+            e.listenerType = ListenerType.PCCC;
             OnSerialRequestReceived(e);
         }
 
-        private void ParsePrintFinalLabelTransaction(TcpClient client, short[] dataArray, string tagName)
+        private void ParsePrintLabelTransaction(TcpClient client, short[] dataArray, string tagName)
         {
             var e = new LabelPrintEventArgs(client);
+
+            e.InTagName = tagName;
 
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
@@ -439,8 +444,17 @@ namespace OESListener
             e.RevLevel = (dataArray[25] < 10) ? "0" + dataArray[25].ToString() : dataArray[25].ToString();
             e.PrinterIpAddress = dataArray[26].ToString() + "." + dataArray[27].ToString() + "." + dataArray[28].ToString() + "." + dataArray[29].ToString();
 
+            if (dataArray[18] == 31)
+                e.PrintType = "Final";
 
-            OnFinalLabelPrintReceived(e);
+            if (dataArray[18] == 32)
+            {
+                e.PrintType = "Interim";
+                e.InterimFile = dataArray[30].ToString();
+            }
+
+            e.listenerType = ListenerType.PCCC;
+            OnLabelPrintReceived(e);
 
         }
 
