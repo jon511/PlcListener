@@ -31,11 +31,11 @@ namespace OESListener
         }
         public event EventHandler<SerialRequestEventArgs> SerialRequestReceived;
 
-        protected virtual void OnFinalLabelPrintReceived(LabelPrintEventArgs e)
+        protected virtual void OnLabelPrintReceived(LabelPrintEventArgs e)
         {
             if (!PrintFromFile)
             {
-                FinalLabelPrintReceived?.Invoke(this, e);
+                LabelPrintReceived?.Invoke(this, e);
             }
             else
             {
@@ -43,13 +43,15 @@ namespace OESListener
                 p.UseFile = true;
                 var result = p.PrintLabel();
                 e.Response = result.ToString();
-                Console.WriteLine(result);
+                if (Logger.Enabled)
+                    Logger.Log(result.ToString());
+
                 var resp = new ListenerResponse();
                 resp.FinalPrintResponse(e);
             }
             
         }
-        public event EventHandler<LabelPrintEventArgs> FinalLabelPrintReceived;
+        public event EventHandler<LabelPrintEventArgs> LabelPrintReceived;
 
         public string myIPAddress { get; set; }
         public int TcpPort { get; set; }
@@ -110,17 +112,17 @@ namespace OESListener
 
         private void PcccListener_FinalLabelPrintReceived(object sender, LabelPrintEventArgs e)
         {
-            OnFinalLabelPrintReceived(e);
+            OnLabelPrintReceived(e);
         }
 
         private void TcpListener_FinalLabelPrintReceived(object sender, LabelPrintEventArgs e)
         {
-            OnFinalLabelPrintReceived(e);
+            OnLabelPrintReceived(e);
         }
 
         private void EipListener_FinalLabelPrintReceived(object sender, LabelPrintEventArgs e)
         {
-            OnFinalLabelPrintReceived(e);
+            OnLabelPrintReceived(e);
         }
 
         private void TcpListener_ProductionReceived(object sender, ProductionEventArgs e)

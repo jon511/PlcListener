@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbPlcAsyncListener.cs" />
     <Compile Include="EipListener.cs" />
     <Compile Include="LabelPrinter.cs" />
     <Compile Include="LabelPrintEventArgs.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="OesEventArgs.cs" />
     <Compile Include="SerialRequestEventArgs.cs" />
     <Compile Include="PlcWriter.cs" />
+    <Compile Include="StateObject.cs" />
     <Compile Include="TcpListener.cs" />
     <Compile Include="PcccListener.cs" />
     <Compile Include="ProductionEventArgs.cs" />

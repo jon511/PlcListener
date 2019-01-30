@@ -15,6 +15,11 @@ namespace OESListener
             Client = client;
         }
 
+        public LoginEventArgs(string senderIp)
+        {
+            SenderIp = senderIp;
+        }
+
         public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, string processRequest)
         {
             Client = client;

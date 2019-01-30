@@ -42,6 +42,11 @@ namespace OESListener
             Client = client;
         }
 
+        public SetupEventArgs(string senderIp)
+        {
+            SenderIp = senderIp;
+        }
+
         public SetupEventArgs(System.Net.Sockets.TcpClient client, string cellID, string transactionRequest, string modelNumber, string opNumber)
         {
             Client = client;

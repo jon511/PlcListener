@@ -17,5 +17,10 @@ namespace OESListener
         {
             Client = client;
         }
+
+        public LabelPrintEventArgs(string senderIp)
+        {
+            SenderIp = senderIp;
+        }
     }
 }

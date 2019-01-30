@@ -15,6 +15,11 @@ namespace OESListener
         {
             Client = client;
         }
+
+        public ProductionEventArgs(string senderIp)
+        {
+            SenderIp = senderIp;
+        }
         public ProductionEventArgs(System.Net.Sockets.TcpClient client, string cellID, string itemID, string requestType, string status, string failureCode, string[] data)
         {
             Client = client;

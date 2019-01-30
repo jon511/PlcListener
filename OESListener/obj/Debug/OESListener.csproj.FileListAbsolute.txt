@@ -1,6 +1,5 @@
 C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\bin\Debug\OESListener.dll
 C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\bin\Debug\OESListener.pdb
-C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.csprojAssemblyReference.cache
 C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.csproj.CoreCompileInputs.cache
 C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.dll
 C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.pdb
@@ -13,3 +12,4 @@ C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.csproj.CopyComplete
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.dll
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.pdb
+C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.csprojAssemblyReference.cache

@@ -53,8 +53,8 @@ namespace OESListener
             var result = SendToPrinter();
             if (result != 0)
                 return result;
-
-            Console.WriteLine(e.PrintCode);
+            if (Logger.Enabled)
+                Logger.Log(e.PrintCode);
 
             return 0;
         }
@@ -101,8 +101,11 @@ namespace OESListener
                 client.Close();
                 return 0;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                if (Logger.Enabled)
+                    Logger.Log(ex.ToString());
+
                 return 3;
             }
 

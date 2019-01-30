@@ -270,9 +270,8 @@ namespace OESListener
             }
 
             Array.Copy(phArr.ToArray(), 0, retArr, 22, phArr.Count());
-            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
-            s.SlcResponse(targetIp, retArr, e.OutTagName);
+            s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
         }
         
         public void PcccSetupResponse(SetupEventArgs e)
@@ -336,12 +335,11 @@ namespace OESListener
             Int16.TryParse(e.Response.Acknowledge, out retArr[67]);
 
             Int16.TryParse(e.Response.ErrorCode, out retArr[68]);
-            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
-            s.SlcResponse(targetIp, retArr, e.OutTagName);
+            s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
 
             if (e.Request == "4")
-                PcccPlcModelSetupResponse(targetIp, e);
+                PcccPlcModelSetupResponse(e.SenderIp, e);
 
         }
 
@@ -364,10 +362,9 @@ namespace OESListener
 
             short.TryParse(e.Status, out retArr[20]);
             short.TryParse(e.FailureCode, out retArr[21]);
-            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
 
-            s.SlcResponse(targetIp, retArr, e.OutTagName);
+            s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
 
         }
 
@@ -377,10 +374,9 @@ namespace OESListener
             e.OutTagName = "N247:0";
             var itemArr = Util.StringToAbIntArray(e.ItemID);
             Array.Copy(itemArr, 0, retArr, 0, itemArr.Length);
-            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
 
-            s.SlcResponse(targetIp, retArr, e.OutTagName);
+            s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
         }
 
         public void PcccFinalPrintResponse(LabelPrintEventArgs e)
@@ -388,10 +384,9 @@ namespace OESListener
             var retArr = new short[10];
             e.OutTagName = e.InTagName;
             short.TryParse(e.Response, out retArr[0]);
-            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
 
-            s.SlcResponse(targetIp, retArr, e.OutTagName);
+            s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
         }
 
         public void EipProductionResponse(ProductionEventArgs e)
@@ -430,10 +425,10 @@ namespace OESListener
             }
 
             Array.Copy(phArr.ToArray(), 0, retArr, 22, phArr.Count());
-            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
-            s.LogixResponse(targetIp, retArr, e.OutTagName);
-            Console.WriteLine("listener complete");
+            s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
+            if (Logger.Enabled)
+                Logger.Log("listener complete");
         }
 
         public void EipSetupResponse(SetupEventArgs e)
@@ -497,12 +492,11 @@ namespace OESListener
             Int16.TryParse(e.Response.Acknowledge, out retArr[67]);
 
             Int16.TryParse(e.Response.ErrorCode, out retArr[68]);
-            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
-            s.LogixResponse(targetIp, retArr, e.OutTagName);
+            s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
 
             if (e.Request == "4")
-                EipPlcModelSetupResponse(targetIp, e);
+                EipPlcModelSetupResponse(e.SenderIp, e);
 
         }
 
@@ -525,10 +519,9 @@ namespace OESListener
 
             short.TryParse(e.Status, out retArr[20]);
             short.TryParse(e.FailureCode, out retArr[21]);
-            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
 
-            s.LogixResponse(targetIp, retArr, e.OutTagName);
+            s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
 
         }
 
@@ -538,10 +531,9 @@ namespace OESListener
             e.OutTagName = "N247[0]";
             var itemArr = Util.StringToAbIntArray(e.ItemID);
             Array.Copy(itemArr, 0, retArr, 0, itemArr.Length);
-            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
 
-            s.LogixResponse(targetIp, retArr, e.OutTagName);
+            s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
         }
 
         public void EipFinalPrintResponse(LabelPrintEventArgs e)
@@ -549,10 +541,9 @@ namespace OESListener
             var retArr = new short[10];
             e.OutTagName = e.InTagName;
             short.TryParse(e.Response, out retArr[0]);
-            var targetIp = ((IPEndPoint)e.Client.Client.RemoteEndPoint).Address.ToString();
             var s = new PlcWriter();
 
-            s.LogixResponse(targetIp, retArr, e.OutTagName);
+            s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
         }
     }
 }

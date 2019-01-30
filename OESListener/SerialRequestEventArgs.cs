@@ -14,6 +14,11 @@ namespace OESListener
             Client = client;
         }
 
+        public SerialRequestEventArgs(string senderIp)
+        {
+            SenderIp = senderIp;
+        }
+
         public SerialRequestEventArgs(System.Net.Sockets.TcpClient client, string itemId)
         {
             Client = client;

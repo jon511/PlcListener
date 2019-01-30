@@ -12,7 +12,18 @@ namespace Test
 
         static void Main(string[] args)
         {
+            //var testArr = new string[]{ "1.1", "2.2", "3", "4.4", "5.5", "6"};
+            //var realArr = new List<double>();
+            //var intArr = new List<int>();
 
+            //foreach (var item in testArr)
+            //{
+            //    double.TryParse(item, out double result);
+            //    realArr.Add(result);
+            //    intArr.Add((int)Math.Truncate(result));
+            //}
+
+            //Console.Read();
             //var p = new OESListener.PlcWriter();
             //var data = new short[10];
             //data[0] = 15;
@@ -46,7 +57,7 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener("10.50.71.106");
+            var l = new OESListener.Listener("10.50.71.118");
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
             l.PrintFromFile = true;
@@ -70,9 +81,9 @@ namespace Test
         private static void L_ProductionReceived(object sender, OESListener.ProductionEventArgs e)
         {
 
-            var number = new Random();
-            var rand = number.Next(10, 150);
-            Thread.Sleep(rand);
+            //var number = new Random();
+            //var rand = number.Next(10, 150);
+            //Thread.Sleep(rand);
 
 
             var resp = new OESListener.ListenerResponse();

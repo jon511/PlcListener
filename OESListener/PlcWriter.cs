@@ -110,9 +110,11 @@ namespace OESListener
                     {
                         bytes = reader.Read(inData, 0, inData.Length);
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                        Console.WriteLine(e);
+                        if (Logger.Enabled)
+                            Logger.Log(ex.ToString());
+
                         done = true;
                     }
 
@@ -124,9 +126,6 @@ namespace OESListener
 
                     if (bytes > 0)
                     {
-                        Util.DisplayHexValues(byteArr);
-                        Console.WriteLine("");
-                        Console.WriteLine("");
 
                         if (byteArr[0] == 0x65)
                         {
@@ -148,10 +147,7 @@ namespace OESListener
                             outArr[19] = senderContext[0];
 
                             writer.Write(outArr);
-
-                            Util.DisplayHexValues(outArr);
-                            Console.WriteLine("");
-                            Console.WriteLine("");
+                            
                         }
 
                         if (byteArr[0] == 0x6f)
@@ -210,7 +206,8 @@ namespace OESListener
             writer.Write(registerSession);
             GetResponse.Wait();
 
-            Console.WriteLine("Task Complete");
+            if (Logger.Enabled)
+                Logger.Log("Task Complete");
 
             
         }
@@ -237,9 +234,11 @@ namespace OESListener
                     {
                         bytes = reader.Read(inData, 0, inData.Length);
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                        Console.WriteLine(e);
+                        if (Logger.Enabled)
+                            Logger.Log(ex.ToString());
+
                         done = true;
                     }
 
@@ -295,11 +294,7 @@ namespace OESListener
                             outArr[19] = senderContext[0];
 
                             writer.Write(outArr);
-
-                            Util.DisplayHexValues(outArr);
-                            Console.WriteLine("");
-                            Console.WriteLine("");
-
+                            
                             if (Logger.Enabled)
                                 Logger.Log("plc accecpted response");
 
@@ -349,7 +344,8 @@ namespace OESListener
             var registerSession = new byte[] { 0x65, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 };
             writer.Write(registerSession);
             GetResponse.Wait();
-            Console.WriteLine("Task Complete");
+            if (Logger.Enabled)
+                Logger.Log("Task Complete");
         }
 
 

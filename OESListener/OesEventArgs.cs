@@ -20,6 +20,7 @@ namespace OESListener
         public string OutTagName { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         public System.Net.Sockets.TcpClient Client { get; set; }
+        public string SenderIp { get; set; }
         public string CellId { get; set; }
         public string ItemId { get; set; }
         public string Request { get; set; }
