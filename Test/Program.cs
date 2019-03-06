@@ -57,7 +57,7 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener("10.50.71.118");
+            var l = new OESListener.Listener("10.50.71.101");
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
             l.PrintFromFile = true;
@@ -74,7 +74,7 @@ namespace Test
         private static void L_SerialRequestReceived(object sender, OESListener.SerialRequestEventArgs e)
         {
             var resp = new OESListener.ListenerResponse();
-            e.ItemID = "new serial number";
+            e.ItemId = "new serial number";
             resp.SerialRequestResponse(e);
         }
 
@@ -84,7 +84,12 @@ namespace Test
             //var number = new Random();
             //var rand = number.Next(10, 150);
             //Thread.Sleep(rand);
-
+            e.CellId = "newCell";
+            e.ItemId = "itemID";
+            e.P_Val_1 = 101;
+            e.P_Val_2 = 10000;
+            e.P_Val_3 = 9999;
+            e.P_Val_4 = 4444;
 
             var resp = new OESListener.ListenerResponse();
             resp.ProductionResponse(e);
@@ -93,10 +98,7 @@ namespace Test
 
         private static void L_SetupReceived(object sender, OESListener.SetupEventArgs e)
         {
-            OESListener.Logger.Log(e.CellId);
-            OESListener.Logger.Log(e.Request);
-            OESListener.Logger.Log(e.ModelNumber);
-            OESListener.Logger.Log(e.OpNumber);
+            
             OESListener.Logger.Log("setup response");
             e.Response.Component1.AccessId = "1";
             e.Response.Component1.ModelNumber = "B0884400-00";
@@ -109,11 +111,7 @@ namespace Test
 
         private static void L_LoginReceived(object sender, OESListener.LoginEventArgs e)
         {
-            OESListener.Logger.Log(e.CellId);
-            OESListener.Logger.Log(e.OperatorID);
-            OESListener.Logger.Log(e.Status);
-            OESListener.Logger.Log(e.FailureCode);
-            OESListener.Logger.Log("login response");
+            
 
             var resp = new OESListener.ListenerResponse();
             resp.LoginResponse(e);

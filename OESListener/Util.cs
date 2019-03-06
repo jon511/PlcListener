@@ -73,6 +73,21 @@ namespace OESListener
             return arr.ToArray();
 
         }
+        internal static string AbIntArrayToString(short[] data)
+        {
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < data.Length; i++)
+            {
+                var s1 = data[i] & 0xff00;
+                s1 = s1 >> 8;
+                var s2 = data[i] & 0xff;
+                sb.Append(s1);
+                sb.Append(s2);
+            }
+
+            return sb.ToString();
+        }
 
         internal static byte[] ConvertToByteArray(short[] arr)
         {

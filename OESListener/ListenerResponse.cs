@@ -112,13 +112,41 @@ namespace OESListener
                 sb.Append(",");
                 sb.Append(e.ItemId);
                 sb.Append(",");
-                sb.Append(e.Request);
+                sb.Append(e.ProcessIndicator);
                 sb.Append(",");
-                sb.Append(e.Status);
+                sb.Append(e.SuccessIndicator);
                 sb.Append(",");
-                sb.Append(e.FailureCode);
+                sb.Append(e.FaultCode);
                 sb.Append(",");
-                sb.Append(string.Join(",", e.ProcessHistoryValues));
+                sb.Append(e.StatusCode);
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_1, e.P_Val_2));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_3, e.P_Val_4));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_5, e.P_Val_6));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_7, e.P_Val_8));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_9, e.P_Val_10));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_11, e.P_Val_12));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_13, e.P_Val_14));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_15, e.P_Val_16));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_17, e.P_Val_18));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_19, e.P_Val_20));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_21, e.P_Val_22));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_23, e.P_Val_24));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_25, e.P_Val_26));
+                sb.Append(",");
+                sb.Append(string.Format("{0}.{1}", e.P_Val_27, e.P_Val_28));
                 responseString = sb.ToString();
             }
             var stream = e.Client.GetStream();
@@ -128,6 +156,8 @@ namespace OESListener
 
         public void TcpSetupResponse(SetupEventArgs e)
         {
+            e.ParseReturnData();
+
             string responseString;
             if (e.UseJson)
             {
@@ -187,11 +217,11 @@ namespace OESListener
                 var sb = new StringBuilder();
                 sb.Append(e.CellId);
                 sb.Append(",");
-                sb.Append(e.Request);
+                sb.Append(e.ProcessIndicator);
                 sb.Append(",");
-                sb.Append(e.Status);
+                sb.Append(e.SuccessIndicator);
                 sb.Append(",");
-                sb.Append(e.FailureCode);
+                sb.Append(e.FaultCode);
                 responseString = sb.ToString();
             }
             var stream = e.Client.GetStream();
@@ -211,7 +241,7 @@ namespace OESListener
                 var sb = new StringBuilder();
                 sb.Append(e.CellId);
                 sb.Append(",");
-                sb.Append(e.ItemID);
+                sb.Append(e.ItemId);
                 responseString = sb.ToString();
             }
 
@@ -253,29 +283,47 @@ namespace OESListener
             var itemArr = Util.StringToAbIntArray(e.ItemId);
             Array.Copy(itemArr, 0, retArr, 5, itemArr.Length);
 
-            retArr[18] = Convert.ToInt16(e.Request);
-            retArr[19] = Convert.ToInt16(e.Status);
+            retArr[18] = Convert.ToInt16(e.ProcessIndicator);
+            retArr[19] = Convert.ToInt16(e.SuccessIndicator);
             retArr[20] = 0;
-            retArr[21] = Convert.ToInt16(e.FailureCode);
+            retArr[21] = Convert.ToInt16(e.FaultCode);
+            retArr[22] = e.P_Val_1;
+            retArr[23] = e.P_Val_2;
+            retArr[24] = e.P_Val_3;
+            retArr[25] = e.P_Val_4;
+            retArr[26] = e.P_Val_5;
+            retArr[27] = e.P_Val_6;
+            retArr[28] = e.P_Val_7;
+            retArr[29] = e.P_Val_8;
+            retArr[30] = e.P_Val_9;
+            retArr[31] = e.P_Val_10;
+            retArr[32] = e.P_Val_11;
+            retArr[33] = e.P_Val_12;
+            retArr[34] = e.P_Val_13;
+            retArr[35] = e.P_Val_14;
+            retArr[36] = e.P_Val_15;
+            retArr[37] = e.P_Val_16;
+            retArr[38] = e.P_Val_17;
+            retArr[39] = e.P_Val_18;
+            retArr[40] = e.P_Val_19;
+            retArr[41] = e.P_Val_20;
+            retArr[42] = e.P_Val_21;
+            retArr[43] = e.P_Val_22;
+            retArr[44] = e.P_Val_23;
+            retArr[45] = e.P_Val_24;
+            retArr[46] = e.P_Val_25;
+            retArr[47] = e.P_Val_26;
+            retArr[48] = e.P_Val_27;
+            retArr[49] = e.P_Val_28;
 
-            var phArr = new List<short>();
-            foreach (var item in e.ProcessHistoryValues)
-            {
-                var fp = Convert.ToDouble(item);
-                var wh = (short)Math.Truncate(fp);
-                var d = (fp - wh) * 100;
-                var dec = (short)(Math.Round(d));
-                phArr.Add(wh);
-                phArr.Add(dec);
-            }
-
-            Array.Copy(phArr.ToArray(), 0, retArr, 22, phArr.Count());
             var s = new PlcWriter();
             s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
         }
         
         public void PcccSetupResponse(SetupEventArgs e)
         {
+            e.ParseReturnData();
+
             e.OutTagName = "N238:0";
             var retArr = new short[71];
             
@@ -338,18 +386,18 @@ namespace OESListener
             var s = new PlcWriter();
             s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
 
-            if (e.Request == "4")
+            if (e.ProcessIndicator == 4)
                 PcccPlcModelSetupResponse(e.SenderIp, e);
 
         }
 
         public void PcccPlcModelSetupResponse(string ipAddress, SetupEventArgs e)
         {
-            var retArr = new short[34];
-            for (var i = 0; i < e.Response.PlcModelSetup.Length; i++)
-            {
-                short.TryParse(e.Response.PlcModelSetup[i], out retArr[i]);
-            }
+            var retArr = e.PlcModelSetup;
+            //for (var i = 0; i < e.Response.PlcModelSetup.Length; i++)
+            //{
+            //    short.TryParse(e.Response.PlcModelSetup[i], out retArr[i]);
+            //}
 
             var s = new PlcWriter();
             s.SlcResponse(ipAddress, retArr, "N241:0");
@@ -359,9 +407,9 @@ namespace OESListener
         {
             var retArr = new short[34];
             e.OutTagName = e.InTagName;
+            retArr[20] = e.SuccessIndicator;
+            retArr[21] = e.FaultCode;
 
-            short.TryParse(e.Status, out retArr[20]);
-            short.TryParse(e.FailureCode, out retArr[21]);
             var s = new PlcWriter();
 
             s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
@@ -372,7 +420,7 @@ namespace OESListener
         {
             var retArr = new short[20];
             e.OutTagName = "N247:0";
-            var itemArr = Util.StringToAbIntArray(e.ItemID);
+            var itemArr = Util.StringToAbIntArray(e.ItemId);
             Array.Copy(itemArr, 0, retArr, 0, itemArr.Length);
             var s = new PlcWriter();
 
@@ -408,23 +456,39 @@ namespace OESListener
             var itemArr = Util.StringToAbIntArray(e.ItemId);
             Array.Copy(itemArr, 0, retArr, 5, itemArr.Length);
 
-            retArr[18] = Convert.ToInt16(e.Request);
-            retArr[19] = Convert.ToInt16(e.Status);
+            retArr[18] = Convert.ToInt16(e.ProcessIndicator);
+            retArr[19] = Convert.ToInt16(e.SuccessIndicator);
             retArr[20] = 0;
-            retArr[21] = Convert.ToInt16(e.FailureCode);
+            retArr[21] = Convert.ToInt16(e.FaultCode);
+            retArr[22] = e.P_Val_1;
+            retArr[23] = e.P_Val_2;
+            retArr[24] = e.P_Val_3;
+            retArr[25] = e.P_Val_4;
+            retArr[26] = e.P_Val_5;
+            retArr[27] = e.P_Val_6;
+            retArr[28] = e.P_Val_7;
+            retArr[29] = e.P_Val_8;
+            retArr[30] = e.P_Val_9;
+            retArr[31] = e.P_Val_10;
+            retArr[32] = e.P_Val_11;
+            retArr[33] = e.P_Val_12;
+            retArr[34] = e.P_Val_13;
+            retArr[35] = e.P_Val_14;
+            retArr[36] = e.P_Val_15;
+            retArr[37] = e.P_Val_16;
+            retArr[38] = e.P_Val_17;
+            retArr[39] = e.P_Val_18;
+            retArr[40] = e.P_Val_19;
+            retArr[41] = e.P_Val_20;
+            retArr[42] = e.P_Val_21;
+            retArr[43] = e.P_Val_22;
+            retArr[44] = e.P_Val_23;
+            retArr[45] = e.P_Val_24;
+            retArr[46] = e.P_Val_25;
+            retArr[47] = e.P_Val_26;
+            retArr[48] = e.P_Val_27;
+            retArr[49] = e.P_Val_28;
 
-            var phArr = new List<short>();
-            foreach (var item in e.ProcessHistoryValues)
-            {
-                var fp = Convert.ToDouble(item);
-                var wh = (short)Math.Truncate(fp);
-                var d = (fp - wh) * 100;
-                var dec = (short)(Math.Round(d));
-                phArr.Add(wh);
-                phArr.Add(dec);
-            }
-
-            Array.Copy(phArr.ToArray(), 0, retArr, 22, phArr.Count());
             var s = new PlcWriter();
             s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
             if (Logger.Enabled)
@@ -433,6 +497,8 @@ namespace OESListener
 
         public void EipSetupResponse(SetupEventArgs e)
         {
+            e.ParseReturnData();
+
             e.OutTagName = "N238[0]";
             var retArr = new short[71];
 
@@ -495,18 +561,18 @@ namespace OESListener
             var s = new PlcWriter();
             s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
 
-            if (e.Request == "4")
+            if (e.ProcessIndicator == 4)
                 EipPlcModelSetupResponse(e.SenderIp, e);
 
         }
 
         public void EipPlcModelSetupResponse(string ipAddress, SetupEventArgs e)
         {
-            var retArr = new short[34];
-            for (var i = 0; i < e.Response.PlcModelSetup.Length; i++)
-            {
-                short.TryParse(e.Response.PlcModelSetup[i], out retArr[i]);
-            }
+            var retArr = e.PlcModelSetup;
+            //for (var i = 0; i < e.Response.PlcModelSetup.Length; i++)
+            //{
+            //    short.TryParse(e.Response.PlcModelSetup[i], out retArr[i]);
+            //}
 
             var s = new PlcWriter();
             s.LogixResponse(ipAddress, retArr, "N241[0]");
@@ -516,9 +582,9 @@ namespace OESListener
         {
             var retArr = new short[34];
             e.OutTagName = e.InTagName;
+            retArr[20] = e.SuccessIndicator;
+            retArr[21] = e.FaultCode;
 
-            short.TryParse(e.Status, out retArr[20]);
-            short.TryParse(e.FailureCode, out retArr[21]);
             var s = new PlcWriter();
 
             s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
@@ -529,7 +595,7 @@ namespace OESListener
         {
             var retArr = new short[20];
             e.OutTagName = "N247[0]";
-            var itemArr = Util.StringToAbIntArray(e.ItemID);
+            var itemArr = Util.StringToAbIntArray(e.ItemId);
             Array.Copy(itemArr, 0, retArr, 0, itemArr.Length);
             var s = new PlcWriter();
 

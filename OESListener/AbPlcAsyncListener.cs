@@ -153,17 +153,38 @@ namespace OESListener
 
             e.GeneratedBarcode = Encoding.Default.GetString(bytes.ToArray());
 
-            e.Request = dataArray[18].ToString();
-            e.Status = dataArray[19].ToString();
-            e.FailureCode = dataArray[20].ToString();
+            e.ProcessIndicator = dataArray[18];
+            e.SuccessIndicator = dataArray[19];
+            e.FaultCode = dataArray[20];
 
-            for (var i = 22; i < dataArray.Length; i++)
-            {
-                if (i % 2 == 0)
-                {
-                    e.ProcessHistoryValues.Add((dataArray[i] + (dataArray[i + 1] * .01)).ToString());
-                }
-            }
+            e.P_Val_1 = dataArray[22];
+            e.P_Val_2 = dataArray[23];
+            e.P_Val_3 = dataArray[24];
+            e.P_Val_4 = dataArray[25];
+            e.P_Val_5 = dataArray[26];
+            e.P_Val_6 = dataArray[27];
+            e.P_Val_7 = dataArray[28];
+            e.P_Val_8 = dataArray[29];
+            e.P_Val_9 = dataArray[30];
+            e.P_Val_10 = dataArray[31];
+            e.P_Val_11 = dataArray[32];
+            e.P_Val_12 = dataArray[33];
+            e.P_Val_13 = dataArray[34];
+            e.P_Val_14 = dataArray[35];
+            e.P_Val_15 = dataArray[36];
+            e.P_Val_16 = dataArray[37];
+            e.P_Val_17 = dataArray[38];
+            e.P_Val_18 = dataArray[39];
+            e.P_Val_19 = dataArray[40];
+            e.P_Val_20 = dataArray[41];
+            e.P_Val_21 = dataArray[42];
+            e.P_Val_22 = dataArray[43];
+            e.P_Val_23 = dataArray[44];
+            e.P_Val_24 = dataArray[45];
+            e.P_Val_25 = dataArray[46];
+            e.P_Val_26 = dataArray[47];
+            e.P_Val_27 = dataArray[48];
+            e.P_Val_28 = dataArray[49];
 
             OnProductionReceived(e);
         }
@@ -199,7 +220,7 @@ namespace OESListener
 
             e.OperatorID = Encoding.Default.GetString(bytes.ToArray());
 
-            e.Request = dataArray[18].ToString();
+            e.ProcessIndicator = dataArray[18];
 
             OnLoginReceived(e);
         }
@@ -237,10 +258,10 @@ namespace OESListener
 
                 e.Component = Encoding.Default.GetString(bytes.ToArray());
 
-                e.AccessId = dataArray[16].ToString();
+                e.AccessId = dataArray[16];
             }
 
-            e.Request = dataArray[18].ToString();
+            e.ProcessIndicator = dataArray[18];
 
             bytes = new List<byte>();
             for (int i = 22; i < 30; i++)

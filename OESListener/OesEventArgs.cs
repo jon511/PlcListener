@@ -23,9 +23,11 @@ namespace OESListener
         public string SenderIp { get; set; }
         public string CellId { get; set; }
         public string ItemId { get; set; }
-        public string Request { get; set; }
-        public string Status { get; set; }
-        public string FailureCode { get; set; }
+        public short ProcessIndicator { get; set; }
+        public short SuccessIndicator { get; set; }
+        public short FaultCode { get; set; }
+        public short StatusCode { get; set; }
+        public short[] ResponseArray { get; set; }
 
     }
 }

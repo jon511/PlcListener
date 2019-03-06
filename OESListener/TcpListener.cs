@@ -134,6 +134,7 @@ namespace OESListener
                         ReceiveData jsonData;
                         try
                         {
+
                             jsonData = Newtonsoft.Json.JsonConvert.DeserializeObject<ReceiveData>(inString);
                             switch (jsonData.Command)
                             {
@@ -141,32 +142,94 @@ namespace OESListener
                                     var p = new ProductionEventArgs(client);
                                     p.CellId = jsonData.CellId;
                                     p.ItemId = jsonData.ItemId;
-                                    p.Request = jsonData.RequestCode;
-                                    p.Status = jsonData.Status;
-                                    p.FailureCode = jsonData.FailureCode;
-                                    p.ProcessHistoryValues = new List<string>(jsonData.ProcessHistoryValues);
+                                    p.ProcessIndicator = jsonData.RequestCode;
+                                    p.SuccessIndicator = jsonData.Status;
+                                    p.FaultCode = jsonData.FailureCode;
+                                    p.StatusCode = jsonData.Status;
+
+                                    short[] sArr = new short[28];
+                                    var pointer = 0;
+
+                                    for (var di = 0; di < jsonData.ProcessHistoryValues.Length; di++)
+                                    {
+                                        var s1 = jsonData.ProcessHistoryValues[di];
+                                        if (s1.Contains("."))
+                                        {
+                                            double.TryParse(s1, out double dResult);
+                                            var temp1 = Math.Truncate(dResult);
+                                            var temp2 = dResult - temp1;
+                                            var temp3 = temp2 * 100;
+                                            var myArr = s1.Split('.');
+                                            //short.TryParse(myArr[0], out short prodShort);
+                                            sArr[pointer] = Convert.ToInt16(temp1);
+                                            pointer++;
+                                            //short.TryParse(myArr[1], out short prodShort1);
+                                            sArr[pointer] = Convert.ToInt16(temp3);
+                                            pointer++;
+                                        }
+                                        else
+                                        {
+                                            short.TryParse(s1, out short prodShort);
+                                            sArr[pointer] = prodShort;
+                                            pointer++;
+                                            sArr[pointer] = 0;
+                                            pointer++;
+                                        }
+                                    }
+
+                                    p.P_Val_1 = sArr[0];
+                                    p.P_Val_2 = sArr[1];
+                                    p.P_Val_3 = sArr[2];
+                                    p.P_Val_4 = sArr[3];
+                                    p.P_Val_5 = sArr[4];
+                                    p.P_Val_6 = sArr[5];
+                                    p.P_Val_7 = sArr[6];
+                                    p.P_Val_8 = sArr[7];
+                                    p.P_Val_9 = sArr[8];
+                                    p.P_Val_10 = sArr[9];
+                                    p.P_Val_11 = sArr[10];
+                                    p.P_Val_12 = sArr[11];
+                                    p.P_Val_13 = sArr[12];
+                                    p.P_Val_14 = sArr[13];
+                                    p.P_Val_15 = sArr[14];
+                                    p.P_Val_16 = sArr[15];
+                                    p.P_Val_17 = sArr[16];
+                                    p.P_Val_18 = sArr[17];
+                                    p.P_Val_19 = sArr[18];
+                                    p.P_Val_20 = sArr[19];
+                                    p.P_Val_21 = sArr[20];
+                                    p.P_Val_22 = sArr[21];
+                                    p.P_Val_23 = sArr[22];
+                                    p.P_Val_24 = sArr[23];
+                                    p.P_Val_25 = sArr[24];
+                                    p.P_Val_26 = sArr[25];
+                                    p.P_Val_27 = sArr[26];
+                                    p.P_Val_28 = sArr[27];
+
+
                                     p.UseJson = true;
                                     p.listenerType = ListenerType.TCP;
                                     OnProductionReceived(p);
+
                                     break;
                                 case "SETUP":
-                                    if (jsonData.RequestCode == "4" || jsonData.RequestCode == "16")
+                                    if (jsonData.RequestCode == 4 || jsonData.RequestCode == 16)
                                     {
                                         var s = new SetupEventArgs(client);
                                         s.CellId = jsonData.CellId;
-                                        s.Request = jsonData.RequestCode;
+                                        s.ProcessIndicator = jsonData.RequestCode;
                                         s.ModelNumber = jsonData.ModelNumber;
                                         s.OpNumber = jsonData.OpNumber;
                                         s.UseJson = true;
                                         OnSetupReceived(s);
                                     }
-                                    if (jsonData.RequestCode == "5" || jsonData.RequestCode == "17" || jsonData.RequestCode == "6" || jsonData.RequestCode == "18")
+                                    if (jsonData.RequestCode == 5 || jsonData.RequestCode == 17 || jsonData.RequestCode == 6 || jsonData.RequestCode == 18)
                                     {
                                         var s = new SetupEventArgs(client);
                                         s.CellId = jsonData.CellId;
                                         s.Component = jsonData.Component;
                                         s.AccessId = jsonData.AccessId;
-                                        s.Request = jsonData.RequestCode;
+                                        s.ProcessIndicator = jsonData.RequestCode;
                                         s.ModelNumber = jsonData.ModelNumber;
                                         s.OpNumber = jsonData.OpNumber;
                                         s.UseJson = true;
@@ -177,19 +240,19 @@ namespace OESListener
                                     LoginEventArgs l;
                                     switch (jsonData.RequestCode)
                                     {
-                                        case "2":
-                                        case "3":
+                                        case 2:
+                                        case 3:
                                             l = new LoginEventArgs(client);
                                             l.CellId = jsonData.CellId;
                                             l.OperatorID = jsonData.OperatorID;
-                                            l.Request = jsonData.RequestCode;
+                                            l.ProcessIndicator = jsonData.RequestCode;
                                             l.UseJson = true;
                                             OnLoginReceived(l);
                                             break;
-                                        case "17":
+                                        case 17:
                                             l = new LoginEventArgs(client);
                                             l.CellId = jsonData.CellId;
-                                            l.Request = jsonData.RequestCode;
+                                            l.ProcessIndicator = jsonData.RequestCode;
                                             l.UseJson = true;
                                             OnLoginReceived(l);
                                             break;
@@ -204,7 +267,7 @@ namespace OESListener
                                 case "SERIAL":
                                     var sr = new SerialRequestEventArgs(client);
                                     sr.CellId = jsonData.CellId;
-                                    sr.Request = jsonData.RequestCode;
+                                    sr.ProcessIndicator = jsonData.RequestCode;
                                     OnSerialRequestReceived(sr);
 
                                     break;
@@ -248,21 +311,103 @@ namespace OESListener
                                     if (data.Length > 6)
                                     {
                                         var copLen = (data.Length > 20) ? 14 : data.Length - 6;
+                                        dArr = new string[copLen];
                                         Array.Copy(data, 6, dArr, 0, copLen);
                                     }
-                                    var p = new ProductionEventArgs(client, data[1], data[2], data[3], data[4], data[5], dArr);
+                                    short result = 0;
+                                    var p = new ProductionEventArgs(client);
+                                    p.CellId = data[1];
+                                    p.ItemId = data[2];
+                                    short.TryParse(data[3], out result);
+                                    p.ProcessIndicator = result;
+                                    short.TryParse(data[4], out result);
+                                    p.SuccessIndicator = result;
+                                    short.TryParse(data[5], out result);
+                                    p.FaultCode = result;
+                                    p.StatusCode = 0;
+
+                                    short[] sArr = new short[28];
+                                    var pointer = 0;
+                                    for (var di = 0; di < dArr.Length; di++)
+                                    {
+                                        var s1 = dArr[di];
+                                        if (s1.Contains("."))
+                                        {
+                                            var myArr = s1.Split('.');
+                                            short.TryParse(myArr[0], out short prodShort);
+                                            sArr[pointer] = prodShort;
+                                            pointer++;
+                                            short.TryParse(myArr[1], out short prodShort1);
+                                            sArr[pointer] = prodShort1;
+                                            pointer++;
+                                        }
+                                        else
+                                        {
+                                            short.TryParse(s1, out short prodShort);
+                                            sArr[pointer] = prodShort;
+                                            pointer++;
+                                            sArr[pointer] = 0;
+                                            pointer++;
+                                        }
+                                    }
+
+                                    p.P_Val_1 = sArr[0];
+                                    p.P_Val_2 = sArr[1];
+                                    p.P_Val_3 = sArr[2];
+                                    p.P_Val_4 = sArr[3];
+                                    p.P_Val_5 = sArr[4];
+                                    p.P_Val_6 = sArr[5];
+                                    p.P_Val_7 = sArr[6];
+                                    p.P_Val_8 = sArr[7];
+                                    p.P_Val_9 = sArr[8];
+                                    p.P_Val_10 = sArr[9];
+                                    p.P_Val_11 = sArr[10];
+                                    p.P_Val_12 = sArr[11];
+                                    p.P_Val_13 = sArr[12];
+                                    p.P_Val_14 = sArr[13];
+                                    p.P_Val_15 = sArr[14];
+                                    p.P_Val_16 = sArr[15];
+                                    p.P_Val_17 = sArr[16];
+                                    p.P_Val_18 = sArr[17];
+                                    p.P_Val_19 = sArr[18];
+                                    p.P_Val_20 = sArr[19];
+                                    p.P_Val_21 = sArr[20];
+                                    p.P_Val_22 = sArr[21];
+                                    p.P_Val_23 = sArr[22];
+                                    p.P_Val_24 = sArr[23];
+                                    p.P_Val_25 = sArr[24];
+                                    p.P_Val_26 = sArr[25];
+                                    p.P_Val_27 = sArr[26];
+                                    p.P_Val_28 = sArr[27];
+
+
                                     p.UseJson = false;
                                     OnProductionReceived(p);
                                     break;
                                 case "SETUP":
                                     if (data.Length == 5)
                                     {
-                                        var s = new SetupEventArgs(client, data[1], data[2], data[3], data[4]);
+                                        var s = new SetupEventArgs(client);
+                                        s.CellId = data[1];
+                                        short.TryParse(data[2], out short setupShort);
+                                        s.ProcessIndicator = setupShort;
+                                        s.ModelNumber = data[3];
+                                        s.OpNumber = data[4];
+
                                         OnSetupReceived(s);
                                     }
                                     if (data.Length == 7)
                                     {
-                                        var s = new SetupEventArgs(client, data[1], data[2], data[3], data[4], data[5], data[6]);
+                                        var s = new SetupEventArgs(client);
+                                        s.CellId = data[1];
+                                        s.Component = data[2];
+                                        short.TryParse(data[3], out short setupShort);
+                                        s.AccessId = setupShort;
+                                        short.TryParse(data[4], out short setupShort1);
+                                        s.ProcessIndicator = setupShort1;
+                                        s.ModelNumber = data[5];
+                                        s.OpNumber = data[6];
+
                                         OnSetupReceived(s);
                                     }
                                     // get error for wrong length
@@ -272,11 +417,19 @@ namespace OESListener
                                     switch (data.Length)
                                     {
                                         case 4:
-                                            l = new LoginEventArgs(client, data[1], data[2], data[3]);
+                                            l = new LoginEventArgs(client);
+                                            l.CellId = data[1];
+                                            l.OperatorID = data[2];
+                                            short.TryParse(data[3], out short loginResult);
+                                            l.ProcessIndicator = loginResult;
+
                                             OnLoginReceived(l);
                                             break;
                                         case 3:
-                                            l = new LoginEventArgs(client, data[1], data[2]);
+                                            l = new LoginEventArgs(client);
+                                            l.CellId = data[1];
+                                            short.TryParse(data[2], out short loginResult1);
+                                            l.ProcessIndicator = loginResult1;
                                             OnLoginReceived(l);
                                             break;
                                         default:
@@ -289,7 +442,9 @@ namespace OESListener
                                 case "SERIAL":
                                     var sr = new SerialRequestEventArgs(client);
                                     sr.CellId = data[1];
-                                    sr.Request = data[2];
+                                    short.TryParse(data[2], out short res1);
+                                    sr.ProcessIndicator = res1;
+
                                     OnSerialRequestReceived(sr);
                                     break;
                                 default:

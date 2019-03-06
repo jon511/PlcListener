@@ -20,19 +20,19 @@ namespace OESListener
             SenderIp = senderIp;
         }
 
-        public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, string processRequest)
+        public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, short processRequest)
         {
             Client = client;
             CellId = cellID;
-            Request = processRequest;
+            ProcessIndicator = processRequest;
         }
 
-        public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, string operatorID, string processRequest)
+        public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, string operatorID, short processRequest)
         {
             Client = client;
             CellId = cellID;
             OperatorID = operatorID;
-            Request = processRequest;
+            ProcessIndicator = processRequest;
         }
 
     }

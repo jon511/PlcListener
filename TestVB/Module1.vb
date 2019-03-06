@@ -17,7 +17,7 @@ Module Module1
 
         'dim listener with ip only will use default port of 55001 for the tcp listener
         'that can be changed by passing in the desired port as the second argument
-        Dim listener As New Listener("10.50.71.118")
+        Dim listener As New Listener("10.50.71.109")
 
         'if listener.PrintFromFile is set to true, the print code needs to be placed in C:\PrintCode\Final\ for Final labels and
         'C:\PrintCode\Iterim\ for interim labels.
@@ -43,6 +43,7 @@ Module Module1
 
         'do database work here
         'threading is not needed here, all async is handled by the dll
+
 
         'update e with values from database and pass back in listenerResponse.ProductionResponse
 
@@ -94,6 +95,7 @@ Module Module1
         'Serial request transaction comes in here
 
         'do database work here
+        e.ResponseArray(0) = 0
 
         'update e with values from database and pass back in listenerResponse.SerialRequestResponse
         Dim listenerResponse As New ListenerResponse()
