@@ -15,6 +15,7 @@ namespace OESListener
         internal bool UsePlcLogix { get; set; }
         internal bool UsePlcMicrologix { get; set; }
         internal bool UsePlcSlc { get; set; }
+        internal bool UsePlcFive { get; set; }
         internal ListenerType listenerType { get; set; }
         public string InTagName { get; set; }
         public string OutTagName { get; set; }

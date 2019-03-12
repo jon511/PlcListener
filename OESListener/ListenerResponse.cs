@@ -317,7 +317,15 @@ namespace OESListener
             retArr[49] = e.P_Val_28;
 
             var s = new PlcWriter();
-            s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+            if (e.UsePlcFive)
+            {
+                s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            else
+            {
+                s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            
         }
         
         public void PcccSetupResponse(SetupEventArgs e)

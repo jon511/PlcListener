@@ -57,7 +57,11 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener("10.50.71.101");
+            var l = new OESListener.Listener("10.50.71.118");
+            OESListener.Logger.EnableDllLogging = true;
+            OESListener.Logger.LogToConsole = true;
+            OESListener.Logger.LogToFile = false;
+
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
             l.PrintFromFile = true;
@@ -65,7 +69,16 @@ namespace Test
             l.SetupReceived += L_SetupReceived;
             l.ProductionReceived += L_ProductionReceived;
             l.SerialRequestReceived += L_SerialRequestReceived;
+            
+            short[] s1 = new short[50];
 
+            for (var i = 0; i < 50; i++)
+            {
+                s1[i] = (Int16)i;
+            }
+
+            var s = new OESListener.PlcWriter();
+            s.PlcResponse("10.50.201.114",  s1, "N229:1");
 
             Console.Read();
 
@@ -84,8 +97,8 @@ namespace Test
             //var number = new Random();
             //var rand = number.Next(10, 150);
             //Thread.Sleep(rand);
-            e.CellId = "newCell";
-            e.ItemId = "itemID";
+            //e.CellId = "newCell";
+            //e.ItemId = "itemID";
             e.P_Val_1 = 101;
             e.P_Val_2 = 10000;
             e.P_Val_3 = 9999;
@@ -111,7 +124,10 @@ namespace Test
 
         private static void L_LoginReceived(object sender, OESListener.LoginEventArgs e)
         {
-            
+            e.CellId = "";
+            e.OperatorID = "";
+            e.SuccessIndicator = 1;
+            e.ResponseArray = new short[34];
 
             var resp = new OESListener.ListenerResponse();
             resp.LoginResponse(e);

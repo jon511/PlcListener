@@ -73,23 +73,31 @@ namespace OESListener
                 }
             }
 
+            var usePlcFive = false;
+
+            if (dataArray[18] > 99)
+            {
+                usePlcFive = true;
+                dataArray[18] -= 100;
+            }
+
             switch (dataArray[18])
             {
                 case 0:
                 case 1:
-                    ParseProductionTransaction(senderIp, dataArray, tagName);
+                    ParseProductionTransaction(senderIp, dataArray, tagName, usePlcFive);
                     break;
                 case 2:
                 case 3:
-                    ParseLoginTransaction(senderIp, dataArray, tagName);
+                    ParseLoginTransaction(senderIp, dataArray, tagName, usePlcFive);
                     break;
                 case 4:
                 case 5:
                 case 6:
-                    ParseSetupTransaction(senderIp, dataArray, tagName);
+                    ParseSetupTransaction(senderIp, dataArray, tagName, usePlcFive);
                     break;
                 case 21:
-                    ParseRequestSerialTransaction(senderIp, dataArray, tagName);
+                    ParseRequestSerialTransaction(senderIp, dataArray, tagName, usePlcFive);
                     break;
                 case 31:
                     // print final label
@@ -101,14 +109,14 @@ namespace OESListener
                     break;
                 default:
                     if (tagName == "N247:20")
-                        ParseRequestSerialTransaction(senderIp, dataArray, tagName);
+                        ParseRequestSerialTransaction(senderIp, dataArray, tagName, usePlcFive);
 
                     break;
             }
 
         }
 
-        protected void ParseProductionTransaction(string senderIp, short[] dataArray, string tagName)
+        protected void ParseProductionTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false)
         {
             var e = new ProductionEventArgs(senderIp);
             e.InTagName = tagName;
@@ -116,6 +124,8 @@ namespace OESListener
                 e.listenerType = ListenerType.PCCC;
             else
                 e.listenerType = ListenerType.EIP;
+
+            e.UsePlcFive = usePlcFive;
 
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
@@ -189,9 +199,18 @@ namespace OESListener
             OnProductionReceived(e);
         }
 
-        protected void ParseLoginTransaction(string senderIp, short[] dataArray, string tagName)
+        protected void ParseLoginTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false)
         {
             var e = new LoginEventArgs(senderIp);
+
+            e.InTagName = tagName;
+            if (e.InTagName.Contains(":"))
+                e.listenerType = ListenerType.PCCC;
+            else
+                e.listenerType = ListenerType.EIP;
+
+            e.UsePlcFive = usePlcFive;
+
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
             {
@@ -203,6 +222,7 @@ namespace OESListener
                 if (b2 != 0)
                     bytes.Add(b2);
             }
+
 
             e.CellId = Encoding.Default.GetString(bytes.ToArray());
 
@@ -225,9 +245,18 @@ namespace OESListener
             OnLoginReceived(e);
         }
 
-        protected void ParseSetupTransaction(string senderIp, short[] dataArray, string tagName)
+        protected void ParseSetupTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false)
         {
             var e = new SetupEventArgs(senderIp);
+
+            e.InTagName = tagName;
+            if (e.InTagName.Contains(":"))
+                e.listenerType = ListenerType.PCCC;
+            else
+                e.listenerType = ListenerType.EIP;
+
+            e.UsePlcFive = usePlcFive;
+
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
             {
@@ -294,11 +323,18 @@ namespace OESListener
             OnSetupReceived(e);
         }
 
-        protected void ParseRequestSerialTransaction(string senderIp, short[] dataArray, string tagName)
+        protected void ParseRequestSerialTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false)
         {
             var e = new SerialRequestEventArgs(senderIp);
 
-            e.listenerType = ListenerType.PCCC;
+            e.InTagName = tagName;
+            if (e.InTagName.Contains(":"))
+                e.listenerType = ListenerType.PCCC;
+            else
+                e.listenerType = ListenerType.EIP;
+
+            e.UsePlcFive = usePlcFive;
+
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
             {

@@ -11,16 +11,87 @@ namespace OESListener
 {
     public class PlcWriter
     {
+
+        public void PlcResponse(string ipAddress, short[] data, string tagName)
+        {
+            TcpClient c = new TcpClient(ipAddress, 2222);
+            var writer = new BinaryWriter(c.GetStream());
+
+            var dataByteLength = (byte)(data.Length * 2);
+            var writeLength = (byte)(dataByteLength + 21);
+            var byteCountPlusOne = (byte)(dataByteLength + 1);
+            var elementCount = (byte)data.Length;
+
+            byte[] outArr = new byte[] { 1, 7, 0, writeLength, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd3, 0, 0, 0, 0, 0, 0x1d, 0x26, 0x26, 0, 0, 0, 0 };
+
+            var tagArr = Util.DesturctureSlcTag(tagName);
+            var header = new byte[] { 0, 5, 0, 0, 0x0f, 0, 0x73, 0x46, 0x67, 0, 0, elementCount, 0, 0x07, 0, tagArr[0], tagArr[2], 0x99, 0x09, byteCountPlusOne, 0x42 };
+            var dataByteArr = Util.ConvertToByteArray(data);
+            var origSize = outArr.Length;
+            Array.Resize(ref outArr, header.Length + origSize);
+            Array.Copy(header, 0, outArr, origSize, header.Length);
+            origSize = outArr.Length;
+            Array.Resize(ref outArr, dataByteArr.Length + origSize);
+            Array.Copy(dataByteArr, 0, outArr, origSize, dataByteArr.Length);
+
+            Task GetResponse = new Task(() =>
+            {
+
+                var reader = new BinaryReader(c.GetStream());
+
+                Byte[] inData = new Byte[1024];
+                while (true)
+                {
+                    var bytes = reader.Read(inData, 0, inData.Length);
+                    var byteArr = new byte[bytes];
+                    Array.Copy(inData, 0, byteArr, 0, byteArr.Length);
+
+                    if (bytes > 0)
+                    {
+                        if (byteArr[0] == 0x02 && byteArr[1] == 0x01)
+                        {
+                            outArr[4] = byteArr[4];
+                            outArr[5] = byteArr[5];
+                            outArr[6] = byteArr[6];
+                            outArr[7] = byteArr[7];
+                            writer.Write(outArr);
+                        }
+
+                        if (byteArr[0] == 0x02 && byteArr[1] == 0x07)
+                        {
+                            if (Logger.Enabled)
+                                Logger.Log("plc accecpted response");
+
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+
+                }
+
+                c.GetStream().Close();
+                c.Close();
+            });
+            GetResponse.Start();
+
+            //open socket connections to target plc on port 2222
+            var arr = new byte[] { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0x28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            writer.Write(arr);
+            GetResponse.Wait();
+
+        }
         
         public void SlcResponse(string ipAddress, short[] data, string tagName)
         {
             TcpClient c = new TcpClient(ipAddress, 2222);
             var writer = new BinaryWriter(c.GetStream());
 
-
             var dataByteLength = (byte)(data.Length * 2);
             var writeLength = (byte)(dataByteLength + 14);
-
 
             byte[] outArr = new byte[] { 1, 7, 0, writeLength, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd3, 0, 0, 0, 0, 0, 0x1d, 0x26, 0x26, 0, 0, 0, 0 };
 
@@ -33,9 +104,6 @@ namespace OESListener
             origSize = outArr.Length;
             Array.Resize(ref outArr, dataByteArr.Length + origSize);
             Array.Copy(dataByteArr, 0, outArr, origSize, dataByteArr.Length);
-
-
-
 
             Task GetResponse = new Task(() =>
             {
