@@ -10,7 +10,7 @@ Module Module1
         'if Logger.LogPath is not set, the default logPath will in the same location as the exe file. you can set a custom log file location by
         'setting Logger.LogPath to the desired location.
 
-        'Logger.LogPath = "C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\bin\Debug\Log"
+        'Logger.LogPath = "C:\OesLog"
         'Logger.LogToFile = True
         'Logger.LogToConsole = True
         'Logger.EnableDllLogging = False

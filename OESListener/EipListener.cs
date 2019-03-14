@@ -125,6 +125,7 @@ namespace OESListener
                     if (receivedBytes[0] == 0x04)
                     {
                         ListServices(handler, receivedBytes);
+                        handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallBack), state);
                     }
                     else if (receivedBytes[0] == 0x65)
                     {
@@ -138,7 +139,11 @@ namespace OESListener
                         // value 0x52 indicates unconnected message. Data is appending to this transaction.
                         if (receivedBytes[40] == 0x54)
                         {
-                            FowardOpen(handler, receivedBytes, plcID, senderIp);
+                            //test adding plcId to state object
+                            Buffer.BlockCopy(receivedBytes, 52, state.plcId, 0, 4);
+
+                            FowardOpen(handler, receivedBytes, state.plcId, senderIp);
+                            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallBack), state);
                         }
                         else if (receivedBytes[40] == 0x52)
                         {
@@ -153,7 +158,7 @@ namespace OESListener
 
                     else if (receivedBytes[0] == 0x70)
                     {
-                        SendUnitData(handler, receivedBytes, plcID);
+                        SendUnitData(handler, receivedBytes, state.plcId);
                         handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallBack), state);
                     }
                     else
@@ -183,7 +188,7 @@ namespace OESListener
 
         private void ListServices(Socket handler, byte[] bytes)
         {
-            bytes[2] = 26;
+            bytes[2] = 0x1a;
             byte[] resArr = { 0x01, 0x00, 0x00, 0x01, 0x14, 0x00, 0x01, 0x00, 0x20, 0x00 };
             byte[] nameOfService = { 0x43, 0x6f, 0x6d, 0x6d, 0x75, 0x6e, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x00, 0x00 };
 
@@ -287,7 +292,7 @@ namespace OESListener
             Buffer.BlockCopy(bytes, 0, rArr, 0, rArr.Length);
 
             rArr[2] = 0x25;
-
+            
             rArr[36] = plcID[0];
             rArr[37] = plcID[1];
             rArr[38] = plcID[2];

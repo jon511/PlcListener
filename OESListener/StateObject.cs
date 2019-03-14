@@ -12,5 +12,6 @@ namespace OESListener
         public const int BufferSize = 1024;
         public byte[] buffer = new byte[BufferSize];
         public StringBuilder sb = new StringBuilder();
+        public byte[] plcId = new byte[4];
     }
 }

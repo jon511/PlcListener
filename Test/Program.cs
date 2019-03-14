@@ -57,10 +57,17 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener("10.50.71.118");
-            OESListener.Logger.EnableDllLogging = true;
-            OESListener.Logger.LogToConsole = true;
-            OESListener.Logger.LogToFile = false;
+            var l = new OESListener.Listener("192.168.86.215");
+            OESListener.Logger.EnableDllLogging = false;
+            OESListener.Logger.LogToConsole = false;
+            OESListener.Logger.LogToFile = true;
+            OESListener.Logger.LogPath = @"C:\OesLog\";
+            OESListener.Logger.Log("test message");
+            OESListener.Logger.Log("test message 2");
+            OESListener.Logger.Log("test message 3");
+            OESListener.Logger.Log("test message 4");
+            OESListener.Logger.Log("test message 5");
+            OESListener.Logger.Log("test message 6");
 
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
@@ -70,16 +77,6 @@ namespace Test
             l.ProductionReceived += L_ProductionReceived;
             l.SerialRequestReceived += L_SerialRequestReceived;
             
-            short[] s1 = new short[50];
-
-            for (var i = 0; i < 50; i++)
-            {
-                s1[i] = (Int16)i;
-            }
-
-            var s = new OESListener.PlcWriter();
-            s.PlcResponse("10.50.201.114",  s1, "N229:1");
-
             Console.Read();
 
         }

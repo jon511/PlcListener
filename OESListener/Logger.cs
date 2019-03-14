@@ -71,16 +71,16 @@ namespace OESListener
                 while (itemsToWrite.TryDequeue(out string item))
                 {
                     var s = string.Format("{0} {1} - {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), item);
-
+                    
                     if (logToConsole)
                         Console.WriteLine(s);
 
                     if (logToFile)
                     {
-                        using (StreamWriter fileout = File.CreateText(string.Format("{0}Log.txt", logPath)))
-                        {
-                            fileout.Write(s);
-                        }
+                        var fileout = new StreamWriter(string.Format("{0}Log_{1}_{2}_{3}.txt", logPath, DateTime.Now.Month.ToString(), 
+                            DateTime.Now.Day.ToString(), DateTime.Now.Year.ToString()), true);
+                        fileout.WriteLine(s);
+                        fileout.Close();
                     }
                 }
                 Thread.Sleep(10);
@@ -94,10 +94,10 @@ namespace OESListener
             {
                 if (!active)
                     StartLogger();
-
-                itemsToWrite.Enqueue(message);
             }
-            
+
+            itemsToWrite.Enqueue(message);
+
         }
 
 
