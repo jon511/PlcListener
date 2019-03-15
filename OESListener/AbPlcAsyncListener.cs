@@ -163,6 +163,20 @@ namespace OESListener
 
             e.GeneratedBarcode = Encoding.Default.GetString(bytes.ToArray());
 
+            e.In_Word_0 = dataArray[0];
+            e.In_Word_1 = dataArray[1];
+            e.In_Word_2 = dataArray[2];
+            e.In_Word_3 = dataArray[3];
+            e.In_Word_4 = dataArray[4];
+            e.In_Word_5 = dataArray[5];
+            e.In_Word_6 = dataArray[6];
+            e.In_Word_7 = dataArray[7];
+            e.In_Word_8 = dataArray[8];
+            e.In_Word_9 = dataArray[9];
+            e.In_Word_10 = dataArray[10];
+            e.In_Word_11 = dataArray[11];
+
+
             e.ProcessIndicator = dataArray[18];
             e.SuccessIndicator = dataArray[19];
             e.FaultCode = dataArray[20];

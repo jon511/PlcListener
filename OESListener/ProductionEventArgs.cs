@@ -12,9 +12,11 @@ namespace OESListener
         public string[] ProcessHistoryValues {
             get
             {
-                return new string[] { (P_Val_1 + (P_Val_2 * 0.01)).ToString(), (P_Val_3 + (P_Val_4 * 0.01)).ToString(), (P_Val_5 + (P_Val_6 * 0.01)).ToString(), (P_Val_7 + (P_Val_8 * 0.01)).ToString(), (P_Val_9 + (P_Val_10 * 0.01)).ToString(),
-                (P_Val_11 + (P_Val_12 * 0.01)).ToString(),(P_Val_13 + (P_Val_14 * 0.01)).ToString(),(P_Val_15 + (P_Val_16 * 0.01)).ToString(),(P_Val_17 + (P_Val_18 * 0.01)).ToString(),(P_Val_19 + (P_Val_20 * 0.01)).ToString(),
-                (P_Val_21 + (P_Val_22 * 0.01)).ToString(),(P_Val_23 + (P_Val_24 * 0.01)).ToString(),(P_Val_25 + (P_Val_26 * 0.01)).ToString(),(P_Val_27 + (P_Val_28 * 0.01)).ToString()};
+                return new string[] { (ResponseArray[22] + (ResponseArray[23] * 0.01)).ToString(), (ResponseArray[24] + (ResponseArray[25] * 0.01)).ToString(), (ResponseArray[26] + (ResponseArray[27] * 0.01)).ToString(),
+                    (ResponseArray[28] + (ResponseArray[29] * 0.01)).ToString(), (ResponseArray[30] + (ResponseArray[31] * 0.01)).ToString(), (ResponseArray[32] + (ResponseArray[33] * 0.01)).ToString(),
+                    (ResponseArray[34] + (ResponseArray[35] * 0.01)).ToString(),(ResponseArray[36] + (ResponseArray[37] * 0.01)).ToString(),(ResponseArray[38] + (ResponseArray[39] * 0.01)).ToString(),
+                    (ResponseArray[40] + (ResponseArray[41] * 0.01)).ToString(),(ResponseArray[42] + (ResponseArray[43] * 0.01)).ToString(),(ResponseArray[44] + (ResponseArray[45] * 0.01)).ToString(),
+                    (ResponseArray[46] + (ResponseArray[47] * 0.01)).ToString(),(ResponseArray[48] + (ResponseArray[49] * 0.01)).ToString()};
             }
             set
             {
@@ -78,18 +80,43 @@ namespace OESListener
         public short P_Val_27 { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         public short P_Val_28 { get; set; }
-
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_0 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_1 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_2 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_3 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_4 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_5 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_6 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_7 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_8 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_9 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_10 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_11 { get; set; }
 
 
 
         public ProductionEventArgs(System.Net.Sockets.TcpClient client)
         {
             Client = client;
+            ResponseArray = new short[50];
         }
 
         public ProductionEventArgs(string senderIp)
         {
             SenderIp = senderIp;
+            ResponseArray = new short[50];
         }
         public ProductionEventArgs(System.Net.Sockets.TcpClient client, string cellID, string itemID, short requestType, short status, short failureCode, short[] data)
         {
@@ -130,6 +157,8 @@ namespace OESListener
             P_Val_26 = (data.Length > 25) ? data[25] : z;
             P_Val_27 = (data.Length > 26) ? data[26] : z;
             P_Val_28 = (data.Length > 27) ? data[27] : z;
+
+            ResponseArray = new short[50];
 
         }
 
@@ -172,6 +201,8 @@ namespace OESListener
             P_Val_26 = (data.Length > 25) ? data[25] : z;
             P_Val_27 = (data.Length > 26) ? data[26] : z;
             P_Val_28 = (data.Length > 27) ? data[27] : z;
+
+            ResponseArray = new short[50];
         }
     }
 }

@@ -29,6 +29,7 @@ namespace OESListener
         public short FaultCode { get; set; }
         public short StatusCode { get; set; }
         public short[] ResponseArray { get; set; }
+        public short[] IncomingArray { get; set; }
 
     }
 }

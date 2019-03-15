@@ -147,6 +147,14 @@ namespace OESListener
                                     p.FaultCode = jsonData.FailureCode;
                                     p.StatusCode = jsonData.Status;
 
+                                    var cellIdArray = Util.StringToAbIntArray(p.CellId);
+                                    var itemIdArray = Util.StringToAbIntArray(p.ItemId);
+                                    var generatedBarcodeArray = Util.StringToAbIntArray(p.GeneratedBarcode);
+
+                                    Array.Copy(cellIdArray, 0, p.ResponseArray, 0, cellIdArray.Length);
+                                    Array.Copy(itemIdArray, 0, p.ResponseArray, 5, itemIdArray.Length);
+                                    Array.Copy(generatedBarcodeArray, 0, p.ResponseArray, 11, generatedBarcodeArray.Length);
+                                    
                                     short[] sArr = new short[28];
                                     var pointer = 0;
 
@@ -206,6 +214,18 @@ namespace OESListener
                                     p.P_Val_27 = sArr[26];
                                     p.P_Val_28 = sArr[27];
 
+                                    p.In_Word_0 = cellIdArray[0];
+                                    p.In_Word_1 = cellIdArray[1];
+                                    p.In_Word_2 = cellIdArray[2];
+                                    p.In_Word_3 = cellIdArray[3];
+                                    p.In_Word_4 = cellIdArray[4];
+                                    p.In_Word_5 = cellIdArray[5];
+                                    p.In_Word_6 = cellIdArray[6];
+                                    p.In_Word_7 = cellIdArray[7];
+                                    p.In_Word_8 = cellIdArray[8];
+                                    p.In_Word_9 = cellIdArray[9];
+                                    p.In_Word_10 = cellIdArray[10];
+                                    p.In_Word_11 = cellIdArray[11];
 
                                     p.UseJson = true;
                                     p.listenerType = ListenerType.TCP;
@@ -326,6 +346,14 @@ namespace OESListener
                                     p.FaultCode = result;
                                     p.StatusCode = 0;
 
+                                    var cellIdArray = Util.StringToAbIntArray(p.CellId);
+                                    var itemIdArray = Util.StringToAbIntArray(p.ItemId);
+                                    var generatedBarcodeArray = Util.StringToAbIntArray(p.GeneratedBarcode);
+
+                                    Array.Copy(cellIdArray, 0, p.ResponseArray, 0, cellIdArray.Length);
+                                    Array.Copy(itemIdArray, 0, p.ResponseArray, 5, itemIdArray.Length);
+                                    Array.Copy(generatedBarcodeArray, 0, p.ResponseArray, 11, generatedBarcodeArray.Length);
+
                                     short[] sArr = new short[28];
                                     var pointer = 0;
                                     for (var di = 0; di < dArr.Length; di++)
@@ -380,6 +408,18 @@ namespace OESListener
                                     p.P_Val_27 = sArr[26];
                                     p.P_Val_28 = sArr[27];
 
+                                    p.In_Word_0 = cellIdArray[0];
+                                    p.In_Word_1 = cellIdArray[1];
+                                    p.In_Word_2 = cellIdArray[2];
+                                    p.In_Word_3 = cellIdArray[3];
+                                    p.In_Word_4 = cellIdArray[4];
+                                    p.In_Word_5 = cellIdArray[5];
+                                    p.In_Word_6 = cellIdArray[6];
+                                    p.In_Word_7 = cellIdArray[7];
+                                    p.In_Word_8 = cellIdArray[8];
+                                    p.In_Word_9 = cellIdArray[9];
+                                    p.In_Word_10 = cellIdArray[10];
+                                    p.In_Word_11 = cellIdArray[11];
 
                                     p.UseJson = false;
                                     OnProductionReceived(p);

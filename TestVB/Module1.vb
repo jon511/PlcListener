@@ -10,14 +10,16 @@ Module Module1
         'if Logger.LogPath is not set, the default logPath will in the same location as the exe file. you can set a custom log file location by
         'setting Logger.LogPath to the desired location.
 
-        'Logger.LogPath = "C:\OesLog"
-        'Logger.LogToFile = True
+        Logger.LogPath = "C:\OesLog"
+        Logger.LogToFile = True
         'Logger.LogToConsole = True
-        'Logger.EnableDllLogging = False
+        Logger.EnableDllLogging = False
+        Logger.Log(String.Format("{0}", 10))
+
 
         'dim listener with ip only will use default port of 55001 for the tcp listener
         'that can be changed by passing in the desired port as the second argument
-        Dim listener As New Listener("10.50.71.109")
+        Dim listener As New Listener()
 
         'if listener.PrintFromFile is set to true, the print code needs to be placed in C:\PrintCode\Final\ for Final labels and
         'C:\PrintCode\Iterim\ for interim labels.
@@ -43,7 +45,9 @@ Module Module1
 
         'do database work here
         'threading is not needed here, all async is handled by the dll
-
+        'Console.WriteLine(e.ResponseArray.Length)
+        ReDim e.ResponseArray(50)
+        Console.WriteLine(e.ResponseArray.Length)
 
         'update e with values from database and pass back in listenerResponse.ProductionResponse
 
