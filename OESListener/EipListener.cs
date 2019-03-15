@@ -140,7 +140,8 @@ namespace OESListener
                         if (receivedBytes[40] == 0x54)
                         {
                             //test adding plcId to state object
-                            Buffer.BlockCopy(receivedBytes, 52, state.plcId, 0, 4);
+                            Array.Copy(receivedBytes, 52, state.plcId, 0, 4);
+                            Array.Copy(receivedBytes, 48, state.conId, 0, 4);
 
                             FowardOpen(handler, receivedBytes, state.plcId, senderIp);
                             handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallBack), state);
@@ -158,7 +159,7 @@ namespace OESListener
 
                     else if (receivedBytes[0] == 0x70)
                     {
-                        SendUnitData(handler, receivedBytes, state.plcId);
+                        SendUnitData(handler, receivedBytes, state.plcId, state.conId);
                         handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallBack), state);
                     }
                     else
@@ -240,7 +241,7 @@ namespace OESListener
 
         private void FowardOpen(Socket handler, byte[] bytes, byte[] plcID, string senderIP)
         {
-            var retArr = new byte[72];
+            var retArr = new byte[70];
             Buffer.BlockCopy(bytes, 0, retArr, 0, retArr.Length);
             Buffer.BlockCopy(bytes, 52, plcID, 0, 4);
 
@@ -286,13 +287,18 @@ namespace OESListener
 
         }
 
-        private void SendUnitData(Socket handler, byte[] bytes, byte[] plcID)
+        private void SendUnitData(Socket handler, byte[] bytes, byte[] plcID, byte[] conId)
         {
             var rArr = new byte[61];
             Buffer.BlockCopy(bytes, 0, rArr, 0, rArr.Length);
 
             rArr[2] = 0x25;
-            
+
+            rArr[32] = conId[0];
+            rArr[33] = conId[1];
+            rArr[34] = conId[2];
+            rArr[35] = conId[3];
+
             rArr[36] = plcID[0];
             rArr[37] = plcID[1];
             rArr[38] = plcID[2];

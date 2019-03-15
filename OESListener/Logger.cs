@@ -77,8 +77,8 @@ namespace OESListener
 
                     if (logToFile)
                     {
-                        var fileout = new StreamWriter(string.Format("{0}Log_{1}_{2}_{3}.txt", logPath, DateTime.Now.Month.ToString(), 
-                            DateTime.Now.Day.ToString(), DateTime.Now.Year.ToString()), true);
+                        var fileout = new StreamWriter(string.Format("{0}{3}_{1}_{2}_{4:HH}_Log.txt", logPath, DateTime.Now.Month.ToString(), 
+                            DateTime.Now.Day.ToString(), DateTime.Now.Year.ToString(), DateTime.Now.Hour.ToString()), true);
                         fileout.WriteLine(s);
                         fileout.Close();
                     }

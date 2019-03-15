@@ -13,5 +13,6 @@ namespace OESListener
         public byte[] buffer = new byte[BufferSize];
         public StringBuilder sb = new StringBuilder();
         public byte[] plcId = new byte[4];
+        public byte[] conId = new byte[4];
     }
 }

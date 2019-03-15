@@ -57,17 +57,7 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener("192.168.86.215");
-            OESListener.Logger.EnableDllLogging = false;
-            OESListener.Logger.LogToConsole = false;
-            OESListener.Logger.LogToFile = true;
-            OESListener.Logger.LogPath = @"C:\OesLog\";
-            OESListener.Logger.Log("test message");
-            OESListener.Logger.Log("test message 2");
-            OESListener.Logger.Log("test message 3");
-            OESListener.Logger.Log("test message 4");
-            OESListener.Logger.Log("test message 5");
-            OESListener.Logger.Log("test message 6");
+            var l = new OESListener.Listener("10.50.71.127");
 
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
