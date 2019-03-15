@@ -146,6 +146,8 @@ namespace OESListener
                                     p.SuccessIndicator = jsonData.Status;
                                     p.FaultCode = jsonData.FailureCode;
                                     p.StatusCode = jsonData.Status;
+                                    p.GeneratedBarcode = (string.IsNullOrEmpty(jsonData.GeneratedBarcode)) ? "" : jsonData.GeneratedBarcode;
+                                    
 
                                     var cellIdArray = Util.StringToAbIntArray(p.CellId);
                                     var itemIdArray = Util.StringToAbIntArray(p.ItemId);
@@ -214,18 +216,18 @@ namespace OESListener
                                     p.P_Val_27 = sArr[26];
                                     p.P_Val_28 = sArr[27];
 
-                                    p.In_Word_0 = cellIdArray[0];
-                                    p.In_Word_1 = cellIdArray[1];
-                                    p.In_Word_2 = cellIdArray[2];
-                                    p.In_Word_3 = cellIdArray[3];
-                                    p.In_Word_4 = cellIdArray[4];
-                                    p.In_Word_5 = cellIdArray[5];
-                                    p.In_Word_6 = cellIdArray[6];
-                                    p.In_Word_7 = cellIdArray[7];
-                                    p.In_Word_8 = cellIdArray[8];
-                                    p.In_Word_9 = cellIdArray[9];
-                                    p.In_Word_10 = cellIdArray[10];
-                                    p.In_Word_11 = cellIdArray[11];
+                                    p.In_Word_0 = (cellIdArray.Length > 0) ? cellIdArray[0] : Convert.ToInt16(0);
+                                    p.In_Word_1 = (cellIdArray.Length > 1) ? cellIdArray[1] : Convert.ToInt16(0);
+                                    p.In_Word_2 = (cellIdArray.Length > 2) ? cellIdArray[2] : Convert.ToInt16(0);
+                                    p.In_Word_3 = (cellIdArray.Length > 3) ? cellIdArray[3] : Convert.ToInt16(0);
+                                    p.In_Word_4 = (cellIdArray.Length > 4) ? cellIdArray[4] : Convert.ToInt16(0);
+                                    p.In_Word_5 = (itemIdArray.Length > 0) ? itemIdArray[0] : Convert.ToInt16(0);
+                                    p.In_Word_6 = (itemIdArray.Length > 1) ? itemIdArray[1] : Convert.ToInt16(0);
+                                    p.In_Word_7 = (itemIdArray.Length > 2) ? itemIdArray[2] : Convert.ToInt16(0);
+                                    p.In_Word_8 = (itemIdArray.Length > 3) ? itemIdArray[3] : Convert.ToInt16(0);
+                                    p.In_Word_9 = (itemIdArray.Length > 4) ? itemIdArray[4] : Convert.ToInt16(0);
+                                    p.In_Word_10 = (itemIdArray.Length > 5) ? itemIdArray[5] : Convert.ToInt16(0);
+                                    p.In_Word_11 = (generatedBarcodeArray.Length > 0) ? generatedBarcodeArray[0] : Convert.ToInt16(0);
 
                                     p.UseJson = true;
                                     p.listenerType = ListenerType.TCP;
@@ -338,6 +340,7 @@ namespace OESListener
                                     var p = new ProductionEventArgs(client);
                                     p.CellId = data[1];
                                     p.ItemId = data[2];
+                                    p.GeneratedBarcode = "";
                                     short.TryParse(data[3], out result);
                                     p.ProcessIndicator = result;
                                     short.TryParse(data[4], out result);
@@ -408,18 +411,18 @@ namespace OESListener
                                     p.P_Val_27 = sArr[26];
                                     p.P_Val_28 = sArr[27];
 
-                                    p.In_Word_0 = cellIdArray[0];
-                                    p.In_Word_1 = cellIdArray[1];
-                                    p.In_Word_2 = cellIdArray[2];
-                                    p.In_Word_3 = cellIdArray[3];
-                                    p.In_Word_4 = cellIdArray[4];
-                                    p.In_Word_5 = cellIdArray[5];
-                                    p.In_Word_6 = cellIdArray[6];
-                                    p.In_Word_7 = cellIdArray[7];
-                                    p.In_Word_8 = cellIdArray[8];
-                                    p.In_Word_9 = cellIdArray[9];
-                                    p.In_Word_10 = cellIdArray[10];
-                                    p.In_Word_11 = cellIdArray[11];
+                                    p.In_Word_0 = (cellIdArray.Length > 0) ? cellIdArray[0] : Convert.ToInt16(0);
+                                    p.In_Word_1 = (cellIdArray.Length > 1) ? cellIdArray[1] : Convert.ToInt16(0);
+                                    p.In_Word_2 = (cellIdArray.Length > 2) ? cellIdArray[2] : Convert.ToInt16(0);
+                                    p.In_Word_3 = (cellIdArray.Length > 3) ? cellIdArray[3] : Convert.ToInt16(0);
+                                    p.In_Word_4 = (cellIdArray.Length > 4) ? cellIdArray[4] : Convert.ToInt16(0);
+                                    p.In_Word_5 = (itemIdArray.Length > 0) ? itemIdArray[0] : Convert.ToInt16(0);
+                                    p.In_Word_6 = (itemIdArray.Length > 1) ? itemIdArray[1] : Convert.ToInt16(0);
+                                    p.In_Word_7 = (itemIdArray.Length > 2) ? itemIdArray[2] : Convert.ToInt16(0);
+                                    p.In_Word_8 = (itemIdArray.Length > 3) ? itemIdArray[3] : Convert.ToInt16(0);
+                                    p.In_Word_9 = (itemIdArray.Length > 4) ? itemIdArray[4] : Convert.ToInt16(0);
+                                    p.In_Word_10 = (itemIdArray.Length > 5) ? itemIdArray[5] : Convert.ToInt16(0);
+                                    p.In_Word_11 = (generatedBarcodeArray.Length > 0) ? generatedBarcodeArray[0] : Convert.ToInt16(0);
 
                                     p.UseJson = false;
                                     OnProductionReceived(p);
