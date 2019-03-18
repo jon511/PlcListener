@@ -203,6 +203,33 @@ namespace OESListener
             0x00, 0x00, 0x00, 0x00, 0xb2, 0x00, eipItem2Length[0], eipItem2Length[1]};
         }
 
+        internal static byte[] EipPcccWrapper(byte[] sessionHandle, int dataLen)
+        {
+
+            var eipCommand = new byte[] { 0x6f, 0x00 };
+            var eipLength = Util.ConvertIntToTwoBytes(dataLen);
+            var eipStatus = new byte[] { 0x00, 0x00, 0x00, 0x00 };
+            var senderContext = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            var eipOptions = new byte[] { 0x00, 0x00, 0x00, 0x00 };
+
+            var eipInterfaceHandle = new byte[] { 0x00, 0x00, 0x00, 0x00 };
+            var eipTimeOut = new byte[] { 0x00, 0x00 };
+            var eipItemCount = new byte[] { 0x02, 0x00 };
+
+            var retList = new List<byte>();
+            retList.AddRange(eipCommand);
+            retList.AddRange(eipLength);
+            retList.AddRange(sessionHandle);
+            retList.AddRange(eipStatus);
+            retList.AddRange(senderContext);
+            retList.AddRange(eipOptions);
+            retList.AddRange(eipInterfaceHandle);
+            retList.AddRange(eipTimeOut);
+            retList.AddRange(eipItemCount);
+
+            return retList.ToArray();
+        }
+
         internal static byte[] Unconnected_Send(byte[] tagIOI, byte[] sessionHandle)
         {
             var eipCommand = new byte[] { 0x6f, 0x00 };

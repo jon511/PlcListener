@@ -12,6 +12,7 @@ namespace Test
 
         static void Main(string[] args)
         {
+
             //var testArr = new string[]{ "1.1", "2.2", "3", "4.4", "5.5", "6"};
             //var realArr = new List<double>();
             //var intArr = new List<int>();
@@ -57,7 +58,7 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener();
+            var l = new OESListener.Listener("10.50.71.122");
 
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
@@ -67,7 +68,9 @@ namespace Test
             l.ProductionReceived += L_ProductionReceived;
             l.SerialRequestReceived += L_SerialRequestReceived;
 
-            
+            //OESListener.PlcWriter p = new OESListener.PlcWriter();
+            //p.MicroLogixResponse("10.53.29.46", new short[3] { 1700, 500, 500 }, "N219:0");
+            //p.MicroLogixResponse("10.53.29.46", new short[10] { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 }, "N219:0");
 
             OESListener.Logger.LogPath = @"C:\OesLog";
             OESListener.Logger.LogToFile = true;
@@ -95,7 +98,7 @@ namespace Test
             e.ResponseArray[18] = e.ProcessIndicator;
             e.ResponseArray[19] = e.SuccessIndicator;
             e.ResponseArray[20] = e.FaultCode;
-            e.ResponseArray[21] = 1;
+            e.ResponseArray[21] = 308;
 
             e.ResponseArray[22] = e.P_Val_1;
             e.ResponseArray[23] = e.P_Val_2;

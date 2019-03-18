@@ -48,7 +48,7 @@ namespace OESListener
 
         }
 
-        protected void ParseSlcRecievedData(string senderIp, byte[] bytes)
+        protected void ParseSlcRecievedData(string senderIp, byte[] bytes, bool useMicroLogix = false)
         {
             var retArr = new int[bytes[0] / 2];
 
@@ -85,19 +85,19 @@ namespace OESListener
             {
                 case 0:
                 case 1:
-                    ParseProductionTransaction(senderIp, dataArray, tagName, usePlcFive);
+                    ParseProductionTransaction(senderIp, dataArray, tagName, usePlcFive, useMicroLogix);
                     break;
                 case 2:
                 case 3:
-                    ParseLoginTransaction(senderIp, dataArray, tagName, usePlcFive);
+                    ParseLoginTransaction(senderIp, dataArray, tagName, usePlcFive, useMicroLogix);
                     break;
                 case 4:
                 case 5:
                 case 6:
-                    ParseSetupTransaction(senderIp, dataArray, tagName, usePlcFive);
+                    ParseSetupTransaction(senderIp, dataArray, tagName, usePlcFive, useMicroLogix);
                     break;
                 case 21:
-                    ParseRequestSerialTransaction(senderIp, dataArray, tagName, usePlcFive);
+                    ParseRequestSerialTransaction(senderIp, dataArray, tagName, usePlcFive, useMicroLogix);
                     break;
                 case 31:
                     // print final label
@@ -109,14 +109,14 @@ namespace OESListener
                     break;
                 default:
                     if (tagName == "N247:20")
-                        ParseRequestSerialTransaction(senderIp, dataArray, tagName, usePlcFive);
+                        ParseRequestSerialTransaction(senderIp, dataArray, tagName, usePlcFive, useMicroLogix);
 
                     break;
             }
 
         }
 
-        protected void ParseProductionTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false)
+        protected void ParseProductionTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false, bool useMicroLogix = false)
         {
             var e = new ProductionEventArgs(senderIp);
             e.InTagName = tagName;
@@ -126,6 +126,7 @@ namespace OESListener
                 e.listenerType = ListenerType.EIP;
 
             e.UsePlcFive = usePlcFive;
+            e.UsePlcMicrologix = useMicroLogix;
 
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
@@ -213,7 +214,7 @@ namespace OESListener
             OnProductionReceived(e);
         }
 
-        protected void ParseLoginTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false)
+        protected void ParseLoginTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false, bool useMicroLogix = false)
         {
             var e = new LoginEventArgs(senderIp);
 
@@ -224,6 +225,7 @@ namespace OESListener
                 e.listenerType = ListenerType.EIP;
 
             e.UsePlcFive = usePlcFive;
+            e.UsePlcMicrologix = useMicroLogix;
 
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
@@ -259,7 +261,7 @@ namespace OESListener
             OnLoginReceived(e);
         }
 
-        protected void ParseSetupTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false)
+        protected void ParseSetupTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false, bool useMicroLogix = false)
         {
             var e = new SetupEventArgs(senderIp);
 
@@ -270,6 +272,7 @@ namespace OESListener
                 e.listenerType = ListenerType.EIP;
 
             e.UsePlcFive = usePlcFive;
+            e.UsePlcMicrologix = useMicroLogix;
 
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)
@@ -337,7 +340,7 @@ namespace OESListener
             OnSetupReceived(e);
         }
 
-        protected void ParseRequestSerialTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false)
+        protected void ParseRequestSerialTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false, bool useMicroLogix = false)
         {
             var e = new SerialRequestEventArgs(senderIp);
 
@@ -348,6 +351,7 @@ namespace OESListener
                 e.listenerType = ListenerType.EIP;
 
             e.UsePlcFive = usePlcFive;
+            e.UsePlcMicrologix = useMicroLogix;
 
             var bytes = new List<byte>();
             for (int i = 0; i < 5; i++)

@@ -142,8 +142,11 @@ namespace OESListener
                             //test adding plcId to state object
                             Array.Copy(receivedBytes, 52, state.plcId, 0, 4);
                             Array.Copy(receivedBytes, 48, state.conId, 0, 4);
+                            state.orgSn[0] = receivedBytes[56];
+                            state.orgSn[1] = receivedBytes[57];
 
-                            FowardOpen(handler, receivedBytes, state.plcId, senderIp);
+
+                            FowardOpen(handler, receivedBytes, state, senderIp);
                             handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallBack), state);
                         }
                         else if (receivedBytes[40] == 0x52)
@@ -159,7 +162,7 @@ namespace OESListener
 
                     else if (receivedBytes[0] == 0x70)
                     {
-                        SendUnitData(handler, receivedBytes, state.plcId, state.conId);
+                        SendUnitData(handler, receivedBytes, state);
                         handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallBack), state);
                     }
                     else
@@ -239,11 +242,11 @@ namespace OESListener
 
         }
 
-        private void FowardOpen(Socket handler, byte[] bytes, byte[] plcID, string senderIP)
+        private void FowardOpen(Socket handler, byte[] bytes, StateObject state, string senderIP)
         {
             var retArr = new byte[70];
             Buffer.BlockCopy(bytes, 0, retArr, 0, retArr.Length);
-            Buffer.BlockCopy(bytes, 52, plcID, 0, 4);
+            //Buffer.BlockCopy(bytes, 52, plcID, 0, 4);
 
             retArr[2] = 0x2e;
             retArr[3] = 0x00;
@@ -254,16 +257,16 @@ namespace OESListener
             retArr[41] = 0x00;
             retArr[42] = 0x00;
             retArr[43] = 0x00;
-            retArr[44] = 0x00; //0x07
-            retArr[45] = 0x00; //0x01
-            retArr[46] = 0x00; //0x00
-            retArr[47] = 0x00; //0x8a
-            retArr[48] = bytes[52]; //0x00
-            retArr[49] = bytes[53]; //0x07
-            retArr[50] = bytes[54]; //0x00
-            retArr[51] = bytes[55]; //0x11
-            retArr[52] = 0x11;
-            retArr[53] = 0x00;
+            retArr[44] = state.conId[0]; //0x07
+            retArr[45] = state.conId[1]; //0x01
+            retArr[46] = state.conId[2]; //0x00
+            retArr[47] = state.conId[3]; //0x8a
+            retArr[48] = state.plcId[0]; //0x00
+            retArr[49] = state.plcId[1]; //0x07
+            retArr[50] = state.plcId[2]; //0x00
+            retArr[51] = state.plcId[3]; //0x11
+            retArr[52] = state.orgSn[0];//0x11;
+            retArr[53] = state.orgSn[1];//0x00;
             retArr[54] = 0x01;
             retArr[55] = 0x00;
             retArr[56] = 0x02; //0x8a
@@ -287,34 +290,34 @@ namespace OESListener
 
         }
 
-        private void SendUnitData(Socket handler, byte[] bytes, byte[] plcID, byte[] conId)
+        private void SendUnitData(Socket handler, byte[] bytes, StateObject state)
         {
             var rArr = new byte[61];
             Buffer.BlockCopy(bytes, 0, rArr, 0, rArr.Length);
 
             rArr[2] = 0x25;
 
-            rArr[32] = conId[0];
-            rArr[33] = conId[1];
-            rArr[34] = conId[2];
-            rArr[35] = conId[3];
+            rArr[32] = 0xa1;
+            rArr[33] = 0x00;
+            rArr[34] = 0x04;
+            rArr[35] = 0x00;
 
-            rArr[36] = plcID[0];
-            rArr[37] = plcID[1];
-            rArr[38] = plcID[2];
-            rArr[39] = plcID[3];
+            rArr[36] = state.plcId[0];
+            rArr[37] = state.plcId[1];
+            rArr[38] = state.plcId[2];
+            rArr[39] = state.plcId[3];
 
             rArr[42] = 0x11;
             rArr[43] = 0x00;
             rArr[44] = bytes[44];
-            rArr[45] = 0x00;
+            rArr[45] = bytes[45]; //0x00;
             rArr[46] = 0xcb;
             rArr[47] = 0x00;
             rArr[48] = 0x00;
             rArr[49] = 0x00;
-            rArr[50] = 0x07;
-            rArr[51] = 0x01;
-            rArr[52] = 0x00;
+            rArr[50] = bytes[52];// 0x07;
+            rArr[51] = bytes[53];// 0x01;
+            rArr[52] = bytes[54];// 0x00;
             rArr[53] = bytes[55];
             rArr[54] = bytes[56];
             rArr[55] = bytes[57];
@@ -335,7 +338,7 @@ namespace OESListener
             var remoteIpEndPoint = handler.RemoteEndPoint as IPEndPoint;
             var senderIp = remoteIpEndPoint.Address.ToString();
 
-            ParseSlcRecievedData(senderIp, bytesToParse);
+            ParseSlcRecievedData(senderIp, bytesToParse, true);
         }
 
         private void ParseLogixRecievedData(string senderIp,byte[] bytes, string senderIP)

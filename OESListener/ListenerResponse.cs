@@ -334,7 +334,11 @@ namespace OESListener
             {
                 s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
-            else
+            else if (e.UsePlcMicrologix)
+            {
+                s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            else 
             {
                 s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
             }

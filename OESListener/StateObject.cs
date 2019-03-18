@@ -14,5 +14,6 @@ namespace OESListener
         public StringBuilder sb = new StringBuilder();
         public byte[] plcId = new byte[4];
         public byte[] conId = new byte[4];
+        public byte[] orgSn = new byte[2];
     }
 }
