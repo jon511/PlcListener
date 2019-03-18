@@ -146,7 +146,7 @@ namespace OESListener
                                     p.SuccessIndicator = jsonData.Status;
                                     p.FaultCode = jsonData.FailureCode;
                                     p.StatusCode = jsonData.Status;
-                                    p.GeneratedBarcode = (string.IsNullOrEmpty(jsonData.GeneratedBarcode)) ? "" : jsonData.GeneratedBarcode;
+                                    p.GeneratedBarcode = (string.IsNullOrEmpty(jsonData.GeneratedBarcode)) ? "" : (jsonData.GeneratedBarcode.Length == 2) ? jsonData.GeneratedBarcode : "";
                                     
 
                                     var cellIdArray = Util.StringToAbIntArray(p.CellId);
@@ -325,27 +325,29 @@ namespace OESListener
 
                         try
                         {
+                            //expected format
+                            //command,cell id, item id, en id, process ind, success ind, faultCode, 
                             var data = Encoding.Default.GetString(receivedBytes).Trim().Split(',');
                             switch (data[0])
                             {
                                 case "PROD":
                                     var dArr = new string[14];
-                                    if (data.Length > 6)
+                                    if (data.Length > 7)
                                     {
-                                        var copLen = (data.Length > 20) ? 14 : data.Length - 6;
+                                        var copLen = (data.Length > 20) ? 14 : data.Length - 7;
                                         dArr = new string[copLen];
-                                        Array.Copy(data, 6, dArr, 0, copLen);
+                                        Array.Copy(data, 7, dArr, 0, copLen);
                                     }
                                     short result = 0;
                                     var p = new ProductionEventArgs(client);
                                     p.CellId = data[1];
                                     p.ItemId = data[2];
-                                    p.GeneratedBarcode = "";
-                                    short.TryParse(data[3], out result);
-                                    p.ProcessIndicator = result;
+                                    p.GeneratedBarcode = (data[3].Length == 2) ? data[3] : "";
                                     short.TryParse(data[4], out result);
-                                    p.SuccessIndicator = result;
+                                    p.ProcessIndicator = result;
                                     short.TryParse(data[5], out result);
+                                    p.SuccessIndicator = result;
+                                    short.TryParse(data[6], out result);
                                     p.FaultCode = result;
                                     p.StatusCode = 0;
 
@@ -364,12 +366,16 @@ namespace OESListener
                                         var s1 = dArr[di];
                                         if (s1.Contains("."))
                                         {
+                                            double.TryParse(s1, out double dResult);
+                                            var temp1 = Math.Truncate(dResult);
+                                            var temp2 = dResult - temp1;
+                                            var temp3 = temp2 * 100;
                                             var myArr = s1.Split('.');
-                                            short.TryParse(myArr[0], out short prodShort);
-                                            sArr[pointer] = prodShort;
+                                            //short.TryParse(myArr[0], out short prodShort);
+                                            sArr[pointer] = Convert.ToInt16(temp1);
                                             pointer++;
-                                            short.TryParse(myArr[1], out short prodShort1);
-                                            sArr[pointer] = prodShort1;
+                                            //short.TryParse(myArr[1], out short prodShort1);
+                                            sArr[pointer] = Convert.ToInt16(temp3);
                                             pointer++;
                                         }
                                         else

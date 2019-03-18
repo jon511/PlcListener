@@ -57,7 +57,7 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener("10.50.71.127");
+            var l = new OESListener.Listener();
 
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
@@ -66,7 +66,13 @@ namespace Test
             l.SetupReceived += L_SetupReceived;
             l.ProductionReceived += L_ProductionReceived;
             l.SerialRequestReceived += L_SerialRequestReceived;
+
             
+
+            OESListener.Logger.LogPath = @"C:\OesLog";
+            OESListener.Logger.LogToFile = true;
+            OESListener.Logger.Log("here is a message");
+
             Console.Read();
 
         }
@@ -86,10 +92,40 @@ namespace Test
             //Thread.Sleep(rand);
             //e.CellId = "newCell";
             //e.ItemId = "itemID";
-            e.P_Val_1 = 101;
-            e.P_Val_2 = 10000;
-            e.P_Val_3 = 9999;
-            e.P_Val_4 = 4444;
+            e.ResponseArray[18] = e.ProcessIndicator;
+            e.ResponseArray[19] = e.SuccessIndicator;
+            e.ResponseArray[20] = e.FaultCode;
+            e.ResponseArray[21] = 1;
+
+            e.ResponseArray[22] = e.P_Val_1;
+            e.ResponseArray[23] = e.P_Val_2;
+            e.ResponseArray[24] = e.P_Val_3;
+            e.ResponseArray[25] = e.P_Val_4;
+            e.ResponseArray[26] = e.P_Val_5;
+            e.ResponseArray[27] = e.P_Val_6;
+            e.ResponseArray[28] = e.P_Val_7;
+            e.ResponseArray[29] = e.P_Val_8;
+            e.ResponseArray[30] = e.P_Val_9;
+            e.ResponseArray[31] = e.P_Val_10;
+            e.ResponseArray[32] = e.P_Val_11;
+            e.ResponseArray[33] = e.P_Val_12;
+            e.ResponseArray[34] = e.P_Val_13;
+            e.ResponseArray[35] = e.P_Val_14;
+            e.ResponseArray[36] = e.P_Val_15;
+            e.ResponseArray[37] = e.P_Val_16;
+            e.ResponseArray[38] = e.P_Val_17;
+            e.ResponseArray[39] = e.P_Val_18;
+            e.ResponseArray[40] = e.P_Val_19;
+            e.ResponseArray[41] = e.P_Val_20;
+            e.ResponseArray[42] = e.P_Val_21;
+            e.ResponseArray[43] = e.P_Val_22;
+            e.ResponseArray[44] = e.P_Val_23;
+            e.ResponseArray[45] = e.P_Val_24;
+            e.ResponseArray[46] = e.P_Val_25;
+            e.ResponseArray[47] = e.P_Val_26;
+            e.ResponseArray[48] = e.P_Val_27;
+            e.ResponseArray[49] = e.P_Val_28;
+
 
             var resp = new OESListener.ListenerResponse();
             resp.ProductionResponse(e);
