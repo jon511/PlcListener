@@ -103,6 +103,11 @@ namespace OESListener
             string responseString;
             if (e.UseJson)
             {
+                e.ProcessIndicator = e.ResponseArray[18];
+                e.SuccessIndicator = e.ResponseArray[19];
+                e.FaultCode = e.ResponseArray[20];
+                e.StatusCode = e.ResponseArray[21];
+
                 responseString = Newtonsoft.Json.JsonConvert.SerializeObject(e);
             }
             else
