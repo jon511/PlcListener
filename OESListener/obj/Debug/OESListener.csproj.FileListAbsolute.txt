@@ -13,3 +13,4 @@ C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.dll
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.pdb
 C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.csprojAssemblyReference.cache
+C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\bin\Debug\Newtonsoft.Json.dll

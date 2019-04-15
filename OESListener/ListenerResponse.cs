@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Text;
 
 namespace OESListener
@@ -243,6 +240,7 @@ namespace OESListener
         public void TcpSerialRequestRespone(SerialRequestEventArgs e)
         {
             string responseString;
+            e.ItemId = Util.AbIntArrayToString(e.ResponseArray);
             if (e.UseJson)
             {
                 responseString = Newtonsoft.Json.JsonConvert.SerializeObject(e);
@@ -412,8 +410,7 @@ namespace OESListener
         {
             var retArr = new short[20];
             e.OutTagName = "N247:0";
-            var itemArr = Util.StringToAbIntArray(e.ItemId);
-            Array.Copy(itemArr, 0, retArr, 0, itemArr.Length);
+            Array.Copy(e.ResponseArray, 0, retArr, 0, e.ResponseArray.Length);
             var s = new PlcWriter();
 
             s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
@@ -589,8 +586,7 @@ namespace OESListener
         {
             var retArr = new short[20];
             e.OutTagName = "N247[0]";
-            var itemArr = Util.StringToAbIntArray(e.ItemId);
-            Array.Copy(itemArr, 0, retArr, 0, itemArr.Length);
+            Array.Copy(e.ResponseArray, 0, retArr, 0, e.ResponseArray.Length);
             var s = new PlcWriter();
 
             s.LogixResponse(e.SenderIp, retArr, e.OutTagName);

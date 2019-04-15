@@ -152,7 +152,6 @@ namespace Test
         {
             e.CellId = "";
             e.OperatorID = "";
-            e.ProcessIndicator
             e.SuccessIndicator = 1;
             e.ResponseArray = new short[34];
 
