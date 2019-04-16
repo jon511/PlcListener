@@ -153,9 +153,9 @@ namespace OESListener
                                     var itemIdArray = Util.StringToAbIntArray(p.ItemId);
                                     var generatedBarcodeArray = Util.StringToAbIntArray(p.GeneratedBarcode);
 
-                                    Array.Copy(cellIdArray, 0, p.ResponseArray, 0, cellIdArray.Length);
-                                    Array.Copy(itemIdArray, 0, p.ResponseArray, 5, itemIdArray.Length);
-                                    Array.Copy(generatedBarcodeArray, 0, p.ResponseArray, 11, generatedBarcodeArray.Length);
+                                    //Array.Copy(cellIdArray, 0, p.ResponseArray, 0, cellIdArray.Length);
+                                    //Array.Copy(itemIdArray, 0, p.ResponseArray, 5, itemIdArray.Length);
+                                    //Array.Copy(generatedBarcodeArray, 0, p.ResponseArray, 11, generatedBarcodeArray.Length);
                                     
                                     short[] sArr = new short[28];
                                     var pointer = 0;
@@ -355,9 +355,9 @@ namespace OESListener
                                     var itemIdArray = Util.StringToAbIntArray(p.ItemId);
                                     var generatedBarcodeArray = Util.StringToAbIntArray(p.GeneratedBarcode);
 
-                                    Array.Copy(cellIdArray, 0, p.ResponseArray, 0, cellIdArray.Length);
-                                    Array.Copy(itemIdArray, 0, p.ResponseArray, 5, itemIdArray.Length);
-                                    Array.Copy(generatedBarcodeArray, 0, p.ResponseArray, 11, generatedBarcodeArray.Length);
+                                    //Array.Copy(cellIdArray, 0, p.ResponseArray, 0, cellIdArray.Length);
+                                    //Array.Copy(itemIdArray, 0, p.ResponseArray, 5, itemIdArray.Length);
+                                    //Array.Copy(generatedBarcodeArray, 0, p.ResponseArray, 11, generatedBarcodeArray.Length);
 
                                     short[] sArr = new short[28];
                                     var pointer = 0;
