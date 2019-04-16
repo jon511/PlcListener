@@ -140,6 +140,7 @@ namespace OESListener
                             {
                                 case "PROD":
                                     var p = new ProductionEventArgs(client);
+                                    p.SenderIp = myIPAddress;
                                     p.CellId = jsonData.CellId;
                                     p.ItemId = jsonData.ItemId;
                                     p.ProcessIndicator = jsonData.RequestCode;
@@ -238,11 +239,14 @@ namespace OESListener
                                     if (jsonData.RequestCode == 4 || jsonData.RequestCode == 16)
                                     {
                                         var s = new SetupEventArgs(client);
+                                        s.SenderIp = myIPAddress;
                                         s.CellId = jsonData.CellId;
                                         s.ProcessIndicator = jsonData.RequestCode;
                                         s.ModelNumber = jsonData.ModelNumber;
                                         s.OpNumber = jsonData.OpNumber;
                                         s.UseJson = true;
+                                        s.SenderIp = myIPAddress;
+
                                         OnSetupReceived(s);
                                     }
                                     if (jsonData.RequestCode == 5 || jsonData.RequestCode == 17 || jsonData.RequestCode == 6 || jsonData.RequestCode == 18)
@@ -255,6 +259,8 @@ namespace OESListener
                                         s.ModelNumber = jsonData.ModelNumber;
                                         s.OpNumber = jsonData.OpNumber;
                                         s.UseJson = true;
+                                        s.SenderIp = myIPAddress;
+
                                         OnSetupReceived(s);
                                     }
                                     break;
@@ -269,6 +275,8 @@ namespace OESListener
                                             l.OperatorID = jsonData.OperatorID;
                                             l.ProcessIndicator = jsonData.RequestCode;
                                             l.UseJson = true;
+                                            l.SenderIp = myIPAddress;
+
                                             OnLoginReceived(l);
                                             break;
                                         case 17:
@@ -276,6 +284,8 @@ namespace OESListener
                                             l.CellId = jsonData.CellId;
                                             l.ProcessIndicator = jsonData.RequestCode;
                                             l.UseJson = true;
+                                            l.SenderIp = myIPAddress;
+
                                             OnLoginReceived(l);
                                             break;
                                         default:
@@ -290,6 +300,8 @@ namespace OESListener
                                     var sr = new SerialRequestEventArgs(client);
                                     sr.CellId = jsonData.CellId;
                                     sr.ProcessIndicator = jsonData.RequestCode;
+                                    sr.SenderIp = myIPAddress;
+
                                     OnSerialRequestReceived(sr);
 
                                     break;
@@ -301,6 +313,8 @@ namespace OESListener
                                     lp.Weight = jsonData.Weight;
                                     lp.RevLevel = jsonData.RevLevel;
                                     lp.PrinterIpAddress = jsonData.PrinterIpAddress;
+                                    lp.SenderIp = myIPAddress;
+
                                     OnFinalLabelPrintReceived(lp);
                                     break;
                                 case "INTERIMPRINT":
@@ -350,6 +364,8 @@ namespace OESListener
                                     short.TryParse(data[6], out result);
                                     p.FaultCode = result;
                                     p.StatusCode = 0;
+
+                                    p.SenderIp = myIPAddress;
 
                                     var cellIdArray = Util.StringToAbIntArray(p.CellId);
                                     var itemIdArray = Util.StringToAbIntArray(p.ItemId);
@@ -442,12 +458,14 @@ namespace OESListener
                                         s.ProcessIndicator = setupShort;
                                         s.ModelNumber = data[3];
                                         s.OpNumber = data[4];
+                                        s.SenderIp = myIPAddress;
 
                                         OnSetupReceived(s);
                                     }
                                     if (data.Length == 7)
                                     {
                                         var s = new SetupEventArgs(client);
+                                        s.SenderIp = myIPAddress;
                                         s.CellId = data[1];
                                         s.Component = data[2];
                                         short.TryParse(data[3], out short setupShort);
@@ -471,6 +489,7 @@ namespace OESListener
                                             l.OperatorID = data[2];
                                             short.TryParse(data[3], out short loginResult);
                                             l.ProcessIndicator = loginResult;
+                                            l.SenderIp = myIPAddress;
 
                                             OnLoginReceived(l);
                                             break;
@@ -479,6 +498,8 @@ namespace OESListener
                                             l.CellId = data[1];
                                             short.TryParse(data[2], out short loginResult1);
                                             l.ProcessIndicator = loginResult1;
+                                            l.SenderIp = myIPAddress;
+
                                             OnLoginReceived(l);
                                             break;
                                         default:
@@ -493,6 +514,7 @@ namespace OESListener
                                     sr.CellId = data[1];
                                     short.TryParse(data[2], out short res1);
                                     sr.ProcessIndicator = res1;
+                                    sr.SenderIp = myIPAddress;
 
                                     OnSerialRequestReceived(sr);
                                     break;
