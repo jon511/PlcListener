@@ -58,7 +58,7 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener("10.50.71.130");
+            var l = new OESListener.Listener();
 
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
@@ -83,13 +83,18 @@ namespace Test
         private static void L_SerialRequestReceived(object sender, OESListener.SerialRequestEventArgs e)
         {
             var resp = new OESListener.ListenerResponse();
+            e.ResponseArray[0] = 22597;
+            e.ResponseArray[1] = 13893;
+            e.ResponseArray[2] = 12592;
+            e.ResponseArray[3] = 13616;
+
             e.ItemId = "new serial number";
             resp.SerialRequestResponse(e);
         }
 
         private static void L_ProductionReceived(object sender, OESListener.ProductionEventArgs e)
         {
-
+            //e.ResponseArray = new short[48];
             //var number = new Random();
             //var rand = number.Next(10, 150);
             //Thread.Sleep(rand);
@@ -122,12 +127,12 @@ namespace Test
             e.ResponseArray[41] = e.P_Val_20;
             e.ResponseArray[42] = e.P_Val_21;
             e.ResponseArray[43] = e.P_Val_22;
-            e.ResponseArray[44] = e.P_Val_23;
-            e.ResponseArray[45] = e.P_Val_24;
-            e.ResponseArray[46] = e.P_Val_25;
-            e.ResponseArray[47] = e.P_Val_26;
-            e.ResponseArray[48] = e.P_Val_27;
-            e.ResponseArray[49] = e.P_Val_28;
+            //e.ResponseArray[44] = e.P_Val_23;
+            //e.ResponseArray[45] = e.P_Val_24;
+            //e.ResponseArray[46] = e.P_Val_25;
+            //e.ResponseArray[47] = e.P_Val_26;
+            //e.ResponseArray[48] = e.P_Val_27;
+            //e.ResponseArray[49] = e.P_Val_28;
 
 
             var resp = new OESListener.ListenerResponse();

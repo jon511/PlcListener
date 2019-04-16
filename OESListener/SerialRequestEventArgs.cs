@@ -5,17 +5,6 @@ namespace OESListener
     public class SerialRequestEventArgs : OesEventArgs
     {
 
-        public new string ItemId {
-            get
-            {
-                return Util.AbIntArrayToString(ResponseArray);
-            }
-            set
-            {
-                ItemId = value;
-            }
-        }
-
         public SerialRequestEventArgs(System.Net.Sockets.TcpClient client)
         {
             Client = client;

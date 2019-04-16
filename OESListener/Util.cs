@@ -81,8 +81,8 @@ namespace OESListener
                 var s1 = data[i] & 0xff00;
                 s1 = s1 >> 8;
                 var s2 = data[i] & 0xff;
-                sb.Append(s1);
-                sb.Append(s2);
+                sb.Append(Convert.ToChar(s1));
+                sb.Append(Convert.ToChar(s2));
             }
 
             return sb.ToString();

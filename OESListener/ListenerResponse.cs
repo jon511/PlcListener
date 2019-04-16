@@ -127,34 +127,39 @@ namespace OESListener
                 sb.Append(",");
                 //sb.Append(e.StatusCode);
                 sb.Append(e.ResponseArray[21].ToString());
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[22] + (e.ResponseArray[23] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[24] + (e.ResponseArray[25] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[26] + (e.ResponseArray[27] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[28] + (e.ResponseArray[29] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[30] + (e.ResponseArray[31] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[32] + (e.ResponseArray[33] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[34] + (e.ResponseArray[35] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[36] + (e.ResponseArray[37] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[38] + (e.ResponseArray[39] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[40] + (e.ResponseArray[41] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[42] + (e.ResponseArray[43] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[44] + (e.ResponseArray[45] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[46] + (e.ResponseArray[47] * .01))));
-                sb.Append(",");
-                sb.Append(string.Format("{0}", (e.ResponseArray[48] + (e.ResponseArray[49] * .01))));
+
+                foreach (var item in e.ProcessHistoryValues)
+                {
+                    sb.Append(",");
+                    sb.Append(item);
+                }
+                
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[24] + (e.ResponseArray[25] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[26] + (e.ResponseArray[27] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[28] + (e.ResponseArray[29] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[30] + (e.ResponseArray[31] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[32] + (e.ResponseArray[33] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[34] + (e.ResponseArray[35] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[36] + (e.ResponseArray[37] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[38] + (e.ResponseArray[39] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[40] + (e.ResponseArray[41] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[42] + (e.ResponseArray[43] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[44] + (e.ResponseArray[45] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[46] + (e.ResponseArray[47] * .01))));
+                //sb.Append(",");
+                //sb.Append(string.Format("{0}", (e.ResponseArray[48] + (e.ResponseArray[49] * .01))));
                 responseString = sb.ToString();
             }
             var stream = e.Client.GetStream();
