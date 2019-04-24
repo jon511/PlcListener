@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace OESListener
@@ -79,6 +80,12 @@ namespace OESListener
 
         public void FinalPrintResponse(LabelPrintEventArgs e)
         {
+            
+            //var p = new LabelPrinter(e);
+            //p.UseFile = false;
+            //var result = p.PrintLabel();
+            //e.Response = result.ToString();
+
             switch (e.listenerType)
             {
                 case ListenerType.TCP:
@@ -104,6 +111,12 @@ namespace OESListener
                 e.SuccessIndicator = e.ResponseArray[19];
                 e.FaultCode = e.ResponseArray[20];
                 e.StatusCode = e.ResponseArray[21];
+                var tempList = new List<string>();
+                for (var i = 22; i < e.ResponseArray.Length; i++)
+                {
+                    tempList.Add(e.ResponseArray[i].ToString());
+                }
+                e.ProcessHistoryValues = tempList.ToArray();
 
                 responseString = Newtonsoft.Json.JsonConvert.SerializeObject(e);
             }
@@ -117,22 +130,28 @@ namespace OESListener
                 sb.Append(e.GeneratedBarcode);
                 sb.Append(",");
                 //sb.Append(e.ProcessIndicator);
-                sb.Append(e.ResponseArray[18].ToString());
-                sb.Append(",");
-                //sb.Append(e.SuccessIndicator);
-                sb.Append(e.ResponseArray[19].ToString());
-                sb.Append(",");
-                //sb.Append(e.FaultCode);
-                sb.Append(e.ResponseArray[20].ToString());
-                sb.Append(",");
-                //sb.Append(e.StatusCode);
-                sb.Append(e.ResponseArray[21].ToString());
+                //sb.Append(e.ResponseArray[18].ToString());
+                //sb.Append(",");
+                ////sb.Append(e.SuccessIndicator);
+                //sb.Append(e.ResponseArray[19].ToString());
+                //sb.Append(",");
+                ////sb.Append(e.FaultCode);
+                //sb.Append(e.ResponseArray[20].ToString());
+                //sb.Append(",");
+                ////sb.Append(e.StatusCode);
+                //sb.Append(e.ResponseArray[21].ToString());
 
-                foreach (var item in e.ProcessHistoryValues)
+                for (var i = 18; i < e.ResponseArray.Length; i++)
                 {
                     sb.Append(",");
-                    sb.Append(item);
+                    sb.Append(e.ResponseArray[i].ToString());
                 }
+
+                //foreach (var item in e.ProcessHistoryValues)
+                //{
+                //    sb.Append(",");
+                //    sb.Append(item);
+                //}
                 
                 //sb.Append(",");
                 //sb.Append(string.Format("{0}", (e.ResponseArray[24] + (e.ResponseArray[25] * .01))));
@@ -366,20 +385,31 @@ namespace OESListener
             if (result > 9999)
             {
                 var small = result - 10000;
-                var big = result - small;
-                retArr[65] = (byte)big;
-                retArr[66] = (byte)small;
+                var big = (result - small) * 0.0001;
+                retArr[66] = (short)big;
+                retArr[65] = (short)small;
             }
             else
             {
-                retArr[66] = (byte)result;
+                retArr[65] = (byte)result;
             }
 
             Int16.TryParse(e.Response.Acknowledge, out retArr[67]);
 
             Int16.TryParse(e.Response.ErrorCode, out retArr[68]);
             var s = new PlcWriter();
-            s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+            if (e.UsePlcFive)
+            {
+                s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            else if (e.UsePlcMicrologix)
+            {
+                s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            else
+            {
+                s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+            }
 
             if (e.ProcessIndicator == 4)
                 PcccPlcModelSetupResponse(e.SenderIp, e);
@@ -395,7 +425,18 @@ namespace OESListener
             //}
 
             var s = new PlcWriter();
-            s.SlcResponse(ipAddress, retArr, "N241:0");
+            if (e.UsePlcFive)
+            {
+                s.PlcResponse(e.SenderIp, retArr, "N241:0");
+            }
+            else if (e.UsePlcMicrologix)
+            {
+                s.MicroLogixResponse(e.SenderIp, retArr, "N241:0");
+            }
+            else
+            {
+                s.SlcResponse(e.SenderIp, retArr, "N241:0");
+            }
         }
 
         public void PcccLoginResponse(LoginEventArgs e)
@@ -406,8 +447,18 @@ namespace OESListener
             retArr[21] = e.FaultCode;
 
             var s = new PlcWriter();
-
-            s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+            if (e.UsePlcFive)
+            {
+                s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            else if (e.UsePlcMicrologix)
+            {
+                s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            else
+            {
+                s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+            }
 
         }
 
@@ -416,9 +467,20 @@ namespace OESListener
             var retArr = new short[20];
             e.OutTagName = "N247:0";
             Array.Copy(e.ResponseArray, 0, retArr, 0, e.ResponseArray.Length);
-            var s = new PlcWriter();
 
-            s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+            var s = new PlcWriter();
+            if (e.UsePlcFive)
+            {
+                s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            else if (e.UsePlcMicrologix)
+            {
+                s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            else
+            {
+                s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+            }
         }
 
         public void PcccFinalPrintResponse(LabelPrintEventArgs e)
@@ -426,9 +488,20 @@ namespace OESListener
             var retArr = new short[10];
             e.OutTagName = e.InTagName;
             short.TryParse(e.Response, out retArr[0]);
-            var s = new PlcWriter();
 
-            s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+            var s = new PlcWriter();
+            if (e.UsePlcFive)
+            {
+                s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            else if (e.UsePlcMicrologix)
+            {
+                s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
+            }
+            else
+            {
+                s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+            };
         }
 
         public void EipProductionResponse(ProductionEventArgs e)
@@ -542,13 +615,13 @@ namespace OESListener
             if (result > 9999)
             {
                 var small = result - 10000;
-                var big = result - small;
-                retArr[65] = (byte)big;
-                retArr[66] = (byte)small;
+                var big = (result - small) * 0.0001;
+                retArr[66] = (short)big;
+                retArr[65] = (short)small;
             }
             else
             {
-                retArr[66] = (byte)result;
+                retArr[65] = (byte)result;
             }
 
             Int16.TryParse(e.Response.Acknowledge, out retArr[67]);

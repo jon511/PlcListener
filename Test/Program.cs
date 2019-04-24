@@ -33,7 +33,7 @@ namespace Test
             ////data[10] = 10000;
             ////data[49] = 2;
 
-            ////p.LogixResponse("10.50.196.160", data, "N218");
+            //p.LogixResponse("10.55.16.187", data, "N208");
 
 
             //Task SendWrite = new Task(() =>
@@ -67,6 +67,7 @@ namespace Test
             l.SetupReceived += L_SetupReceived;
             l.ProductionReceived += L_ProductionReceived;
             l.SerialRequestReceived += L_SerialRequestReceived;
+            l.LabelPrintReceived += L_LabelPrintReceived;
 
             //OESListener.PlcWriter p = new OESListener.PlcWriter();
             //p.MicroLogixResponse("10.53.29.46", new short[3] { 1700, 500, 500 }, "N219:0");
@@ -78,6 +79,34 @@ namespace Test
 
             Console.Read();
 
+        }
+
+        private static void L_LabelPrintReceived(object sender, OESListener.LabelPrintEventArgs e)
+        {
+            e.PrintCode = @"^XA^JZN^POI^PQ1^BY3,3,100,^LH070,030^FS
+^FO0065,040^B3N,N,160,N,N^FD*_SerialNumber_*^FS
+^FO065,210,^A0N,30,30^FDP/N : B0656800-01        USA ARC: _SerialNumber_^FS
+^FO065,380,^A0N,27,27^FDDOT-SP 12122/5300 M4636 UN3268: EX2000060075^FS
+^FO065,410,^A0N,27,27^FDEINFUHRER:^FS
+^FO126,440,^A0N,27,27^FDTEL.^FS
+^FO520,530,^A0N,27,27^FDBAM PT -1073^FS
+^FO605,542,^A0N,27,27^FD1^FS
+^FO520,570,^A0N,27,27^FDBA01772^FS
+~DGR:0AF4A8C3,00064,004,0FFF80,1FFF80,3FFF80,2318,4318,0318,
+0318,0318,0718,0618,0618,0E1880,0E1D80,1E1F80,1C0F,
+1C0E,^FO155,285^XG0AF4A8C3,1,1^FS
+^FO065,570,^A0N,27,27^FDHERSTELLUNG: _Year_. KNOXVILLE^FS
+^FO100,250,^A0N,30,30^FD1.8mm .196KG 0.044L PW332.8 PH499.2BAR^FS
+^FO180,280,^A0N,30,30^FD 0531 -40C A  JS _Year_ / _Month_^FS
+^FO240,410,^A0N,27,27^FD TAKATA-PETRI AG^FS
+^FO240,440,^A0N,27,27^FD BAHNWEG 1^FS
+^FO240,470,^A0N,27,27^FD 63743 ASCHAFFENBURG^FS
+^FO065,470,^A0N,20,20^FD+49 6021-65-0(83)^FS
+^FO150,325,^A0N,30,30^FD_Weight_^FS
+^BY2,2,50
+^FO0300,320^BCN,040,N,N^FD_Weight_^FS^XZ";
+            var resp = new OESListener.ListenerResponse();
+            resp.FinalPrintResponse(e);
         }
 
         private static void L_SerialRequestReceived(object sender, OESListener.SerialRequestEventArgs e)
@@ -94,12 +123,6 @@ namespace Test
 
         private static void L_ProductionReceived(object sender, OESListener.ProductionEventArgs e)
         {
-            //e.ResponseArray = new short[48];
-            //var number = new Random();
-            //var rand = number.Next(10, 150);
-            //Thread.Sleep(rand);
-            //e.CellId = "newCell";
-            //e.ItemId = "itemID";
             e.ResponseArray[18] = e.ProcessIndicator;
             e.ResponseArray[19] = e.SuccessIndicator;
             e.ResponseArray[20] = e.FaultCode;
@@ -127,13 +150,6 @@ namespace Test
             e.ResponseArray[41] = e.P_Val_20;
             e.ResponseArray[42] = e.P_Val_21;
             e.ResponseArray[43] = e.P_Val_22;
-            //e.ResponseArray[44] = e.P_Val_23;
-            //e.ResponseArray[45] = e.P_Val_24;
-            //e.ResponseArray[46] = e.P_Val_25;
-            //e.ResponseArray[47] = e.P_Val_26;
-            //e.ResponseArray[48] = e.P_Val_27;
-            //e.ResponseArray[49] = e.P_Val_28;
-
 
             var resp = new OESListener.ListenerResponse();
             resp.ProductionResponse(e);
@@ -148,7 +164,9 @@ namespace Test
             e.Response.Component1.ModelNumber = "B0884400-00";
             e.Response.Acknowledge = "1";
             e.Response.ErrorCode = "1";
-            e.Response.PlcModelSetup = new string[] { "1.1", "2.2", "3.3", "4.4", "5.5", "6.6", "7.7", "8.8", "9.9" };
+            e.ResponseArray[65] = 14;
+            e.ResponseArray[66] = 0;
+            e.PlcModelSetup = new short[] { 1 , 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 };
             var resp = new OESListener.ListenerResponse();
             resp.SetupResponse(e);
         }

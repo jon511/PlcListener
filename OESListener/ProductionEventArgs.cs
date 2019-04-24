@@ -9,26 +9,7 @@ namespace OESListener
     {
         //public string ItemId { get; set; }
         public string GeneratedBarcode { get; set; }
-        public string[] ProcessHistoryValues {
-            get
-            {
-                var sArr = new List<string>();
-                for (var i = 22; i < ResponseArray.Length; i += 2)
-                {
-                    sArr.Add((ResponseArray[i] + (ResponseArray[i + 1] * 0.01)).ToString());
-                }
-                //return new string[] { (ResponseArray[22] + (ResponseArray[23] * 0.01)).ToString(), (ResponseArray[24] + (ResponseArray[25] * 0.01)).ToString(), (ResponseArray[26] + (ResponseArray[27] * 0.01)).ToString(),
-                //(ResponseArray[28] + (ResponseArray[29] * 0.01)).ToString(), (ResponseArray[30] + (ResponseArray[31] * 0.01)).ToString(), (ResponseArray[32] + (ResponseArray[33] * 0.01)).ToString(),
-                //(ResponseArray[34] + (ResponseArray[35] * 0.01)).ToString(),(ResponseArray[36] + (ResponseArray[37] * 0.01)).ToString(),(ResponseArray[38] + (ResponseArray[39] * 0.01)).ToString(),
-                //(ResponseArray[40] + (ResponseArray[41] * 0.01)).ToString(),(ResponseArray[42] + (ResponseArray[43] * 0.01)).ToString(),(ResponseArray[44] + (ResponseArray[45] * 0.01)).ToString(),
-                //(ResponseArray[46] + (ResponseArray[47] * 0.01)).ToString(),(ResponseArray[48] + (ResponseArray[49] * 0.01)).ToString()};
-                return sArr.ToArray();
-        }
-            set
-            {
-                ProcessHistoryValues = value;
-            }
-        }
+        public string[] ProcessHistoryValues { get; set; }
 
         [Newtonsoft.Json.JsonIgnore]
         public short P_Val_1 { get; set; }

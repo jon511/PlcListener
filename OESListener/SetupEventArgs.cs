@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OESListener
 {
@@ -106,6 +107,15 @@ namespace OESListener
 
             Response.Acknowledge = ResponseArray[67].ToString();
             Response.ErrorCode = ResponseArray[68].ToString();
+
+            var tempPlcModel = new List<string>();
+
+            foreach (var item in PlcModelSetup)
+            {
+                tempPlcModel.Add(item.ToString());
+            }
+
+            Response.PlcModelSetup = tempPlcModel.ToArray();
         }
 
 

@@ -391,6 +391,7 @@ namespace OESListener
                         }
                         if (byteArr[0] == 0x70)
                         {
+                            //Util.DisplayHexValues(byteArr);
                             break;
                         }
 

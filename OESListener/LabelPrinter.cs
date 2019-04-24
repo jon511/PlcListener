@@ -14,8 +14,8 @@ namespace OESListener
         public LabelPrinter(LabelPrintEventArgs args)
         {
             e = args;
-            FinalPrintStorageFolder = @"\PrintCode\Final\";
-            InterimPrintStorageFolder = @"\Printcode\Interim";
+            FinalPrintStorageFolder = @"C:\PrintCode\Final\";
+            InterimPrintStorageFolder = @"C:\Printcode\Interim\";
 
             CheckFolders();
         }

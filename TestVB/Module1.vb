@@ -74,7 +74,6 @@ Module Module1
         'e.Response.PlcModelSetup(2) = "3.3"
         'e.Response.Acknowledge = "1"
         'e.Response.ErrorCode = "1"
-
         'update e with values from database and pass back in listenerResponse.SetupResponse
         Dim listenerResponse As New ListenerResponse()
         listenerResponse.SetupResponse(e)
