@@ -68,7 +68,7 @@ namespace OESListener
             Thread myNewThread = new Thread(() => StartListening());
             if (Logger.Enabled)
                 Logger.Log("Starting new thread");
-
+            myNewThread.IsBackground = true;
             myNewThread.Start();
         }
 

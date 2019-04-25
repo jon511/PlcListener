@@ -18,6 +18,7 @@ namespace OESListener
         public void Listen()
         {
             Thread myNewThread = new Thread(() => StartListening());
+            myNewThread.IsBackground = true;
             myNewThread.Start();
         }
 
