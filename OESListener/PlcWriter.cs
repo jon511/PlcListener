@@ -304,7 +304,7 @@ namespace OESListener
         {
             TcpClient c = new TcpClient(ipAddress, 44818);
             var writer = new BinaryWriter(c.GetStream());
-            var senderContext = new byte[8] { 0x24, 0x49, 0x4e, 0x47, 0x45, 0x41, 0x52, 0x24 };
+            var senderContext = new byte[8] { 0x24, 0x4f, 0x53, 0x42, 0x4f, 0x52, 0x4e, 0x45 };
             var cId = new byte[4];
             byte[] sessionHandle = new byte[4];
 
@@ -350,13 +350,13 @@ namespace OESListener
                             byte[] outArr = Util.ForwardOpenPacket(sessionHandle, 0);
 
                             outArr[12] = senderContext[0];
-                            outArr[13] = senderContext[0];
-                            outArr[14] = senderContext[0];
-                            outArr[15] = senderContext[0];
-                            outArr[16] = senderContext[0];
-                            outArr[17] = senderContext[0];
-                            outArr[18] = senderContext[0];
-                            outArr[19] = senderContext[0];
+                            outArr[13] = senderContext[1];
+                            outArr[14] = senderContext[2];
+                            outArr[15] = senderContext[3];
+                            outArr[16] = senderContext[4];
+                            outArr[17] = senderContext[5];
+                            outArr[18] = senderContext[6];
+                            outArr[19] = senderContext[7];
 
                             writer.Write(outArr);
                             
@@ -375,13 +375,13 @@ namespace OESListener
                             byte[] outArr = Util.Build_EIP_CIP_Header(Util.createWriteRequest(tagName, data), sessionHandle, connectionId);
 
                             outArr[12] = senderContext[0];
-                            outArr[13] = senderContext[0];
-                            outArr[14] = senderContext[0];
-                            outArr[15] = senderContext[0];
-                            outArr[16] = senderContext[0];
-                            outArr[17] = senderContext[0];
-                            outArr[18] = senderContext[0];
-                            outArr[19] = senderContext[0];
+                            outArr[13] = senderContext[1];
+                            outArr[14] = senderContext[2];
+                            outArr[15] = senderContext[3];
+                            outArr[16] = senderContext[4];
+                            outArr[17] = senderContext[5];
+                            outArr[18] = senderContext[6];
+                            outArr[19] = senderContext[7];
 
                             writer.Write(outArr);
 

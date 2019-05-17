@@ -25,15 +25,15 @@ namespace Test
             //}
 
             //Console.Read();
-            //var p = new OESListener.PlcWriter();
-            //var data = new short[10];
-            //data[0] = 15;
-            //data[1] = 4;
-            //data[2] = 3;
-            ////data[10] = 10000;
-            ////data[49] = 2;
+            var p = new OESListener.PlcWriter();
+            var data = new short[10];
+            data[0] = 15;
+            data[1] = 4;
+            data[2] = 3;
+            //data[10] = 10000;
+            //data[49] = 2;
 
-            //p.LogixResponse("10.55.16.187", data, "N208");
+            p.LogixResponse("10.50.71.116", data, "N201[0]");
 
 
             //Task SendWrite = new Task(() =>
@@ -58,7 +58,7 @@ namespace Test
 
             //Console.Read();
 
-            var l = new OESListener.Listener();
+            var l = new OESListener.Listener("10.50.71.105");
 
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
