@@ -42,9 +42,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="testCoreDll">
-      <HintPath>..\..\testCoreDll\testCoreDll\bin\Debug\netcoreapp2.1\testCoreDll.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

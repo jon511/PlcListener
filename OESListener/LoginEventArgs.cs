@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
 
 namespace OESListener
 {
@@ -13,21 +10,30 @@ namespace OESListener
         public LoginEventArgs(System.Net.Sockets.TcpClient client)
         {
             Client = client;
+            ResponseArray = new short[50];
         }
 
-        public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, string processRequest)
+        public LoginEventArgs(string senderIp)
+        {
+            SenderIp = senderIp;
+            ResponseArray = new short[50];
+        }
+
+        public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, short processRequest)
         {
             Client = client;
             CellId = cellID;
-            Request = processRequest;
+            ProcessIndicator = processRequest;
+            ResponseArray = new short[50];
         }
 
-        public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, string operatorID, string processRequest)
+        public LoginEventArgs(System.Net.Sockets.TcpClient client, string cellID, string operatorID, short processRequest)
         {
             Client = client;
             CellId = cellID;
             OperatorID = operatorID;
-            Request = processRequest;
+            ProcessIndicator = processRequest;
+            ResponseArray = new short[50];
         }
 
     }

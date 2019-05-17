@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,16 +68,16 @@ namespace OESListener
                 while (itemsToWrite.TryDequeue(out string item))
                 {
                     var s = string.Format("{0} {1} - {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), item);
-
+                    
                     if (logToConsole)
                         Console.WriteLine(s);
 
                     if (logToFile)
                     {
-                        using (StreamWriter fileout = File.CreateText(string.Format("{0}Log.txt", logPath)))
-                        {
-                            fileout.Write(s);
-                        }
+                        var nowTime = DateTime.Now.ToString("yyyy_MM_dd_HH_");
+                        var fileout = new StreamWriter(string.Format("{0}{1}Log.txt", logPath, nowTime), true);
+                        fileout.WriteLine(s);
+                        fileout.Close();
                     }
                 }
                 Thread.Sleep(10);
@@ -94,10 +91,10 @@ namespace OESListener
             {
                 if (!active)
                     StartLogger();
-
-                itemsToWrite.Enqueue(message);
             }
-            
+
+            itemsToWrite.Enqueue(message);
+
         }
 
 

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace OESListener
 {
@@ -17,8 +14,8 @@ namespace OESListener
         public LabelPrinter(LabelPrintEventArgs args)
         {
             e = args;
-            FinalPrintStorageFolder = @"\PrintCode\Final\";
-            InterimPrintStorageFolder = @"\Printcode\Interim\";
+            FinalPrintStorageFolder = @"C:\PrintCode\Final\";
+            InterimPrintStorageFolder = @"C:\Printcode\Interim\";
 
             CheckFolders();
         }
@@ -53,22 +50,16 @@ namespace OESListener
             var result = SendToPrinter();
             if (result != 0)
                 return result;
-           
+            if (Logger.Enabled)
+                Logger.Log(e.PrintCode);
+
             return 0;
         }
 
         private string GetPrintcode()
         {
-            string file = "";
-            if (e.PrintType == "Final")
-                file = FinalPrintStorageFolder + e.AlphaCode + ".txt";
-
-            if (e.PrintType == "Interim")
-            {
-                var interimFileString = (e.InterimFile.Length < 2) ? "0" + e.InterimFile : e.InterimFile;
-                file = InterimPrintStorageFolder + interimFileString + ".txt";
-            }
-                
+            
+            string file = FinalPrintStorageFolder + e.AlphaCode + ".txt";
             if (File.Exists(file))
                 return File.ReadAllText(file);
             else
@@ -94,12 +85,11 @@ namespace OESListener
             try
             {
                 // Open connection
-                System.Net.Sockets.TcpClient client = new TcpClientWithTimeout(e.PrinterIpAddress, Port, 4000).Connect();
-                //client.Connect(e.PrinterIpAddress, Port);
+                System.Net.Sockets.TcpClient client = new System.Net.Sockets.TcpClient();
+                client.Connect(e.PrinterIpAddress, Port);
 
                 // Write ZPL String to connection
                 System.IO.StreamWriter writer = new System.IO.StreamWriter(client.GetStream());
-                writer.BaseStream.WriteTimeout = 1000;
                 writer.Write(e.PrintCode);
                 writer.Flush();
 
@@ -110,6 +100,9 @@ namespace OESListener
             }
             catch (Exception ex)
             {
+                if (Logger.Enabled)
+                    Logger.Log(ex.ToString());
+
                 return 3;
             }
 

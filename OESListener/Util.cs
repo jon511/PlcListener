@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -72,6 +71,21 @@ namespace OESListener
 
             return arr.ToArray();
 
+        }
+        internal static string AbIntArrayToString(short[] data)
+        {
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < data.Length; i++)
+            {
+                var s1 = data[i] & 0xff00;
+                s1 = s1 >> 8;
+                var s2 = data[i] & 0xff;
+                sb.Append(Convert.ToChar(s1));
+                sb.Append(Convert.ToChar(s2));
+            }
+
+            return sb.ToString();
         }
 
         internal static byte[] ConvertToByteArray(short[] arr)
@@ -168,14 +182,17 @@ namespace OESListener
         internal static byte[] buildCIPForwardOpen(byte processorSlot)
         {
 
-            var nB = Util.ConvertIntToTwoBytes(connectionSerial);
+            
             connectionSerial++;
-            if (connectionSerial > 1000)
+            if (connectionSerial > 1000 || connectionSerial < 1)
                 connectionSerial = 1;
 
-            return new byte[] {0x54, 0x02, 0x20, 0x06, 0x24, 0x01, 0x01, 0x0e, 0x02, 0x00, 0x00, 0x20, 0x01, 0x00, 0x00, 0x20, nB[0], nB[1], 0x37,
-                0x13, 0x42, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x34, 0x12, 0x20, 0x00, 0xf4, 0x43, 0x01, 0x40, 0x20, 0x00, 0xf4, 0x43, 0xa3, 0x03,
-                0x01, processorSlot, 0x20, 0x02, 0x24, 0x01 };
+            var nB = Util.ConvertIntToTwoBytes(connectionSerial);
+
+            ///////////////////////
+            return new byte[] {0x54, 0x02, 0x20, 0x06, 0x24, 0x01, 0x0a, 0xff, 0x02, 0x00, 0x00, 0x20, 0x01, 0x00, 0x00, 0x20, nB[0], nB[1], 0x37,
+                0x13, 0x42, 0x00, 0x00, 0x00, 0x02/*0x03*/, 0x00, 0x00, 0x00, 0x34, 0x12, 0x20, 0x00, 0xf4, 0x43, 0x01, 0x40, 0x20, 0x00, 0xf4, 0x43, 0xa3, 0x04/*0x03*/,
+                0x01, processorSlot, 0x20, 0x02, 0x24, 0x01, 0x2c, 0x01 };
 
         }
 
@@ -186,6 +203,33 @@ namespace OESListener
             return new byte[] {0x6f, 0x00, eipLength[0], eipLength[1], sessionHandle[0], sessionHandle[1], sessionHandle[2], sessionHandle[3],
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
             0x00, 0x00, 0x00, 0x00, 0xb2, 0x00, eipItem2Length[0], eipItem2Length[1]};
+        }
+
+        internal static byte[] EipPcccWrapper(byte[] sessionHandle, int dataLen)
+        {
+
+            var eipCommand = new byte[] { 0x6f, 0x00 };
+            var eipLength = Util.ConvertIntToTwoBytes(dataLen);
+            var eipStatus = new byte[] { 0x00, 0x00, 0x00, 0x00 };
+            var senderContext = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            var eipOptions = new byte[] { 0x00, 0x00, 0x00, 0x00 };
+
+            var eipInterfaceHandle = new byte[] { 0x00, 0x00, 0x00, 0x00 };
+            var eipTimeOut = new byte[] { 0x00, 0x00 };
+            var eipItemCount = new byte[] { 0x02, 0x00 };
+
+            var retList = new List<byte>();
+            retList.AddRange(eipCommand);
+            retList.AddRange(eipLength);
+            retList.AddRange(sessionHandle);
+            retList.AddRange(eipStatus);
+            retList.AddRange(senderContext);
+            retList.AddRange(eipOptions);
+            retList.AddRange(eipInterfaceHandle);
+            retList.AddRange(eipTimeOut);
+            retList.AddRange(eipItemCount);
+
+            return retList.ToArray();
         }
 
         internal static byte[] Unconnected_Send(byte[] tagIOI, byte[] sessionHandle)

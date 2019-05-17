@@ -1,26 +1,95 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OESListener
 {
     public class PlcWriter
     {
+
+        public void PlcResponse(string ipAddress, short[] data, string tagName)
+        {
+            TcpClient c = new TcpClient(ipAddress, 2222);
+            var writer = new BinaryWriter(c.GetStream());
+
+            var dataByteLength = (byte)(data.Length * 2);
+            var writeLength = (byte)(dataByteLength + 21);
+            var byteCountPlusOne = (byte)(dataByteLength + 1);
+            var elementCount = (byte)data.Length;
+
+            byte[] outArr = new byte[] { 1, 7, 0, writeLength, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd3, 0, 0, 0, 0, 0, 0x1d, 0x26, 0x26, 0, 0, 0, 0 };
+
+            var tagArr = Util.DesturctureSlcTag(tagName);
+            var header = new byte[] { 0, 5, 0, 0, 0x0f, 0, 0x73, 0x46, 0x67, 0, 0, elementCount, 0, 0x07, 0, tagArr[0], tagArr[2], 0x99, 0x09, byteCountPlusOne, 0x42 };
+            var dataByteArr = Util.ConvertToByteArray(data);
+            var origSize = outArr.Length;
+            Array.Resize(ref outArr, header.Length + origSize);
+            Array.Copy(header, 0, outArr, origSize, header.Length);
+            origSize = outArr.Length;
+            Array.Resize(ref outArr, dataByteArr.Length + origSize);
+            Array.Copy(dataByteArr, 0, outArr, origSize, dataByteArr.Length);
+
+            Task GetResponse = new Task(() =>
+            {
+
+                var reader = new BinaryReader(c.GetStream());
+
+                Byte[] inData = new Byte[1024];
+                while (true)
+                {
+                    var bytes = reader.Read(inData, 0, inData.Length);
+                    var byteArr = new byte[bytes];
+                    Array.Copy(inData, 0, byteArr, 0, byteArr.Length);
+
+                    if (bytes > 0)
+                    {
+                        if (byteArr[0] == 0x02 && byteArr[1] == 0x01)
+                        {
+                            outArr[4] = byteArr[4];
+                            outArr[5] = byteArr[5];
+                            outArr[6] = byteArr[6];
+                            outArr[7] = byteArr[7];
+                            writer.Write(outArr);
+                        }
+
+                        if (byteArr[0] == 0x02 && byteArr[1] == 0x07)
+                        {
+                            if (Logger.Enabled)
+                                Logger.Log("plc accecpted response");
+
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+
+                }
+
+                c.GetStream().Close();
+                c.Close();
+            });
+            GetResponse.Start();
+
+            //open socket connections to target plc on port 2222
+            var arr = new byte[] { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0x28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            writer.Write(arr);
+            GetResponse.Wait();
+
+        }
         
         public void SlcResponse(string ipAddress, short[] data, string tagName)
         {
             TcpClient c = new TcpClient(ipAddress, 2222);
             var writer = new BinaryWriter(c.GetStream());
 
-
             var dataByteLength = (byte)(data.Length * 2);
             var writeLength = (byte)(dataByteLength + 14);
-
 
             byte[] outArr = new byte[] { 1, 7, 0, writeLength, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xd3, 0, 0, 0, 0, 0, 0x1d, 0x26, 0x26, 0, 0, 0, 0 };
 
@@ -33,9 +102,6 @@ namespace OESListener
             origSize = outArr.Length;
             Array.Resize(ref outArr, dataByteArr.Length + origSize);
             Array.Copy(dataByteArr, 0, outArr, origSize, dataByteArr.Length);
-
-
-
 
             Task GetResponse = new Task(() =>
             {
@@ -88,7 +154,7 @@ namespace OESListener
             
         }
 
-        public void LogixResponse(string ipAddress, short[] data, string tagName)
+        public void MicroLogixResponse(string ipAddress, short[] data, string tagName)
         {
             TcpClient c = new TcpClient(ipAddress, 44818);
             var writer = new BinaryWriter(c.GetStream());
@@ -105,14 +171,16 @@ namespace OESListener
                 {
                     int bytes = 0;
                     bool done = false;
-                    reader.BaseStream.ReadTimeout = 10000;
+                    reader.BaseStream.ReadTimeout = 5000;
                     try
                     {
                         bytes = reader.Read(inData, 0, inData.Length);
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                        Console.WriteLine(e);
+                        if (Logger.Enabled)
+                            Logger.Log(ex.ToString());
+
                         done = true;
                     }
 
@@ -145,29 +213,51 @@ namespace OESListener
                             outArr[19] = senderContext[0];
 
                             writer.Write(outArr);
-                            
+
                         }
 
                         if (byteArr[0] == 0x6f)
                         {
                             //todo: error handling for errors from plc
 
-                            var connectionId = new byte[4];
-                            connectionId[0] = byteArr[44];
-                            connectionId[1] = byteArr[45];
-                            connectionId[2] = byteArr[46];
-                            connectionId[3] = byteArr[47];
-                            cId = connectionId;
-                            byte[] outArr = Util.Build_EIP_CIP_Header(Util.createWriteRequest(tagName, data), sessionHandle, connectionId);
+                            if (byteArr[40] != 0xd4)
+                                break;
 
-                            outArr[12] = senderContext[0];
-                            outArr[13] = senderContext[0];
-                            outArr[14] = senderContext[0];
-                            outArr[15] = senderContext[0];
-                            outArr[16] = senderContext[0];
-                            outArr[17] = senderContext[0];
-                            outArr[18] = senderContext[0];
-                            outArr[19] = senderContext[0];
+                            var dataByteLength = (byte)(data.Length * 2);
+                            var writeLength = Util.ConvertIntToTwoBytes(dataByteLength + 10);
+                            var allLength = dataByteLength + 38;
+
+                            var tagArr = Util.DesturctureSlcTag(tagName);
+
+                            if (ipAddress.Length % 2 != 0)
+                                ipAddress += char.MinValue;
+
+                            var ipArr = Encoding.Default.GetBytes(ipAddress);
+                            var ipLen = Util.ConvertIntToTwoBytes(ipArr.Length);
+
+                            var header = new byte[] { 0x91, 0x00, writeLength[0], writeLength[1], 0x0f, 0, 0xe2, 0xc0, 0xaa, dataByteLength, tagArr[0], tagArr[1], tagArr[2], tagArr[3] };
+                            var dataByteArr = Util.ConvertToByteArray(data);
+
+                            sessionHandle[0] = byteArr[4];
+                            sessionHandle[1] = byteArr[5];
+                            sessionHandle[2] = byteArr[6];
+                            sessionHandle[3] = byteArr[7];
+
+                            var eipHeader = Util.EipPcccWrapper(sessionHandle, allLength);
+
+                            var typeId1 = new byte[] { 0x85, 0x00 };
+
+                            var retList = new List<byte>();
+                            retList.AddRange(eipHeader);
+                            retList.AddRange(typeId1);
+                            retList.AddRange(ipLen);
+                            retList.AddRange(ipArr);
+                            retList.AddRange(header);
+                            retList.AddRange(dataByteArr);
+
+                            
+
+                            byte[] outArr = retList.ToArray();
 
                             writer.Write(outArr);
 
@@ -198,12 +288,139 @@ namespace OESListener
 
             });
             GetResponse.Start();
+
+
+            var registerSession = new byte[] { 0x65, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 };
+            writer.Write(registerSession);
+            GetResponse.Wait();
+
+            if (Logger.Enabled)
+                Logger.Log("Task Complete");
+
+
+        }
+
+        public void LogixResponse(string ipAddress, short[] data, string tagName)
+        {
+            TcpClient c = new TcpClient(ipAddress, 44818);
+            var writer = new BinaryWriter(c.GetStream());
+            var senderContext = new byte[8] { 0x24, 0x4f, 0x53, 0x42, 0x4f, 0x52, 0x4e, 0x45 };
+            var cId = new byte[4];
+            byte[] sessionHandle = new byte[4];
+
+            Task GetResponse = new Task(() =>
+            {
+
+                var reader = new BinaryReader(c.GetStream());
+                Byte[] inData = new Byte[1024];
+                while (true)
+                {
+                    int bytes = 0;
+                    bool done = false;
+                    reader.BaseStream.ReadTimeout = 5000;
+                    try
+                    {
+                        bytes = reader.Read(inData, 0, inData.Length);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Logger.Enabled)
+                            Logger.Log(ex.ToString());
+
+                        done = true;
+                    }
+
+                    if (done)
+                        break;
+
+                    var byteArr = new byte[bytes];
+                    Array.Copy(inData, 0, byteArr, 0, byteArr.Length);
+
+                    if (bytes > 0)
+                    {
+
+                        if (byteArr[0] == 0x65)
+                        {
+                            //var sessionHandle = new byte[4];
+                            sessionHandle[0] = byteArr[4];
+                            sessionHandle[1] = byteArr[5];
+                            sessionHandle[2] = byteArr[6];
+                            sessionHandle[3] = byteArr[7];
+
+                            byte[] outArr = Util.ForwardOpenPacket(sessionHandle, 0);
+
+                            outArr[12] = senderContext[0];
+                            outArr[13] = senderContext[1];
+                            outArr[14] = senderContext[2];
+                            outArr[15] = senderContext[3];
+                            outArr[16] = senderContext[4];
+                            outArr[17] = senderContext[5];
+                            outArr[18] = senderContext[6];
+                            outArr[19] = senderContext[7];
+
+                            writer.Write(outArr);
+                            
+                        }
+
+                        if (byteArr[0] == 0x6f)
+                        {
+                            //todo: error handling for errors from plc
+
+                            var connectionId = new byte[4];
+                            connectionId[0] = byteArr[44];
+                            connectionId[1] = byteArr[45];
+                            connectionId[2] = byteArr[46];
+                            connectionId[3] = byteArr[47];
+                            cId = connectionId;
+                            byte[] outArr = Util.Build_EIP_CIP_Header(Util.createWriteRequest(tagName, data), sessionHandle, connectionId);
+
+                            outArr[12] = senderContext[0];
+                            outArr[13] = senderContext[1];
+                            outArr[14] = senderContext[2];
+                            outArr[15] = senderContext[3];
+                            outArr[16] = senderContext[4];
+                            outArr[17] = senderContext[5];
+                            outArr[18] = senderContext[6];
+                            outArr[19] = senderContext[7];
+
+                            writer.Write(outArr);
+
+
+                            if (Logger.Enabled)
+                                Logger.Log("plc accecpted response");
+                        }
+                        if (byteArr[0] == 0x70)
+                        {
+                            //Util.DisplayHexValues(byteArr);
+                            break;
+                        }
+
+
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+
+
+
+                }
+                if (c.Connected)
+                    c.GetStream().Close();
+
+                c.Close();
+
+            });
+            GetResponse.Start();
             
             
             var registerSession = new byte[] { 0x65, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 };
             writer.Write(registerSession);
             GetResponse.Wait();
-            
+
+            if (Logger.Enabled)
+                Logger.Log("Task Complete");
 
             
         }
@@ -230,9 +447,11 @@ namespace OESListener
                     {
                         bytes = reader.Read(inData, 0, inData.Length);
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                        Console.WriteLine(e);
+                        if (Logger.Enabled)
+                            Logger.Log(ex.ToString());
+
                         done = true;
                     }
 
@@ -289,7 +508,6 @@ namespace OESListener
 
                             writer.Write(outArr);
                             
-
                             if (Logger.Enabled)
                                 Logger.Log("plc accecpted response");
 
@@ -339,6 +557,8 @@ namespace OESListener
             var registerSession = new byte[] { 0x65, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 };
             writer.Write(registerSession);
             GetResponse.Wait();
+            if (Logger.Enabled)
+                Logger.Log("Task Complete");
         }
 
 

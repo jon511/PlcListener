@@ -1,23 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
 
 namespace OESListener
 {
     public class SerialRequestEventArgs : OesEventArgs
     {
-        public string ItemID { get; set; }
 
         public SerialRequestEventArgs(System.Net.Sockets.TcpClient client)
         {
             Client = client;
+            ResponseArray = new short[12];
+        }
+
+        public SerialRequestEventArgs(string senderIp)
+        {
+            SenderIp = senderIp;
+            ResponseArray = new short[12];
         }
 
         public SerialRequestEventArgs(System.Net.Sockets.TcpClient client, string itemId)
         {
             Client = client;
-            ItemID = itemId;
+            ItemId = itemId;
+            ResponseArray = new short[12];
         }
     }
 }
