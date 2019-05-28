@@ -7,6 +7,82 @@ namespace OESListener
 {
     class Util
     {
+        internal static Dictionary<int, string> SlcErrorCode = new Dictionary<int, string> {
+            { 0x00, "GOOD" },
+            { 0x01, "DST node is out of buffer space" },
+            { 0x02, "Cannot guarantee delivery: link layer (The remote node specified does not ACK command.)" },
+            { 0x03, "Duplicate token holder detected" },
+            { 0x04, "Local port is disconnected" },
+            { 0x05, "Application layer timed out waiting for a response" },
+            { 0x06, "Duplicate node detected" },
+            { 0x07, "Station is offline" },
+            { 0x08, "Hardware fault" },
+            { 0x10, "Illegal command or format" },
+            { 0x20, "Host has a problem and will not communicate" },
+            { 0x30, "Remote node host is missing, disconnected, or shut down" },
+            { 0x40, "Host could not complete function due to hardware fault" },
+            { 0x50, "Addressing problem or memory protect rungs" },
+            { 0x60, "Function not allowed due to command protection selection" },
+            { 0x70, "Processor is in Program mode" },
+            { 0x80, "Compatibility mode file missing or communication zone problem" },
+            { 0x90, "Remote node cannot buffer command" },
+            { 0xa0, "Wait ACK (1775KA buffer full)"},
+            { 0xb0, "Remote node problem due to download" },
+            { 0xc0, "Wait ACK (1775KA buffer full)" },
+            { 0xf0, "Error code in the EXT STS byte" }
+        };
+
+        internal static Dictionary<int, string> SlcExtErrorCode = new Dictionary<int, string> {
+            { 0x00, "GOOD" },
+            { 0x01, "A field has an illegal value" },
+            { 0x02, "Less levels specified in address than minimum for any address" },
+            { 0x03, "More levels specified in address than system supports" },
+            { 0x04, "Symbol not found" },
+            { 0x05, "Symbol is of improper format" },
+            { 0x06, "Address doesn't point to something usable" },
+            { 0x07, "File is wrong size" },
+            { 0x08, "Cannot complete request, situation has changed since the start of the command" },
+            { 0x09, "Data or file is too large" },
+            { 0x0a, "Transaction size plus word address is too large" },
+            { 0x0b, "Access denied, improper privilege" },
+            { 0x0c, "Condition cannot be generated  resource is not available" },
+            { 0x0d, "Condition already exists  resource is already available" },
+            { 0x0e, "Command cannot be executed" },
+            { 0x0f, "Histogram overflow" },
+            { 0x10, "No access" },
+            { 0x11, "Host has a problem and will not communicate" },
+            { 0x12, "" },
+            { 0x13, "" },
+            { 0x14, "" },
+            { 0x15, "" },
+            { 0x16, "" },
+            { 0x17, "" },
+            { 0x18, "" },
+            { 0x19, "" },
+            { 0x22, "" },
+            { 0x23, "" },
+            { 0x24, "" },
+            { 0x1a, "" },
+            { 0x1b, "" },
+            { 0x1c, "" },
+            { 0x1d, "" },
+            { 0x1e, "" },
+            { 0x1f, "" },
+        };
+
+        internal static Dictionary<int, string> LogixErrorCode = new Dictionary<int, string>
+        {
+            { 0x00, "GOOD" },
+            { 0x04, "A syntax error was detected decoding the Request Path" },
+            { 0x05, "Request Path destination unknown: Probably instance number is not present"},
+            { 0x2101, "Device state conflict: keyswitch position: The requestor is attempting to change force information in HARD RUN mode" },
+            { 0x2802, "Device state conflict: Safety Status: The controller is in a state in which Safety. Memory cannot be modified." },
+            { 0x13, "Insufficient Request Data: Data too short for expected parameters." },
+            { 0x26, "The Request Path Size received was shorter or longer than expected." },
+            { 0x2104, "General Error: Offset is beyond end of the requested tag." },
+            { 0x2105, "General Error: Offset plus Number of Elements extends beyond the end of the requested tag." },
+            { 0x2107, "General Error: Data type used in request does not match target tag’s data type." }
+        };
         internal static byte[] ConvertIntToFourBytes(int val)
         {
             var b = new byte[4];
@@ -29,7 +105,8 @@ namespace OESListener
 
         internal static int Convert2BytesToInteger(byte b1, byte b2)
         {
-            return Convert.ToInt32(b2 << 8) + Convert.ToInt32(b1);
+            return (short)((b2 << 8) | b1);
+            //return Convert.ToInt16(b2 << 8) + Convert.ToInt16(b1);
         }
 
         internal static short[] ConvertStringToByteArray(string s)
@@ -178,22 +255,39 @@ namespace OESListener
             rrDataHeader.AddRange(fwdOpen);
             return rrDataHeader.ToArray();
         }
-        private static int connectionSerial = 0;
+
+        internal static byte[] ForwardClosePacket(byte[] sessionHandel, byte processorSlot, int connectionSerialNumber)
+        {
+            var fwdClose = buildCipFowardClose(processorSlot, connectionSerialNumber);
+            var rrDataHeader = new List<byte>();
+            rrDataHeader.AddRange(buildEIPSendDataHeader(sessionHandel, fwdClose.Length));
+            rrDataHeader.AddRange(fwdClose);
+            return rrDataHeader.ToArray();
+        }
+
+        private static int connectionSerial = 1;
         internal static byte[] buildCIPForwardOpen(byte processorSlot)
         {
 
             
-            connectionSerial++;
-            if (connectionSerial > 1000 || connectionSerial < 1)
-                connectionSerial = 1;
+            
+            if (connectionSerial > 1000)
+                connectionSerial = 0;
 
+            connectionSerial++;
             var nB = Util.ConvertIntToTwoBytes(connectionSerial);
 
             ///////////////////////
             return new byte[] {0x54, 0x02, 0x20, 0x06, 0x24, 0x01, 0x0a, 0xff, 0x02, 0x00, 0x00, 0x20, 0x01, 0x00, 0x00, 0x20, nB[0], nB[1], 0x37,
-                0x13, 0x42, 0x00, 0x00, 0x00, 0x02/*0x03*/, 0x00, 0x00, 0x00, 0x34, 0x12, 0x20, 0x00, 0xf4, 0x43, 0x01, 0x40, 0x20, 0x00, 0xf4, 0x43, 0xa3, 0x04/*0x03*/,
-                0x01, processorSlot, 0x20, 0x02, 0x24, 0x01, 0x2c, 0x01 };
+                0x13, 0x42, 0x00, 0x00, 0x00, 0x02/*0x03*/, 0x00, 0x00, 0x00, 0x34, 0x12, 0x20, 0x00, 0xf4, 0x43, 0x01, 0x40, 0x20, 0x00, 0xf4, 0x43, 0xa3, /*0x04*/0x03,
+                0x01, processorSlot, 0x20, 0x02, 0x24, 0x01/*, 0x2c, 0x01*/ };
 
+        }
+
+        internal static byte[] buildCipFowardClose(byte processorSlot, int connectionSerialNumber)
+        {
+            var nB = Util.ConvertIntToTwoBytes(connectionSerial);
+            return new byte[] { 0x4e, 0x02, 0x20, 0x06, 0x24, 0x01, 0xa, 0x0e, nB[0], nB[1], 0x37, 0x13, 0x42, 0x00, 0x00, 0x00, 0x03, 0x00, 0x01, processorSlot, 0x20, 0x02, 0x24, 0x01 };
         }
 
         internal static byte[] buildEIPSendDataHeader(byte[] sessionHandle, int frameLen)
@@ -335,7 +429,6 @@ namespace OESListener
             return eipCommand.ToArray();
         }
 
-        
         internal static byte[] createWriteRequest(string tagName, short[] data)
         {
             var tagNameArr = tagName.Split('[');
@@ -392,6 +485,7 @@ namespace OESListener
             }
         }
         
+
         
     }
 }

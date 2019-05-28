@@ -377,9 +377,9 @@ namespace OESListener
                 case 4:
                 case 5:
                 case 6:
-                case 14:
-                case 15:
                 case 16:
+                case 17:
+                case 18:
                     ParseSetupTransaction(senderIp, dataArray, tagName);
                     break;
                 case 21: //serial request

@@ -13,6 +13,76 @@ namespace Test
         static void Main(string[] args)
         {
 
+            var production = new OesWriter.ProductionTransaction();
+            production.CellId = "K04902";
+            production.ItemId = "QG912345678";
+            production.RequestCode = 0;
+            production.Status = 0;
+            production.ProcessHistoryValues = new string[5] { "1.1", "2.2", "3.3", "4", "5" };
+
+            production.SendTransaction("10.50.5.34", 55001);
+
+            Console.WriteLine(production.ResponseString);
+
+            var result = production.SendCsvTransaction("10.50.5.34");
+
+            Console.WriteLine(result);
+
+
+            var pt = new OesWriter.LoginTransaction();
+            pt.CellId = "130401";
+            pt.OperatorId = "50034";
+            pt.RequestCode = 3;
+
+
+            var sr = pt.SendCsvTransaction("10.50.5.34");
+
+            Console.WriteLine(sr);
+
+            var serial = new OesWriter.SerialRequest();
+            serial.CellId = "130401";
+
+
+            Console.WriteLine(serial.SendTransaction("10.50.5.34"));
+
+            //pt = new OesWriter.SetupTransaction();
+            //pt.CellId = "K04902";
+            //pt.ModelNumber = "B0871400-00";
+            //pt.OpNumber = "49";
+            //pt.RequestCode = 5;
+            //pt.AccessId = 1;
+            //pt.Component = "34661S1491375";
+
+            //pt.SendTransaction("10.50.5.34", 55001);
+
+            //Console.WriteLine(pt.ResponseString);
+
+            //pt = new OesWriter.SetupTransaction();
+            //pt.CellId = "K04902";
+            //pt.ModelNumber = "B0871400-00";
+            //pt.OpNumber = "49";
+            //pt.RequestCode = 5;
+            //pt.AccessId = 2;
+            //pt.Component = "TRYD28210017";
+
+            //pt.SendTransaction("10.50.5.34", 55001);
+
+            //Console.WriteLine(pt.ResponseString);
+
+            //pt = new OesWriter.SetupTransaction();
+            //pt.CellId = "K04902";
+            //pt.ModelNumber = "B0871400-00";
+            //pt.OpNumber = "49";
+            //pt.RequestCode = 5;
+            //pt.AccessId = 3;
+            //pt.Component = "85071580D8W05";
+
+            //pt.SendTransaction("10.50.5.34", 55001);
+
+            //Console.WriteLine(pt.ResponseString);
+
+            Console.Read();
+
             //var testArr = new string[]{ "1.1", "2.2", "3", "4.4", "5.5", "6"};
             //var realArr = new List<double>();
             //var intArr = new List<int>();
@@ -25,40 +95,26 @@ namespace Test
             //}
 
             //Console.Read();
-            //var p = new OESListener.PlcWriter();
-            //var data = new short[10];
-            //data[0] = 15;
-            //data[1] = 4;
-            //data[2] = 3;
-            ////data[10] = 10000;
-            ////data[49] = 2;
+            var p = new OESListener.PlcWriter();
+            var data = new short[10];
+            data[0] = 15;
+            data[1] = 4;
+            data[2] = 3;
+            //data[10] = 10000;
+            //data[49] = 2;
 
-            //p.LogixResponse("10.50.71.116", data, "N201[0]");
+            //p.LogixResponse("10.50.201.100", data, "n228[0]");
+            //var status = p.LogixResponse("10.64.41.165", data, "N198[0]");
+            var status = p.LogixResponse("10.50.71.117", data, "N198[0]");
+            var status1 = p.PlcResponse("10.50.193.133", data, "N199:50");
+            var status2 = p.MicroLogixResponse("10.53.29.46", data, "N199:10");
 
 
-            //Task SendWrite = new Task(() =>
-            //{
-            //    p.LogixResponse("10.50.196.160", data, "N218");
-            //});
-            //SendWrite.Start();
 
-            //Console.Read();
-
-            //var p1 = new OESListener.PlcWriter();
-            //data = new short[10];
-            //data[0] = 0;
-            //data[1] = 1;
-            //data[2] = 2;
-
-            //Task NewWrite = new Task(() =>
-            //{
-            //    p1.LogixResponse("10.50.196.160", data, "N218");
-            //});
-            //NewWrite.Start();
 
             //Console.Read();
 
-            var l = new OESListener.Listener("10.50.71.105");
+            var l = new OESListener.Listener("10.50.71.116");
 
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();

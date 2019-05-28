@@ -279,7 +279,7 @@ namespace OESListener
 
                                             OnLoginReceived(l);
                                             break;
-                                        case 17:
+                                        case 19:
                                             l = new LoginEventArgs(client);
                                             l.CellId = jsonData.CellId;
                                             l.ProcessIndicator = jsonData.RequestCode;
@@ -468,14 +468,14 @@ namespace OESListener
                                         var s = new SetupEventArgs(client);
                                         s.SenderIp = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
                                         s.CellId = data[1];
-                                        s.Component = data[2];
-                                        short.TryParse(data[3], out short setupShort);
-                                        s.AccessId = setupShort;
-                                        short.TryParse(data[4], out short setupShort1);
+                                        short.TryParse(data[2], out short setupShort1);
                                         s.ProcessIndicator = setupShort1;
-                                        s.ModelNumber = data[5];
-                                        s.OpNumber = data[6];
-
+                                        s.ModelNumber = data[3];
+                                        s.OpNumber = data[4];
+                                        short.TryParse(data[5], out short setupShort);
+                                        s.AccessId = setupShort;
+                                        s.Component = data[6];
+                                        
                                         OnSetupReceived(s);
                                     }
                                     // get error for wrong length

@@ -49,7 +49,7 @@ namespace OESListener
 
 
         static ConcurrentQueue<string> itemsToWrite = new ConcurrentQueue<string>();
-        static bool done = false;
+        //static bool done = false;
         static bool active = false;
 
         static void StartLogger()

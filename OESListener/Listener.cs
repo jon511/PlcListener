@@ -91,6 +91,7 @@ namespace OESListener
             tcpListener.ProductionReceived += TcpListener_ProductionReceived;
             tcpListener.SerialRequestReceived += TcpListener_SerialRequestReceived;
             tcpListener.FinalLabelPrintReceived += TcpListener_FinalLabelPrintReceived;
+
             var pcccListener = new PcccListener(myIPAddress);
             pcccListener.Listen();
             pcccListener.LoginReceived += PcccListener_LoginReceived;
@@ -105,6 +106,7 @@ namespace OESListener
             eipListener.LoginReceived += EipListener_LoginReceived;
             eipListener.SerialRequestReceived += EipListener_SerialRequestReceived;
             eipListener.FinalLabelPrintReceived += EipListener_FinalLabelPrintReceived;
+            //
         }
 
         private void PcccListener_FinalLabelPrintReceived(object sender, LabelPrintEventArgs e)
