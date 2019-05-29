@@ -52,8 +52,8 @@ Module Module1
         'update e with values from database and pass back in listenerResponse.ProductionResponse
 
         Dim listenerResponse As New ListenerResponse()
-        listenerResponse.ProductionResponse(e)
-
+        Dim response As String = listenerResponse.ProductionResponse(e)
+        Console.WriteLine(response)
 
     End Sub
 

@@ -28,6 +28,15 @@ namespace Test
 
             Console.WriteLine(result);
 
+            var setupTrans = new OesWriter.SetupTransaction();
+            setupTrans.CellId = "K04902";
+            setupTrans.RequestCode = 4;
+            setupTrans.ModelNumber = "B0871400-00";
+            setupTrans.OpNumber = "49";
+
+            var setupResponse = setupTrans.SendCsvTransaction("10.50.5.34");
+
+            Console.WriteLine(setupResponse.ResponseString);
 
             var pt = new OesWriter.LoginTransaction();
             pt.CellId = "130401";
