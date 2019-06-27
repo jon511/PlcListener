@@ -8,7 +8,7 @@ namespace OesWriter
 {
     public class SerialRequest
     {
-        public string Command { get; set; }
+        private string Command { get; set; }
         public string CellId { get; set; }
         public int RequestCode { get; set; }
 

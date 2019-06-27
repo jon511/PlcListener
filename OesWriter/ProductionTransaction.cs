@@ -8,7 +8,7 @@ namespace OesWriter
 {
     public class ProductionTransaction
     {
-        public string Command { get; set; }
+        private string Command { get; set; }
         public string CellId { get; set; }
         public string ItemId { get; set; }
         public string GeneratedBarcode { get; set; }
@@ -27,10 +27,17 @@ namespace OesWriter
             Status = 0;
             FailureCode = 0;
             ProcessHistoryValues = new string[15];
+
+            for (var i = 0; i < 15; i++)
+            {
+                ProcessHistoryValues[i] = string.Format("{0}", 0);
+            }
+            
         }
 
-        public void SendTransaction(string ipAddress, int port)
+        private void SendTransaction(string ipAddress)
         {
+            var port = 55001;
             var client = new TcpClient();
             try
             {

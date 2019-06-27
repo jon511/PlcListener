@@ -8,7 +8,7 @@ namespace OesWriter
 {
     public class LoginTransaction
     {
-        public string Command { get; set; }
+        private string Command { get; set; }
         public string CellId { get; set; }
         public string OperatorId { get; set; }
         public int RequestCode { get; set; }
@@ -19,7 +19,7 @@ namespace OesWriter
 
         }
 
-        public string SendTransaction(string ipAddress)
+        private string SendTransaction(string ipAddress)
         {
             var port = 55001;
             var status = "";

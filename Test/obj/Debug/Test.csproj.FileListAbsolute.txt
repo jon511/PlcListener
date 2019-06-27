@@ -20,3 +20,5 @@ C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git
 C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\Newtonsoft.Json.dll
 C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OesWriter.dll
 C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OesWriter.pdb
+C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OesWriter.dll
+C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OesWriter.pdb

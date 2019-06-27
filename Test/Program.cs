@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,46 +14,59 @@ namespace Test
         static void Main(string[] args)
         {
 
-            var production = new OesWriter.ProductionTransaction();
-            production.CellId = "K04902";
-            production.ItemId = "QG912345678";
-            production.RequestCode = 0;
-            production.Status = 0;
-            production.ProcessHistoryValues = new string[5] { "1.1", "2.2", "3.3", "4", "5" };
+            //OESListener.WebServer webServer = new OESListener.WebServer();
+            //webServer.StartServer();
+            var tempData = new short[70];
+            tempData[68] = 1;
+            tempData[69] = 1;
 
-            production.SendTransaction("10.50.5.34", 55001);
+            var tempData1 = new short[5];
+            tempData1[0] = 10;
 
-            Console.WriteLine(production.ResponseString);
+            var setupWriter = new OESListener.PlcWriter();
+            //var tempREs = setupWriter.MicroLogixResponse("10.53.21.125", tempData1, "N241:0");
+            var tempRes = setupWriter.MicroLogixResponse("10.53.27.50", tempData1, "N240:0");
 
-            var result = production.SendCsvTransaction("10.50.5.34");
+            //var production = new OesWriter.ProductionTransaction();
+            //production.CellId = "K04902";
+            //production.ItemId = "QG912345678";
+            //production.RequestCode = 0;
+            //production.Status = 0;
+            //production.ProcessHistoryValues = new string[5] { "1.1", "2.2", "3.3", "4", "5" };
 
-            Console.WriteLine(result);
+            //production.SendTransaction("10.50.5.34", 55001);
 
-            var setupTrans = new OesWriter.SetupTransaction();
-            setupTrans.CellId = "K04902";
-            setupTrans.RequestCode = 4;
-            setupTrans.ModelNumber = "B0871400-00";
-            setupTrans.OpNumber = "49";
+            //Console.WriteLine(production.ResponseString);
 
-            var setupResponse = setupTrans.SendCsvTransaction("10.50.5.34");
+            //var result = production.SendCsvTransaction("10.50.5.34");
 
-            Console.WriteLine(setupResponse.ResponseString);
+            //Console.WriteLine(result);
 
-            var pt = new OesWriter.LoginTransaction();
-            pt.CellId = "130401";
-            pt.OperatorId = "50034";
-            pt.RequestCode = 3;
+            //var setuptrans = new OesWriter.SetupTransaction();
+            //setuptrans.CellId = "K04902";
+            //setuptrans.RequestCode = 4;
+            //setuptrans.ModelNumber = "B0871400-00";
+            //setuptrans.OpNumber = "49";
 
+            //var setupresponse = setuptrans.SendCsvTransaction("10.50.5.34");
 
-            var sr = pt.SendCsvTransaction("10.50.5.34");
+            //Console.WriteLine(setupresponse.ResponseString);
 
-            Console.WriteLine(sr);
-
-            var serial = new OesWriter.SerialRequest();
-            serial.CellId = "130401";
+            //var pt = new OesWriter.LoginTransaction();
+            //pt.CellId = "130401";
+            //pt.OperatorId = "50034";
+            //pt.RequestCode = 3;
 
 
-            Console.WriteLine(serial.SendTransaction("10.50.5.34"));
+            //var sr = pt.SendCsvTransaction("10.50.5.34");
+
+            //Console.WriteLine(sr);
+
+            //var serial = new OesWriter.SerialRequest();
+            //serial.CellId = "130401";
+
+
+            //Console.WriteLine(serial.SendTransaction("10.50.5.34"));
 
             //pt = new OesWriter.SetupTransaction();
             //pt.CellId = "K04902";
@@ -90,7 +104,7 @@ namespace Test
 
             //Console.WriteLine(pt.ResponseString);
 
-            Console.Read();
+            //Console.Read();
 
             //var testArr = new string[]{ "1.1", "2.2", "3", "4.4", "5.5", "6"};
             //var realArr = new List<double>();
@@ -103,30 +117,52 @@ namespace Test
             //    intArr.Add((int)Math.Truncate(result));
             //}
 
+            ////Console.Read();
+            //var p = new OESListener.PlcWriter();
+            //var data = new short[10];
+            //data[0] = 15;
+            //data[1] = 4;
+            //data[2] = 3;
+            ////data[10] = 10000;
+            ////data[49] = 2;
+
+            ////p.LogixResponse("10.50.201.100", data, "n228[0]");
+            ////var status = p.LogixResponse("10.64.41.165", data, "N198[0]");
+            //var status = p.LogixResponse("10.50.71.117", data, "N198[0]");
+            //var status1 = p.PlcResponse("10.50.193.133", data, "N199:50");
+            //var status2 = p.MicroLogixResponse("10.53.29.46", data, "N199:10");
+
+
+
+
             //Console.Read();
-            var p = new OESListener.PlcWriter();
-            var data = new short[10];
-            data[0] = 15;
-            data[1] = 4;
-            data[2] = 3;
-            //data[10] = 10000;
-            //data[49] = 2;
 
-            //p.LogixResponse("10.50.201.100", data, "n228[0]");
-            //var status = p.LogixResponse("10.64.41.165", data, "N198[0]");
-            var status = p.LogixResponse("10.50.71.117", data, "N198[0]");
-            var status1 = p.PlcResponse("10.50.193.133", data, "N199:50");
-            var status2 = p.MicroLogixResponse("10.53.29.46", data, "N199:10");
+            //ProcessStartInfo startInfo = new ProcessStartInfo();
+            //startInfo.CreateNoWindow = false;
+            //startInfo.UseShellExecute = false;
+            //startInfo.FileName = @"C:\OES\ws\server.exe";
+            //startInfo.WindowStyle = ProcessWindowStyle.Normal;
+            //startInfo.Arguments = null;
 
+            //try
+            //{
+            //    // Start the process with the info we specified.
+            //    // Call WaitForExit and then the using statement will close.
+            //    using (Process exeProcess = Process.Start("C:\\OES\\ws\\server.exe"))
+            //    {
+            //        exeProcess.WaitForExit();
+            //    }
+            //}
+            //catch
+            //{
+            //    // Log error.
+            //}
 
-
-
-            //Console.Read();
-
-            var l = new OESListener.Listener("10.50.71.116");
+            var l = new OESListener.Listener("10.50.71.122");
 
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
+            
             l.PrintFromFile = true;
             l.LoginReceived += L_LoginReceived;
             l.SetupReceived += L_SetupReceived;
@@ -141,6 +177,10 @@ namespace Test
             OESListener.Logger.LogPath = @"C:\OesLog";
             OESListener.Logger.LogToFile = true;
             OESListener.Logger.Log("here is a message");
+
+
+            //OESListener.WebServer webServer = new OESListener.WebServer();
+            //webServer.StartServer();
 
             Console.Read();
 
@@ -229,9 +269,9 @@ namespace Test
             e.Response.Component1.ModelNumber = "B0884400-00";
             e.Response.Acknowledge = "1";
             e.Response.ErrorCode = "1";
-            e.ResponseArray[65] = 14;
+            e.ResponseArray[65] = 1925;
             e.ResponseArray[66] = 0;
-            e.PlcModelSetup = new short[] { 1 , 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 };
+            e.PlcModelSetup = new short[] { 1 , 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };
             var resp = new OESListener.ListenerResponse();
             resp.SetupResponse(e);
         }

@@ -15,7 +15,7 @@ namespace OesWriter
         /// LOGIN = Login
         /// SERIAL = Serial request
         /// </summary>
-        public string Command { get; set; }
+        private string Command { get; set; }
         public string CellId { get; set; }
         public string ModelNumber { get; set; }
         public int RequestCode { get; set; }
@@ -31,7 +31,7 @@ namespace OesWriter
 
         }
 
-        public SetupResponse SendTransaction(string ipAddress)
+        private SetupResponse SendTransaction(string ipAddress)
         {
             var port = 55001;
             var sr = new SetupResponse();
