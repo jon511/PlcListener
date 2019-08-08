@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\OESListener",
+    "\\TestVB"
   ],
-  "SelectedNode": "\\OESListener",
+  "SelectedNode": "\\TestVB\\Module1.vb",
   "PreviewInSolutionExplorer": false
 }

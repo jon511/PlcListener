@@ -16,16 +16,16 @@ namespace Test
 
             //OESListener.WebServer webServer = new OESListener.WebServer();
             //webServer.StartServer();
-            var tempData = new short[70];
-            tempData[68] = 1;
-            tempData[69] = 1;
+            //var tempData = new short[70];
+            //tempData[68] = 1;
+            //tempData[69] = 1;
 
-            var tempData1 = new short[5];
-            tempData1[0] = 10;
+            //var tempData1 = new short[5];
+            //tempData1[0] = 10;
 
-            var setupWriter = new OESListener.PlcWriter();
+            //var setupWriter = new OESListener.PlcWriter();
             //var tempREs = setupWriter.MicroLogixResponse("10.53.21.125", tempData1, "N241:0");
-            var tempRes = setupWriter.MicroLogixResponse("10.53.27.50", tempData1, "N240:0");
+            //var tempRes = setupWriter.MicroLogixResponse("10.53.27.50", tempData1, "N240:0");
 
             //var production = new OesWriter.ProductionTransaction();
             //production.CellId = "K04902";
@@ -158,7 +158,7 @@ namespace Test
             //    // Log error.
             //}
 
-            var l = new OESListener.Listener("10.50.71.122");
+            var l = new OESListener.Listener("10.50.71.124");
 
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
@@ -175,7 +175,10 @@ namespace Test
             //p.MicroLogixResponse("10.53.29.46", new short[10] { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 }, "N219:0");
 
             OESListener.Logger.LogPath = @"C:\OesLog";
-            OESListener.Logger.LogToFile = true;
+            OESListener.Logger.LogToFile = false;
+            OESListener.Logger.LogToConsole = true;
+            OESListener.Logger.EnableDllLogging = true;
+
             OESListener.Logger.Log("here is a message");
 
 

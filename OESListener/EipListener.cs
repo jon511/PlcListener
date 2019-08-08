@@ -71,6 +71,7 @@ namespace OESListener
 
             state.workSocket = handler;
             handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallBack), state);
+            
         }
         
 
@@ -171,8 +172,8 @@ namespace OESListener
                 }
                 else
                 {
-                    handler.Shutdown(SocketShutdown.Both);
-                    handler.Close();
+                    //handler.Shutdown(SocketShutdown.Both);
+                    //handler.Close();
                 }
 
             }
@@ -367,7 +368,7 @@ namespace OESListener
             {
                 case 0: //pre process
                 case 1:
-                    ParseProductionTransaction(senderIp, dataArray, tagName);
+                    ParseProductionTransaction(senderIp, dataArray, tagName, false, false);
                     break;
                 case 2:
                 case 3:

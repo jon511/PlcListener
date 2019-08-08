@@ -414,6 +414,7 @@ namespace OESListener
         public string LogixResponse(string ipAddress, short[] data, string tagName)
         {
             TcpClient c = new TcpClient(ipAddress, 44818);
+
             var writer = new BinaryWriter(c.GetStream());
             var senderContext = new byte[8] { 0x24, 0x4f, 0x53, 0x42, 0x4f, 0x52, 0x4e, 0x45 };
             var cId = new byte[4];
