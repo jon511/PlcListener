@@ -338,7 +338,7 @@ namespace OESListener
             }
             else
             {
-                retArr[65] = (byte)result;
+                retArr[65] = (short)result;
             }
 
             Int16.TryParse(e.Response.Acknowledge, out retArr[67]);
@@ -581,7 +581,7 @@ namespace OESListener
             }
             else
             {
-                retArr[65] = (byte)result;
+                retArr[65] = (short)result;
             }
 
             Int16.TryParse(e.Response.Acknowledge, out retArr[67]);
