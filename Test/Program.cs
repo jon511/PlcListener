@@ -162,7 +162,8 @@ namespace Test
 
             //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
-            
+            var version = l.GetVersion();
+
             l.PrintFromFile = true;
             l.LoginReceived += L_LoginReceived;
             l.SetupReceived += L_SetupReceived;

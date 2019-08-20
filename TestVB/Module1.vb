@@ -26,6 +26,7 @@ Module Module1
         'if listener.PrintFromFile is set to false, the print code needs to be sent back in the LabelPrintTransactionReceived method
         listener.PrintFromFile = True
         listener.Listen()
+        Dim version As String = listener.GetVersion()
 
         'Add listeners for all transaction types that you want to use. All transaction events will be raised in the respective methods.
         AddHandler listener.ProductionReceived, AddressOf ProductionTransactionReceived

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace OESListener
 {
@@ -54,6 +55,13 @@ namespace OESListener
         public int TcpPort { get; set; }
 
         public bool PrintFromFile = false;
+
+        string fileVersion = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
+
+        public string GetVersion()
+        {
+            return fileVersion;
+        }
 
         public Listener()
         {
