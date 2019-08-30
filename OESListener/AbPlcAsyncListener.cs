@@ -348,6 +348,7 @@ namespace OESListener
 
             e.OpNumber = Encoding.Default.GetString(bytes.ToArray());
 
+
             OnSetupReceived(e);
         }
 

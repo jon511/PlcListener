@@ -62,10 +62,11 @@ namespace OESListener
 
         protected void AcceptReceiveDataCallback(IAsyncResult ar)
         {
-            allDone.Set();
 
             Socket listener = (Socket)ar.AsyncState;
             Socket handler = listener.EndAccept(ar);
+
+            allDone.Set();
 
             StateObject state = new StateObject();
 
@@ -236,7 +237,12 @@ namespace OESListener
             var remoteIpEndPoint = handler.RemoteEndPoint as IPEndPoint;
             var senderIp = remoteIpEndPoint.Address.ToString();
 
-            ParseLogixRecievedData(senderIp, dataArray, senderIP);
+            new Thread(delegate ()
+            {
+                ParseLogixRecievedData(senderIp, dataArray, senderIP);
+            }).Start();
+
+            //ParseLogixRecievedData(senderIp, dataArray, senderIP);
 
         }
 
@@ -335,8 +341,10 @@ namespace OESListener
 
             var remoteIpEndPoint = handler.RemoteEndPoint as IPEndPoint;
             var senderIp = remoteIpEndPoint.Address.ToString();
-
-            ParseSlcRecievedData(senderIp, bytesToParse, true);
+            new Thread(delegate () {
+                ParseSlcRecievedData(senderIp, bytesToParse, true);
+            }).Start();
+            //ParseSlcRecievedData(senderIp, bytesToParse, true);
         }
 
         private void ParseLogixRecievedData(string senderIp,byte[] bytes, string senderIP)
