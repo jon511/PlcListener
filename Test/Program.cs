@@ -14,153 +14,8 @@ namespace Test
         static void Main(string[] args)
         {
 
-            //OESListener.WebServer webServer = new OESListener.WebServer();
-            //webServer.StartServer();
-            //var tempData = new short[70];
-            //tempData[68] = 1;
-            //tempData[69] = 1;
-
-            //var tempData1 = new short[5];
-            //tempData1[0] = 10;
-
-            //var setupWriter = new OESListener.PlcWriter();
-            //var tempREs = setupWriter.MicroLogixResponse("10.53.21.125", tempData1, "N241:0");
-            //var tempRes = setupWriter.MicroLogixResponse("10.53.27.50", tempData1, "N240:0");
-
-            //var production = new OesWriter.ProductionTransaction();
-            //production.CellId = "K04902";
-            //production.ItemId = "QG912345678";
-            //production.RequestCode = 0;
-            //production.Status = 0;
-            //production.ProcessHistoryValues = new string[5] { "1.1", "2.2", "3.3", "4", "5" };
-
-            //production.SendTransaction("10.50.5.34", 55001);
-
-            //Console.WriteLine(production.ResponseString);
-
-            //var result = production.SendCsvTransaction("10.50.5.34");
-
-            //Console.WriteLine(result);
-
-            //var setuptrans = new OesWriter.SetupTransaction();
-            //setuptrans.CellId = "K04902";
-            //setuptrans.RequestCode = 4;
-            //setuptrans.ModelNumber = "B0871400-00";
-            //setuptrans.OpNumber = "49";
-
-            //var setupresponse = setuptrans.SendCsvTransaction("10.50.5.34");
-
-            //Console.WriteLine(setupresponse.ResponseString);
-
-            //var pt = new OesWriter.LoginTransaction();
-            //pt.CellId = "130401";
-            //pt.OperatorId = "50034";
-            //pt.RequestCode = 3;
-
-
-            //var sr = pt.SendCsvTransaction("10.50.5.34");
-
-            //Console.WriteLine(sr);
-
-            //var serial = new OesWriter.SerialRequest();
-            //serial.CellId = "130401";
-
-
-            //Console.WriteLine(serial.SendTransaction("10.50.5.34"));
-
-            //pt = new OesWriter.SetupTransaction();
-            //pt.CellId = "K04902";
-            //pt.ModelNumber = "B0871400-00";
-            //pt.OpNumber = "49";
-            //pt.RequestCode = 5;
-            //pt.AccessId = 1;
-            //pt.Component = "34661S1491375";
-
-            //pt.SendTransaction("10.50.5.34", 55001);
-
-            //Console.WriteLine(pt.ResponseString);
-
-            //pt = new OesWriter.SetupTransaction();
-            //pt.CellId = "K04902";
-            //pt.ModelNumber = "B0871400-00";
-            //pt.OpNumber = "49";
-            //pt.RequestCode = 5;
-            //pt.AccessId = 2;
-            //pt.Component = "TRYD28210017";
-
-            //pt.SendTransaction("10.50.5.34", 55001);
-
-            //Console.WriteLine(pt.ResponseString);
-
-            //pt = new OesWriter.SetupTransaction();
-            //pt.CellId = "K04902";
-            //pt.ModelNumber = "B0871400-00";
-            //pt.OpNumber = "49";
-            //pt.RequestCode = 5;
-            //pt.AccessId = 3;
-            //pt.Component = "85071580D8W05";
-
-            //pt.SendTransaction("10.50.5.34", 55001);
-
-            //Console.WriteLine(pt.ResponseString);
-
-            //Console.Read();
-
-            //var testArr = new string[]{ "1.1", "2.2", "3", "4.4", "5.5", "6"};
-            //var realArr = new List<double>();
-            //var intArr = new List<int>();
-
-            //foreach (var item in testArr)
-            //{
-            //    double.TryParse(item, out double result);
-            //    realArr.Add(result);
-            //    intArr.Add((int)Math.Truncate(result));
-            //}
-
-            ////Console.Read();
-            //var p = new OESListener.PlcWriter();
-            //var data = new short[10];
-            //data[0] = 15;
-            //data[1] = 4;
-            //data[2] = 3;
-            ////data[10] = 10000;
-            ////data[49] = 2;
-
-            ////p.LogixResponse("10.50.201.100", data, "n228[0]");
-            ////var status = p.LogixResponse("10.64.41.165", data, "N198[0]");
-            //var status = p.LogixResponse("10.50.71.117", data, "N198[0]");
-            //var status1 = p.PlcResponse("10.50.193.133", data, "N199:50");
-            //var status2 = p.MicroLogixResponse("10.53.29.46", data, "N199:10");
-
-
-
-
-            //Console.Read();
-
-            //ProcessStartInfo startInfo = new ProcessStartInfo();
-            //startInfo.CreateNoWindow = false;
-            //startInfo.UseShellExecute = false;
-            //startInfo.FileName = @"C:\OES\ws\server.exe";
-            //startInfo.WindowStyle = ProcessWindowStyle.Normal;
-            //startInfo.Arguments = null;
-
-            //try
-            //{
-            //    // Start the process with the info we specified.
-            //    // Call WaitForExit and then the using statement will close.
-            //    using (Process exeProcess = Process.Start("C:\\OES\\ws\\server.exe"))
-            //    {
-            //        exeProcess.WaitForExit();
-            //    }
-            //}
-            //catch
-            //{
-            //    // Log error.
-            //}
-
             var l = new OESListener.Listener("10.50.71.90");
 
-            //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
             var version = l.GetVersion();
 
@@ -171,10 +26,6 @@ namespace Test
             l.SerialRequestReceived += L_SerialRequestReceived;
             l.LabelPrintReceived += L_LabelPrintReceived;
 
-            //OESListener.PlcWriter p = new OESListener.PlcWriter();
-            //p.MicroLogixResponse("10.53.29.46", new short[3] { 1700, 500, 500 }, "N219:0");
-            //p.MicroLogixResponse("10.53.29.46", new short[10] { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 }, "N219:0");
-
             OESListener.Logger.LogPath = @"C:\OesLog";
             OESListener.Logger.LogToFile = false;
             OESListener.Logger.LogToConsole = true;
@@ -182,9 +33,6 @@ namespace Test
 
             OESListener.Logger.Log("here is a message");
 
-
-            //OESListener.WebServer webServer = new OESListener.WebServer();
-            //webServer.StartServer();
 
             Console.Read();
 
