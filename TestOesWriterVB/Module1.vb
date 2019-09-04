@@ -3,6 +3,8 @@
 Module Module1
 
     Sub Main()
+        Dim version As String = OesWriter.Version.GetVersion()
+
         'Production transaction
         Dim productionTransaction As New ProductionTransaction()
         productionTransaction.CellId = "K04902"

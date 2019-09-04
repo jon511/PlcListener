@@ -50,6 +50,7 @@
     <Compile Include="SerialRequest.cs" />
     <Compile Include="SetupResponse.cs" />
     <Compile Include="SetupTransaction.cs" />
+    <Compile Include="Version.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
