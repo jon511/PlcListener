@@ -85,11 +85,15 @@ namespace OESListener
                     break;
                 case 2:
                 case 3:
+                case 19:
                     ParseLoginTransaction(senderIp, dataArray, tagName, usePlcFive, useMicroLogix);
                     break;
                 case 4:
                 case 5:
                 case 6:
+                case 16:
+                case 17:
+                case 18:
                     ParseSetupTransaction(senderIp, dataArray, tagName, usePlcFive, useMicroLogix);
                     break;
                 case 21:
@@ -343,6 +347,7 @@ namespace OESListener
             }
 
             e.OpNumber = Encoding.Default.GetString(bytes.ToArray());
+
 
             OnSetupReceived(e);
         }

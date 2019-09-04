@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,55 +14,11 @@ namespace Test
         static void Main(string[] args)
         {
 
-            //var testArr = new string[]{ "1.1", "2.2", "3", "4.4", "5.5", "6"};
-            //var realArr = new List<double>();
-            //var intArr = new List<int>();
+            var l = new OESListener.Listener("10.50.71.90");
 
-            //foreach (var item in testArr)
-            //{
-            //    double.TryParse(item, out double result);
-            //    realArr.Add(result);
-            //    intArr.Add((int)Math.Truncate(result));
-            //}
-
-            //Console.Read();
-            var p = new OESListener.PlcWriter();
-            var data = new short[10];
-            data[0] = 15;
-            data[1] = 4;
-            data[2] = 3;
-            //data[10] = 10000;
-            //data[49] = 2;
-
-            p.LogixResponse("10.50.71.116", data, "N201[0]");
-
-
-            //Task SendWrite = new Task(() =>
-            //{
-            //    p.LogixResponse("10.50.196.160", data, "N218");
-            //});
-            //SendWrite.Start();
-
-            //Console.Read();
-
-            //var p1 = new OESListener.PlcWriter();
-            //data = new short[10];
-            //data[0] = 0;
-            //data[1] = 1;
-            //data[2] = 2;
-
-            //Task NewWrite = new Task(() =>
-            //{
-            //    p1.LogixResponse("10.50.196.160", data, "N218");
-            //});
-            //NewWrite.Start();
-
-            //Console.Read();
-
-            var l = new OESListener.Listener("10.50.71.105");
-
-            //var l = new OESListener.Listener("127.0.0.1");
             l.Listen();
+            var version = l.GetVersion();
+
             l.PrintFromFile = true;
             l.LoginReceived += L_LoginReceived;
             l.SetupReceived += L_SetupReceived;
@@ -69,13 +26,13 @@ namespace Test
             l.SerialRequestReceived += L_SerialRequestReceived;
             l.LabelPrintReceived += L_LabelPrintReceived;
 
-            //OESListener.PlcWriter p = new OESListener.PlcWriter();
-            //p.MicroLogixResponse("10.53.29.46", new short[3] { 1700, 500, 500 }, "N219:0");
-            //p.MicroLogixResponse("10.53.29.46", new short[10] { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 }, "N219:0");
-
             OESListener.Logger.LogPath = @"C:\OesLog";
-            OESListener.Logger.LogToFile = true;
+            OESListener.Logger.LogToFile = false;
+            OESListener.Logger.LogToConsole = true;
+            OESListener.Logger.EnableDllLogging = true;
+
             OESListener.Logger.Log("here is a message");
+
 
             Console.Read();
 
@@ -164,9 +121,12 @@ namespace Test
             e.Response.Component1.ModelNumber = "B0884400-00";
             e.Response.Acknowledge = "1";
             e.Response.ErrorCode = "1";
-            e.ResponseArray[65] = 14;
+            e.ResponseArray[65] = 1925;
             e.ResponseArray[66] = 0;
-            e.PlcModelSetup = new short[] { 1 , 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 };
+            if (e.CellId == "K09001")
+                e.PlcModelSetup = new short[] { 1 , 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };
+            else
+                e.PlcModelSetup = new short[] { 100 , 200, 300, 400, 500, 600, 700, 800, 900, 1000, 11, 12, 13, 14, 15, 16, 17, 18 };
             var resp = new OESListener.ListenerResponse();
             resp.SetupResponse(e);
         }

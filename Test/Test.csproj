@@ -35,6 +35,9 @@
     <Reference Include="OESListener">
       <HintPath>..\OESListener\bin\Debug\OESListener.dll</HintPath>
     </Reference>
+    <Reference Include="OesWriter">
+      <HintPath>..\OesWriter\bin\Debug\OesWriter.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

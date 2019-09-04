@@ -6,79 +6,67 @@ namespace OESListener
 {
     public class ListenerResponse
     {
-        public void ProductionResponse(ProductionEventArgs e)
+        public string ProductionResponse(ProductionEventArgs e)
         {
             switch (e.listenerType)
             {
                 case ListenerType.TCP:
-                    TcpProductionResponse(e);
-                    break;
+                    return TcpProductionResponse(e);
                 case ListenerType.EIP:
-                    EipProductionResponse(e);
-                    break;
+                    return EipProductionResponse(e);
                 case ListenerType.PCCC:
-                    PcccProductionResponse(e);
-                    break;
+                    return PcccProductionResponse(e);
                 default:
-                    break;
+                    return "";
             }
         }
 
-        public void SetupResponse(SetupEventArgs e)
+        public string SetupResponse(SetupEventArgs e)
         {
             switch (e.listenerType)
             {
                 case ListenerType.TCP:
-                    TcpSetupResponse(e);
-                    break;
+                    return TcpSetupResponse(e);
                 case ListenerType.EIP:
-                    EipSetupResponse(e);
-                    break;
+                    return EipSetupResponse(e);
                 case ListenerType.PCCC:
-                    PcccSetupResponse(e);
-                    break;
+                    return PcccSetupResponse(e);
                 default:
-                    break;
+                    return "";
             }
         }
 
-        public void LoginResponse(LoginEventArgs e)
+        public string LoginResponse(LoginEventArgs e)
         {
             switch (e.listenerType)
             {
                 case ListenerType.TCP:
-                    TcpLoginResponse(e);
-                    break;
+                    return TcpLoginResponse(e);
                 case ListenerType.EIP:
-                    EipLoginResponse(e);
-                    break;
+                    return EipLoginResponse(e);
                 case ListenerType.PCCC:
-                    PcccLoginResponse(e);
-                    break;
+                    return PcccLoginResponse(e);
                 default:
-                    break;
+                    return "";
             }
         }
 
-        public void SerialRequestResponse(SerialRequestEventArgs e)
+        public string SerialRequestResponse(SerialRequestEventArgs e)
         {
             switch (e.listenerType)
             {
                 case ListenerType.TCP:
-                    TcpSerialRequestRespone(e);
-                    break;
+                    return TcpSerialRequestRespone(e);
                 case ListenerType.EIP:
-                    EipSerialRequestRespone(e);
-                    break;
+                    return EipSerialRequestRespone(e);
                 case ListenerType.PCCC:
-                    PcccSerialRequestRespone(e);
-                    break;
+                    return PcccSerialRequestRespone(e);
                 default:
-                    break;
+                    return "";
             }
         }
 
-        public void FinalPrintResponse(LabelPrintEventArgs e)
+        public string FinalPrintResponse(LabelPrintEventArgs e)
         {
             
             //var p = new LabelPrinter(e);
@@ -89,20 +77,17 @@ namespace OESListener
             switch (e.listenerType)
             {
                 case ListenerType.TCP:
-                    TcpFinalPrintResponse(e);
-                    break;
+                    return TcpFinalPrintResponse(e);
                 case ListenerType.EIP:
-                    EipFinalPrintResponse(e);
-                    break;
+                    return EipFinalPrintResponse(e);
                 case ListenerType.PCCC:
-                    PcccFinalPrintResponse(e);
-                    break;
+                    return PcccFinalPrintResponse(e);
                 default:
-                    break;
+                    return "";
             }
         }
 
-        public void TcpProductionResponse(ProductionEventArgs e)
+        public string TcpProductionResponse(ProductionEventArgs e)
         {
             string responseString;
             if (e.UseJson)
@@ -123,23 +108,9 @@ namespace OESListener
             else
             {
                 var sb = new StringBuilder();
-                sb.Append(e.CellId);
-                sb.Append(",");
-                sb.Append(e.ItemId);
-                sb.Append(",");
+                sb.Append(e.CellId + ",");
+                sb.Append(e.ItemId + ",");
                 sb.Append(e.GeneratedBarcode);
-                sb.Append(",");
-                //sb.Append(e.ProcessIndicator);
-                //sb.Append(e.ResponseArray[18].ToString());
-                //sb.Append(",");
-                ////sb.Append(e.SuccessIndicator);
-                //sb.Append(e.ResponseArray[19].ToString());
-                //sb.Append(",");
-                ////sb.Append(e.FaultCode);
-                //sb.Append(e.ResponseArray[20].ToString());
-                //sb.Append(",");
-                ////sb.Append(e.StatusCode);
-                //sb.Append(e.ResponseArray[21].ToString());
 
                 for (var i = 18; i < e.ResponseArray.Length; i++)
                 {
@@ -147,46 +118,15 @@ namespace OESListener
                     sb.Append(e.ResponseArray[i].ToString());
                 }
 
-                //foreach (var item in e.ProcessHistoryValues)
-                //{
-                //    sb.Append(",");
-                //    sb.Append(item);
-                //}
-                
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[24] + (e.ResponseArray[25] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[26] + (e.ResponseArray[27] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[28] + (e.ResponseArray[29] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[30] + (e.ResponseArray[31] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[32] + (e.ResponseArray[33] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[34] + (e.ResponseArray[35] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[36] + (e.ResponseArray[37] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[38] + (e.ResponseArray[39] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[40] + (e.ResponseArray[41] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[42] + (e.ResponseArray[43] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[44] + (e.ResponseArray[45] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[46] + (e.ResponseArray[47] * .01))));
-                //sb.Append(",");
-                //sb.Append(string.Format("{0}", (e.ResponseArray[48] + (e.ResponseArray[49] * .01))));
                 responseString = sb.ToString();
             }
             var stream = e.Client.GetStream();
             var outData = Encoding.ASCII.GetBytes(responseString);
             stream.Write(outData, 0, outData.Length);
+            return "GOOD";
         }
 
-        public void TcpSetupResponse(SetupEventArgs e)
+        public string TcpSetupResponse(SetupEventArgs e)
         {
             e.ParseReturnData();
 
@@ -198,35 +138,35 @@ namespace OESListener
             else
             {
                 var sb = new StringBuilder();
-                sb.Append(e.Response.Component1.AccessId);
+                sb.Append(e.Response.Component1.AccessId.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Component1.ModelNumber);
+                sb.Append(e.Response.Component1.ModelNumber.Trim()); ;
                 sb.Append(",");
-                sb.Append(e.Response.Component2.AccessId);
+                sb.Append(e.Response.Component2.AccessId.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Component2.ModelNumber);
+                sb.Append(e.Response.Component2.ModelNumber.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Component3.AccessId);
+                sb.Append(e.Response.Component3.AccessId.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Component3.ModelNumber);
+                sb.Append(e.Response.Component3.ModelNumber.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Component4.AccessId);
+                sb.Append(e.Response.Component4.AccessId.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Component4.ModelNumber);
+                sb.Append(e.Response.Component4.ModelNumber.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Component5.AccessId);
+                sb.Append(e.Response.Component5.AccessId.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Component5.ModelNumber);
+                sb.Append(e.Response.Component5.ModelNumber.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Component6.AccessId);
+                sb.Append(e.Response.Component6.AccessId.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Component6.ModelNumber);
+                sb.Append(e.Response.Component6.ModelNumber.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Quantity);
+                sb.Append(e.Response.Quantity.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.Acknowledge);
+                sb.Append(e.Response.Acknowledge.Trim());
                 sb.Append(",");
-                sb.Append(e.Response.ErrorCode);
+                sb.Append(e.Response.ErrorCode.Trim());
                 sb.Append(",");
                 sb.Append(string.Join(",", e.Response.PlcModelSetup));
 
@@ -235,9 +175,10 @@ namespace OESListener
             var stream = e.Client.GetStream();
             var outData = Encoding.ASCII.GetBytes(responseString);
             stream.Write(outData, 0, outData.Length);
+            return "GOOD";
         }
 
-        public void TcpLoginResponse(LoginEventArgs e)
+        public string TcpLoginResponse(LoginEventArgs e)
         {
             string responseString;
             if (e.UseJson)
@@ -259,9 +200,11 @@ namespace OESListener
             var stream = e.Client.GetStream();
             var outData = Encoding.ASCII.GetBytes(responseString);
             stream.Write(outData, 0, outData.Length);
+
+            return "GOOD";
         }
 
-        public void TcpSerialRequestRespone(SerialRequestEventArgs e)
+        public string TcpSerialRequestRespone(SerialRequestEventArgs e)
         {
             string responseString;
             e.ItemId = Util.AbIntArrayToString(e.ResponseArray);
@@ -281,9 +224,10 @@ namespace OESListener
             var stream = e.Client.GetStream();
             var outData = Encoding.ASCII.GetBytes(responseString);
             stream.Write(outData, 0, outData.Length);
+            return "GOOD";
         }
 
-        public void TcpFinalPrintResponse(LabelPrintEventArgs e)
+        public string TcpFinalPrintResponse(LabelPrintEventArgs e)
         {
             string responseString;
             if (e.UseJson)
@@ -295,9 +239,10 @@ namespace OESListener
             var outData = Encoding.ASCII.GetBytes(responseString);
             stream.Write(outData, 0, outData.Length);
 
+            return "GOOD";
         }
 
-        public void PcccProductionResponse(ProductionEventArgs e)
+        public string PcccProductionResponse(ProductionEventArgs e)
         {
             var retArr = new short[50];
 
@@ -319,22 +264,24 @@ namespace OESListener
             Array.Copy(e.ResponseArray, 18, retArr, 18, 32);
             
             var s = new PlcWriter();
+            
             if (e.UsePlcFive)
             {
-                s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
             else if (e.UsePlcMicrologix)
             {
-                s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
             }
             else 
             {
-                s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
+
             
         }
         
-        public void PcccSetupResponse(SetupEventArgs e)
+        public string PcccSetupResponse(SetupEventArgs e)
         {
             e.ParseReturnData();
 
@@ -391,32 +338,43 @@ namespace OESListener
             }
             else
             {
-                retArr[65] = (byte)result;
+                retArr[65] = (short)result;
             }
 
             Int16.TryParse(e.Response.Acknowledge, out retArr[67]);
 
             Int16.TryParse(e.Response.ErrorCode, out retArr[68]);
             var s = new PlcWriter();
+
+            var status = "";
             if (e.UsePlcFive)
             {
-                s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
+                status = s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
             else if (e.UsePlcMicrologix)
             {
-                s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
+                status = s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
             }
             else
             {
-                s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+                status = s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
 
-            if (e.ProcessIndicator == 4)
-                PcccPlcModelSetupResponse(e.SenderIp, e);
+            if (e.ProcessIndicator == 4 && status == "GOOD")
+            {
+                var pushDownStatus = PcccPlcModelSetupResponse(e.SenderIp, e);
+                if (pushDownStatus != "GOOD")
+                {
+                    status = string.Format("PLC Model Download - {0}", pushDownStatus);
+                }
+            }
+
+            return status;
+
 
         }
 
-        public void PcccPlcModelSetupResponse(string ipAddress, SetupEventArgs e)
+        public string PcccPlcModelSetupResponse(string ipAddress, SetupEventArgs e)
         {
             var retArr = e.PlcModelSetup;
             //for (var i = 0; i < e.Response.PlcModelSetup.Length; i++)
@@ -427,19 +385,19 @@ namespace OESListener
             var s = new PlcWriter();
             if (e.UsePlcFive)
             {
-                s.PlcResponse(e.SenderIp, retArr, "N241:0");
+                return s.PlcResponse(e.SenderIp, retArr, "N241:0");
             }
             else if (e.UsePlcMicrologix)
             {
-                s.MicroLogixResponse(e.SenderIp, retArr, "N241:0");
+                return s.MicroLogixResponse(e.SenderIp, retArr, "N241:0");
             }
             else
             {
-                s.SlcResponse(e.SenderIp, retArr, "N241:0");
+                return s.SlcResponse(e.SenderIp, retArr, "N241:0");
             }
         }
 
-        public void PcccLoginResponse(LoginEventArgs e)
+        public string PcccLoginResponse(LoginEventArgs e)
         {
             var retArr = new short[34];
             e.OutTagName = e.InTagName;
@@ -449,20 +407,20 @@ namespace OESListener
             var s = new PlcWriter();
             if (e.UsePlcFive)
             {
-                s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
             else if (e.UsePlcMicrologix)
             {
-                s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
             }
             else
             {
-                s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
 
         }
 
-        public void PcccSerialRequestRespone(SerialRequestEventArgs e)
+        public string PcccSerialRequestRespone(SerialRequestEventArgs e)
         {
             var retArr = new short[20];
             e.OutTagName = "N247:0";
@@ -471,19 +429,19 @@ namespace OESListener
             var s = new PlcWriter();
             if (e.UsePlcFive)
             {
-                s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
             else if (e.UsePlcMicrologix)
             {
-                s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
             }
             else
             {
-                s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
         }
 
-        public void PcccFinalPrintResponse(LabelPrintEventArgs e)
+        public string PcccFinalPrintResponse(LabelPrintEventArgs e)
         {
             var retArr = new short[10];
             e.OutTagName = e.InTagName;
@@ -492,19 +450,19 @@ namespace OESListener
             var s = new PlcWriter();
             if (e.UsePlcFive)
             {
-                s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.PlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
             else if (e.UsePlcMicrologix)
             {
-                s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.MicroLogixResponse(e.SenderIp, retArr, e.OutTagName);
             }
             else
             {
-                s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
+                return s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
             };
         }
 
-        public void EipProductionResponse(ProductionEventArgs e)
+        public string EipProductionResponse(ProductionEventArgs e)
         {
             var retArr = new short[50];
 
@@ -559,12 +517,14 @@ namespace OESListener
             //retArr[49] = e.P_Val_28;
 
             var s = new PlcWriter();
-            s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
+            var status = s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
             if (Logger.Enabled)
                 Logger.Log("listener complete");
+
+            return status;
         }
 
-        public void EipSetupResponse(SetupEventArgs e)
+        public string EipSetupResponse(SetupEventArgs e)
         {
             e.ParseReturnData();
 
@@ -621,21 +581,29 @@ namespace OESListener
             }
             else
             {
-                retArr[65] = (byte)result;
+                retArr[65] = (short)result;
             }
 
             Int16.TryParse(e.Response.Acknowledge, out retArr[67]);
 
             Int16.TryParse(e.Response.ErrorCode, out retArr[68]);
             var s = new PlcWriter();
-            s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
+            var status = s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
 
-            if (e.ProcessIndicator == 4)
-                EipPlcModelSetupResponse(e.SenderIp, e);
+            if (e.ProcessIndicator == 4 && status == "GOOD")
+            {
+                var pushDownStatus = EipPlcModelSetupResponse(e.SenderIp, e);
+                if (pushDownStatus != "GOOD")
+                {
+                    status = string.Format("PLC Model Download - {0}", pushDownStatus);
+                }
+            }
+
+            return status;
 
         }
 
-        public void EipPlcModelSetupResponse(string ipAddress, SetupEventArgs e)
+        public string EipPlcModelSetupResponse(string ipAddress, SetupEventArgs e)
         {
             var retArr = e.PlcModelSetup;
             //for (var i = 0; i < e.Response.PlcModelSetup.Length; i++)
@@ -644,10 +612,10 @@ namespace OESListener
             //}
 
             var s = new PlcWriter();
-            s.LogixResponse(ipAddress, retArr, "N241[0]");
+            return s.LogixResponse(ipAddress, retArr, "N241[0]");
         }
 
-        public void EipLoginResponse(LoginEventArgs e)
+        public string EipLoginResponse(LoginEventArgs e)
         {
             var retArr = new short[34];
             e.OutTagName = e.InTagName;
@@ -656,28 +624,28 @@ namespace OESListener
 
             var s = new PlcWriter();
 
-            s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
+            return s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
 
         }
 
-        public void EipSerialRequestRespone(SerialRequestEventArgs e)
+        public string EipSerialRequestRespone(SerialRequestEventArgs e)
         {
             var retArr = new short[20];
             e.OutTagName = "N247[0]";
             Array.Copy(e.ResponseArray, 0, retArr, 0, e.ResponseArray.Length);
             var s = new PlcWriter();
 
-            s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
+            return s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
         }
 
-        public void EipFinalPrintResponse(LabelPrintEventArgs e)
+        public string EipFinalPrintResponse(LabelPrintEventArgs e)
         {
             var retArr = new short[10];
             e.OutTagName = e.InTagName;
             short.TryParse(e.Response, out retArr[0]);
             var s = new PlcWriter();
 
-            s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
+            return s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
         }
     }
 }

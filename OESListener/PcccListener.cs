@@ -31,7 +31,7 @@ namespace OESListener
             try
             {
                 server.Bind(ipEndPoint);
-                server.Listen(100);
+                server.Listen(200);
 
                 while (true)
                 {
@@ -62,10 +62,10 @@ namespace OESListener
 
         protected void AcceptReceiveDataCallback(IAsyncResult ar)
         {
-            allDone.Set();
-
             Socket listener = (Socket)ar.AsyncState;
             Socket handler = listener.EndAccept(ar);
+
+            allDone.Set();
 
             StateObject state = new StateObject();
 
@@ -140,8 +140,13 @@ namespace OESListener
                         var dataLen = receivedBytes.Length - 37;
                         var tempArr = new byte[dataLen];
                         Array.Copy(receivedBytes, 37, tempArr, 0, tempArr.Length);
-                        
-                        ParseSlcRecievedData(senderIp, tempArr);
+
+                        new Thread(delegate () {
+                            ParseSlcRecievedData(senderIp, tempArr);
+                        }).Start();
+
+                        //ParseSlcRecievedData(senderIp, tempArr);
+
                         handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallBack), state);
                     }
 

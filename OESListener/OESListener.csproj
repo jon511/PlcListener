@@ -50,6 +50,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="LoginEventArgs.cs" />
     <Compile Include="OesEventArgs.cs" />
+    <Compile Include="ProcessorList.cs" />
     <Compile Include="SerialRequestEventArgs.cs" />
     <Compile Include="PlcWriter.cs" />
     <Compile Include="StateObject.cs" />

@@ -18,3 +18,17 @@ C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.exe
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.pdb
 C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\Newtonsoft.Json.dll
+C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OesWriter.dll
+C:\Users\jonos\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OesWriter.pdb
+C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OesWriter.dll
+C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OesWriter.pdb
+C:\Users\jon\Source\Repos\PlcListener\Test\bin\Debug\Test.exe
+C:\Users\jon\Source\Repos\PlcListener\Test\bin\Debug\Test.pdb
+C:\Users\jon\Source\Repos\PlcListener\Test\bin\Debug\OESListener.dll
+C:\Users\jon\Source\Repos\PlcListener\Test\bin\Debug\Newtonsoft.Json.dll
+C:\Users\jon\Source\Repos\PlcListener\Test\bin\Debug\OESListener.pdb
+C:\Users\jon\Source\Repos\PlcListener\Test\obj\Debug\Test.csprojAssemblyReference.cache
+C:\Users\jon\Source\Repos\PlcListener\Test\obj\Debug\Test.csproj.CoreCompileInputs.cache
+C:\Users\jon\Source\Repos\PlcListener\Test\obj\Debug\Test.csproj.CopyComplete
+C:\Users\jon\Source\Repos\PlcListener\Test\obj\Debug\Test.exe
+C:\Users\jon\Source\Repos\PlcListener\Test\obj\Debug\Test.pdb
