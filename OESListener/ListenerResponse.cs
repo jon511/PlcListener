@@ -23,6 +23,7 @@ namespace OESListener
 
         public string SetupResponse(SetupEventArgs e)
         {
+            
             switch (e.listenerType)
             {
                 case ListenerType.TCP:

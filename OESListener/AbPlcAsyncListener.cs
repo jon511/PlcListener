@@ -315,6 +315,11 @@ namespace OESListener
 
                 e.Component = Encoding.Default.GetString(bytes.ToArray());
 
+                if (string.IsNullOrEmpty(e.Component))
+                {
+                    e.Component = "";
+                }
+
                 e.AccessId = dataArray[16];
             }
 

@@ -460,7 +460,7 @@ namespace OESListener
                                         s.ModelNumber = data[3];
                                         s.OpNumber = data[4];
                                         s.SenderIp = ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString();
-
+                                        s.Component = "";
                                         OnSetupReceived(s);
                                     }
                                     if (data.Length == 7)

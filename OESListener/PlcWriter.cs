@@ -335,12 +335,16 @@ namespace OESListener
 
                             var dataByteLength = (byte)(data.Length * 2);
                             var writeLength = Util.ConvertIntToTwoBytes(dataByteLength + 10);
-                            var allLength = dataByteLength + 38;
+                            //var allLength = dataByteLength + 38;
 
                             var tagArr = Util.DesturctureSlcTag(tagName);
 
-                            if (ipAddress.Length % 2 != 0)
-                                ipAddress += char.MinValue;
+                            //if (ipAddress.Length % 2 != 0)
+                            //    ipAddress += char.MinValue;
+
+                            ipAddress += char.MinValue;
+
+                            var allLength = dataByteLength + 26 + ipAddress.Length;
 
                             var ipArr = Encoding.Default.GetBytes(ipAddress);
                             var ipLen = Util.ConvertIntToTwoBytes(ipArr.Length);

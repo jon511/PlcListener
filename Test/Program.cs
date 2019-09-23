@@ -14,7 +14,16 @@ namespace Test
         static void Main(string[] args)
         {
 
-            var l = new OESListener.Listener("10.50.71.90");
+
+            //var dataTable = new short[] { 10, 20, 30, 40, 50, 60, 70, 80, 90 , 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40 };
+            var dataTable = new short[] { 150, 250, 350 };
+
+            var writer = new OESListener.PlcWriter();
+            var result = writer.MicroLogixResponse("10.53.16.100", dataTable, "N100:10");
+            //var result = writer.MicroLogixResponse("10.53.29.46", dataTable, "N100:10");
+
+            //var l = new OESListener.Listener("10.50.71.90");
+            var l = new OESListener.Listener();
 
             l.Listen();
             var version = l.GetVersion();
