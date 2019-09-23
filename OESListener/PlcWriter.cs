@@ -231,7 +231,7 @@ namespace OESListener
         {
             TcpClient c = new TcpClient(ipAddress, 44818);
             var writer = new BinaryWriter(c.GetStream());
-            var senderContext = new byte[8] { 0x24, 0x49, 0x4e, 0x47, 0x45, 0x41, 0x52, 0x24 };
+            var senderContext = new byte[8] { 0x24, 0x4f, 0x53, 0x42, 0x4f, 0x52, 0x4e, 0x45 };
             var cId = new byte[4];
             byte[] sessionHandle = new byte[4];
             var status = "";
@@ -278,13 +278,13 @@ namespace OESListener
                             byte[] outArr = Util.ForwardOpenPacket(sessionHandle, 0);
 
                             outArr[12] = senderContext[0];
-                            outArr[13] = senderContext[0];
-                            outArr[14] = senderContext[0];
-                            outArr[15] = senderContext[0];
-                            outArr[16] = senderContext[0];
-                            outArr[17] = senderContext[0];
-                            outArr[18] = senderContext[0];
-                            outArr[19] = senderContext[0];
+                            outArr[13] = senderContext[1];
+                            outArr[14] = senderContext[2];
+                            outArr[15] = senderContext[3];
+                            outArr[16] = senderContext[4];
+                            outArr[17] = senderContext[5];
+                            outArr[18] = senderContext[6];
+                            outArr[19] = senderContext[7];
 
                             writer.Write(outArr);
 
@@ -296,13 +296,26 @@ namespace OESListener
 
                             if (byteArr[40] != 0xd4)
                             {
-                                if (byteArr[52] == 0x4f)
+                                var responsePosition = 0;
+                                if (byteArr.Length > 48)
+                                {
+                                    for (var i = 48; i < byteArr.Length; i++)
+                                    {
+                                        if (byteArr[i] == 0x4f)
+                                        {
+                                            responsePosition = i;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (byteArr[responsePosition] == 0x4f)
                                 {
                                     
-                                    if (byteArr.Length > 53)
+                                    if (byteArr.Length > responsePosition + 1)
                                     {
-                                        var errorCode = byteArr[53];
-                                        var extErrorCode = (byteArr.Length > 56) ? byteArr[56] : 0x00;
+                                        var errorCode = byteArr[responsePosition + 1];
+                                        var extErrorCode = (byteArr.Length > responsePosition + 4) ? byteArr[responsePosition + 4] : 0x00;
                                         if (errorCode == 0x00)
                                         {
                                             status = "GOOD";

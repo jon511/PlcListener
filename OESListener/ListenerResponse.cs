@@ -361,7 +361,7 @@ namespace OESListener
                 status = s.SlcResponse(e.SenderIp, retArr, e.OutTagName);
             }
 
-            if (e.ProcessIndicator == 4 && status == "GOOD")
+            if (e.ProcessIndicator == 4)
             {
                 var pushDownStatus = PcccPlcModelSetupResponse(e.SenderIp, e);
                 if (pushDownStatus != "GOOD")
@@ -484,38 +484,6 @@ namespace OESListener
 
             Array.Copy(e.ResponseArray, 18, retArr, 18, 32);
 
-            //retArr[18] = Convert.ToInt16(e.ProcessIndicator);
-            //retArr[19] = Convert.ToInt16(e.SuccessIndicator);
-            //retArr[20] = 0;
-            //retArr[21] = Convert.ToInt16(e.FaultCode);
-            //retArr[22] = e.P_Val_1;
-            //retArr[23] = e.P_Val_2;
-            //retArr[24] = e.P_Val_3;
-            //retArr[25] = e.P_Val_4;
-            //retArr[26] = e.P_Val_5;
-            //retArr[27] = e.P_Val_6;
-            //retArr[28] = e.P_Val_7;
-            //retArr[29] = e.P_Val_8;
-            //retArr[30] = e.P_Val_9;
-            //retArr[31] = e.P_Val_10;
-            //retArr[32] = e.P_Val_11;
-            //retArr[33] = e.P_Val_12;
-            //retArr[34] = e.P_Val_13;
-            //retArr[35] = e.P_Val_14;
-            //retArr[36] = e.P_Val_15;
-            //retArr[37] = e.P_Val_16;
-            //retArr[38] = e.P_Val_17;
-            //retArr[39] = e.P_Val_18;
-            //retArr[40] = e.P_Val_19;
-            //retArr[41] = e.P_Val_20;
-            //retArr[42] = e.P_Val_21;
-            //retArr[43] = e.P_Val_22;
-            //retArr[44] = e.P_Val_23;
-            //retArr[45] = e.P_Val_24;
-            //retArr[46] = e.P_Val_25;
-            //retArr[47] = e.P_Val_26;
-            //retArr[48] = e.P_Val_27;
-            //retArr[49] = e.P_Val_28;
 
             var s = new PlcWriter();
             var status = s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
@@ -591,7 +559,7 @@ namespace OESListener
             var s = new PlcWriter();
             var status = s.LogixResponse(e.SenderIp, retArr, e.OutTagName);
 
-            if (e.ProcessIndicator == 4 && status == "GOOD")
+            if (e.ProcessIndicator == 4)
             {
                 var pushDownStatus = EipPlcModelSetupResponse(e.SenderIp, e);
                 if (pushDownStatus != "GOOD")
