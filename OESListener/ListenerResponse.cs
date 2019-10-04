@@ -401,7 +401,12 @@ namespace OESListener
         public string PcccLoginResponse(LoginEventArgs e)
         {
             var retArr = new short[34];
-            e.OutTagName = e.InTagName;
+
+            if (e.InTagName == "N227:0")
+                e.OutTagName = "N228:0";
+            else
+                e.OutTagName = e.InTagName;
+
             retArr[20] = e.SuccessIndicator;
             retArr[21] = e.FaultCode;
 
@@ -587,7 +592,11 @@ namespace OESListener
         public string EipLoginResponse(LoginEventArgs e)
         {
             var retArr = new short[34];
-            e.OutTagName = e.InTagName;
+            if (e.InTagName == "N227[0]")
+                e.OutTagName = "N228[0]";
+            else
+                e.OutTagName = e.InTagName;
+
             retArr[20] = e.SuccessIndicator;
             retArr[21] = e.FaultCode;
 
