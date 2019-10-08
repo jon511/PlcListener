@@ -8,7 +8,6 @@ C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\obj\Debug\TestVB.vbprojAssemblyReference.cache
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\obj\Debug\TestVB.Resources.resources
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\obj\Debug\TestVB.vbproj.GenerateResource.cache
-C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\obj\Debug\TestVB.vbproj.CoreCompileInputs.cache
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\obj\Debug\TestVB.vbproj.CopyComplete
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\obj\Debug\TestVB.exe
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\TestVB\obj\Debug\TestVB.xml

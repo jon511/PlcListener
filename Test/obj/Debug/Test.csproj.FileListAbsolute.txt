@@ -13,7 +13,6 @@ C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\Newtonsoft.Json.dll
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OESListener.pdb
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.csprojAssemblyReference.cache
-C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.csproj.CoreCompileInputs.cache
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.csproj.CopyComplete
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.exe
 C:\Users\jonosborne\Dropbox\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.pdb
