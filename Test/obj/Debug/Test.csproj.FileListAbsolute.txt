@@ -29,3 +29,17 @@ C:\Users\jon\Source\Repos\PlcListener\Test\obj\Debug\Test.csproj.CoreCompileInpu
 C:\Users\jon\Source\Repos\PlcListener\Test\obj\Debug\Test.csproj.CopyComplete
 C:\Users\jon\Source\Repos\PlcListener\Test\obj\Debug\Test.exe
 C:\Users\jon\Source\Repos\PlcListener\Test\obj\Debug\Test.pdb
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\Test.exe
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\Test.pdb
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OESListener.dll
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\Newtonsoft.Json.dll
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\OESListener.pdb
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.csprojAssemblyReference.cache
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.csproj.CopyComplete
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.exe
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.pdb
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.csproj.CoreCompileInputs.cache
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\Test.exe.manifest
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\bin\Debug\Test.application
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.exe.manifest
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\Test\obj\Debug\Test.application

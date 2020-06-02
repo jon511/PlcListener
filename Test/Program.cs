@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OESListener;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,17 +14,22 @@ namespace Test
 
         static void Main(string[] args)
         {
+            var tempIpAddress = "192.168.1.1";
 
+            if (args.Length > 0)
+                tempIpAddress = args[0];
+
+            Console.WriteLine(string.Format("Listneing on {0}", tempIpAddress));
 
             //var dataTable = new short[] { 10, 20, 30, 40, 50, 60, 70, 80, 90 , 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40 };
-            var dataTable = new short[] { 150, 250, 350 };
+            //var dataTable = new short[] { 150, 250, 350 };
 
-            var writer = new OESListener.PlcWriter();
-            var result = writer.MicroLogixResponse("10.53.16.100", dataTable, "N100:10");
-            //var result = writer.MicroLogixResponse("10.53.29.46", dataTable, "N100:10");
+            //var writer = new OESListener.PlcWriter();
+            //var result = writer.MicroLogixResponse("10.53.16.100", dataTable, "N100:10");
+            ////var result = writer.MicroLogixResponse("10.53.29.46", dataTable, "N100:10");
 
             //var l = new OESListener.Listener("10.50.71.90");
-            var l = new OESListener.Listener();
+            var l = new OESListener.Listener(tempIpAddress);
 
             l.Listen();
             var version = l.GetVersion();
@@ -32,6 +38,7 @@ namespace Test
             l.LoginReceived += L_LoginReceived;
             l.SetupReceived += L_SetupReceived;
             l.ProductionReceived += L_ProductionReceived;
+            
             l.SerialRequestReceived += L_SerialRequestReceived;
             l.LabelPrintReceived += L_LabelPrintReceived;
 
@@ -40,7 +47,7 @@ namespace Test
             OESListener.Logger.LogToConsole = true;
             OESListener.Logger.EnableDllLogging = true;
 
-            OESListener.Logger.Log("here is a message");
+            //OESListener.Logger.Log("here is a message");
 
 
             Console.Read();
@@ -89,10 +96,20 @@ namespace Test
 
         private static void L_ProductionReceived(object sender, OESListener.ProductionEventArgs e)
         {
+            
+            //if (Logger.LogToConsole)
+            //{
+            //    Logger.Log(e.CellId);
+            //    Logger.Log(e.ItemId);
+            //    Logger.Log(e.GeneratedBarcode);
+            //    Logger.Log(e.StatusCode.ToString());
+            //    Logger.Log(e.FaultCode.ToString());
+            //}
+
             e.ResponseArray[18] = e.ProcessIndicator;
             e.ResponseArray[19] = e.SuccessIndicator;
             e.ResponseArray[20] = e.FaultCode;
-            e.ResponseArray[21] = 308;
+            e.ResponseArray[21] = 1;
 
             e.ResponseArray[22] = e.P_Val_1;
             e.ResponseArray[23] = e.P_Val_2;

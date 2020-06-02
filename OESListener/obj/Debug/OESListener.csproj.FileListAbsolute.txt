@@ -21,3 +21,11 @@ C:\Users\jon\Source\Repos\PlcListener\OESListener\obj\Debug\OESListener.csproj.C
 C:\Users\jon\Source\Repos\PlcListener\OESListener\obj\Debug\OESListener.csproj.CopyComplete
 C:\Users\jon\Source\Repos\PlcListener\OESListener\obj\Debug\OESListener.dll
 C:\Users\jon\Source\Repos\PlcListener\OESListener\obj\Debug\OESListener.pdb
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.csprojAssemblyReference.cache
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.csproj.CoreCompileInputs.cache
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.dll
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.pdb
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\bin\Debug\OESListener.dll
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\bin\Debug\OESListener.pdb
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\bin\Debug\Newtonsoft.Json.dll
+X:\Developer\Visual Studio\Source\Repos\PlcListener.git\OESListener\obj\Debug\OESListener.csproj.CopyComplete

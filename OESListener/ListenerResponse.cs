@@ -123,6 +123,10 @@ namespace OESListener
             }
             var stream = e.Client.GetStream();
             var outData = Encoding.ASCII.GetBytes(responseString);
+
+            if (Logger.Enabled)
+                Logger.Log(string.Format("Sending: {0}", responseString));
+
             stream.Write(outData, 0, outData.Length);
             return "GOOD";
         }

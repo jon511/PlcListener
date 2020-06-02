@@ -62,7 +62,7 @@ Module Module1
 
         'Serial Request Transaction
         Dim serialTransaction As New SerialRequest()
-        serialTransaction.CellId = 130401
+        serialTransaction.CellId = 130411
         serialTransaction.RequestCode = 21
 
         Dim serialResponse = serialTransaction.SendTransaction("10.50.5.34")

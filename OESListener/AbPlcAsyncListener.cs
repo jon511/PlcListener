@@ -36,6 +36,11 @@ namespace OESListener
         }
         public event EventHandler<LabelPrintEventArgs> FinalLabelPrintReceived;
 
+        protected virtual void OnInterimLabelPrintReceived(LabelPrintEventArgs e)
+        {
+            InterimLabelPrintReceived?.Invoke(this, e);
+        }
+        public event EventHandler<LabelPrintEventArgs> InterimLabelPrintReceived; 
         public string myIPAddress { get; set; }
         public int Port { get; set; }
 

@@ -336,8 +336,8 @@ namespace OESListener
                     else
                     {
                         if (Logger.Enabled)
-                            Logger.Log("string received");
-
+                            Logger.Log(string.Format("recieving csv: {0}", inString));
+                            
                         try
                         {
                             //expected format
