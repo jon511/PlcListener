@@ -91,6 +91,18 @@ namespace OESListener
         public short In_Word_10 { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         public short In_Word_11 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_12 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_13 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_14 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_15 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_16 { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public short In_Word_17 { get; set; }
 
 
 

@@ -402,6 +402,10 @@ namespace OESListener
                     // print interim label
 
                     break;
+                case 40:
+                case 41:
+                    ParseProductionTransaction(senderIp, dataArray, tagName, false, false, true);
+                    break;
                 default:
                     if (tagName == "N247[20]")
                         ParseRequestSerialTransaction(senderIp, dataArray, tagName);

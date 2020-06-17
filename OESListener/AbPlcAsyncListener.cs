@@ -112,6 +112,10 @@ namespace OESListener
                     // print interim label
 
                     break;
+                case 40:
+                case 41:
+                    ParseProductionTransaction(senderIp, dataArray, tagName, usePlcFive, useMicroLogix, true);
+                    break;
                 default:
                     if (tagName == "N247:20")
                         ParseRequestSerialTransaction(senderIp, dataArray, tagName, usePlcFive, useMicroLogix);
@@ -121,7 +125,7 @@ namespace OESListener
 
         }
 
-        protected void ParseProductionTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false, bool useMicroLogix = false)
+        protected void ParseProductionTransaction(string senderIp, short[] dataArray, string tagName, bool usePlcFive = false, bool useMicroLogix = false, bool marryProcedure = false)
         {
             var e = new ProductionEventArgs(senderIp);
             e.InTagName = tagName;
@@ -161,13 +165,13 @@ namespace OESListener
 
             e.ItemId = Encoding.Default.GetString(bytes.ToArray());
 
+            
             bytes = new List<byte>();
-            //{
-            //    (byte)((dataArray[11] & 0xff00) >> 8),
-            //    (byte)(dataArray[11] & 0x00ff)
-            //};
 
-            for (var i = 11; i < 12; i++)
+            var endPoint = (marryProcedure) ? 16 : 12;
+
+
+            for (var i = 11; i < endPoint; i++)
             {
                 var b1 = (byte)((dataArray[i] & 0xff00) >> 8);
                 var b2 = (byte)(dataArray[i] & 0x00ff);
@@ -193,6 +197,15 @@ namespace OESListener
             e.In_Word_10 = dataArray[10];
             e.In_Word_11 = dataArray[11];
 
+            if (marryProcedure)
+            {
+                e.In_Word_12 = dataArray[12];
+                e.In_Word_13 = dataArray[13];
+                e.In_Word_14 = dataArray[14];
+                e.In_Word_15 = dataArray[15];
+                e.In_Word_16 = dataArray[16];
+                e.In_Word_17 = dataArray[17];
+            }
 
             e.ProcessIndicator = dataArray[18];
             e.SuccessIndicator = dataArray[19];
